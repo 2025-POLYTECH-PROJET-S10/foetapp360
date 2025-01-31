@@ -28,6 +28,6 @@
  */
 function xmldb_hippotrack_uninstall()
 {
-
+    test=true;
     return true;
 }
