@@ -33,7 +33,7 @@ $capabilities = array(
             'teacher' => CAP_ALLOW,
             'editingteacher' => CAP_ALLOW
         ),
-        'clonepermissionsfrom' => 'mod/quiz:viewreports'
+        'clonepermissionsfrom' => 'mod/hippotrack:viewreports'
     ),
 
     // Is the user allowed to see the student's identity fields while grading?
@@ -46,6 +46,6 @@ $capabilities = array(
             'teacher' => CAP_ALLOW,
             'editingteacher' => CAP_ALLOW
         ),
-        'clonepermissionsfrom' => 'mod/quiz:viewreports'
+        'clonepermissionsfrom' => 'mod/hippotrack:viewreports'
     )
 );

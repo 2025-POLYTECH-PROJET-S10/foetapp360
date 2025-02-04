@@ -29,7 +29,7 @@ use core_course\external\helper_for_get_mods_by_courses;
 defined('MOODLE_INTERNAL') || die;
 
 require_once($CFG->libdir . '/externallib.php');
-require_once($CFG->dirroot . '/mod/quiz/locallib.php');
+require_once($CFG->dirroot . '/mod/hippotrack/locallib.php');
 
 /**
  * Quiz external functions
@@ -95,13 +95,13 @@ class mod_hippotrack_external extends external_api {
                 $context = context_module::instance($quiz->coursemodule);
 
                 // Update quiz with override information.
-                $quiz = quiz_update_effective_access($quiz, $USER->id);
+                $quiz = quizz_update_effective_access($quiz, $USER->id);
 
                 // Entry to return.
                 $quizdetails = helper_for_get_mods_by_courses::standard_coursemodule_element_values(
-                        $quiz, 'mod_hippotrack', 'mod/quiz:view', 'mod/quiz:view');
+                        $quiz, 'mod_hippotrack', 'mod/hippotrack:view', 'mod/hippotrack:view');
 
-                if (has_capability('mod/quiz:view', $context)) {
+                if (has_capability('mod/hippotrack:view', $context)) {
                     $quizdetails['introfiles'] = external_util::get_area_files($context->id, 'mod_hippotrack', 'intro', false, false);
                     $viewablefields = array('timeopen', 'timeclose', 'attempts', 'timelimit', 'grademethod', 'decimalpoints',
                                             'questiondecimalpoints', 'sumgrades', 'grade', 'preferredbehaviour');
@@ -112,13 +112,13 @@ class mod_hippotrack_external extends external_api {
 
                     $timenow = time();
                     $quizobj = quiz::create($quiz->id, $USER->id);
-                    $accessmanager = new quiz_access_manager($quizobj, $timenow, has_capability('mod/quiz:ignoretimelimits',
+                    $accessmanager = new quiz_access_manager($quizobj, $timenow, has_capability('mod/hippotrack:ignoretimelimits',
                                                                 $context, null, false));
 
                     // Fields the user could see if have access to the quiz.
                     if (!$accessmanager->prevent_access()) {
                         $quizdetails['hasquestions'] = (int) $quizobj->has_questions();
-                        $quizdetails['autosaveperiod'] = get_config('quiz', 'autosaveperiod');
+                        $quizdetails['autosaveperiod'] = get_config('hippotrack', 'autosaveperiod');
 
                         $additionalfields = array('attemptonlast', 'reviewattempt', 'reviewcorrectness', 'reviewmarks',
                                                     'reviewspecificfeedback', 'reviewgeneralfeedback', 'reviewrightanswer',
@@ -275,8 +275,8 @@ class mod_hippotrack_external extends external_api {
         global $DB;
 
         // Request and permission validation.
-        $quiz = $DB->get_record('quiz', array('id' => $quizid), '*', MUST_EXIST);
-        list($course, $cm) = get_course_and_cm_from_instance($quiz, 'quiz');
+        $quiz = $DB->get_record('hippotrack', array('id' => $quizid), '*', MUST_EXIST);
+        list($course, $cm) = get_course_and_cm_from_instance($quiz, 'hippotrack');
 
         $context = context_module::instance($cm->id);
         self::validate_context($context);
@@ -396,16 +396,16 @@ class mod_hippotrack_external extends external_api {
 
         // Extra checks so only users with permissions can view other users attempts.
         if ($USER->id != $user->id) {
-            require_capability('mod/quiz:viewreports', $context);
+            require_capability('mod/hippotrack:viewreports', $context);
         }
 
         // Update quiz with override information.
-        $quiz = quiz_update_effective_access($quiz, $params['userid']);
+        $quiz = quizz_update_effective_access($quiz, $params['userid']);
         $attempts = quiz_get_user_attempts($quiz->id, $user->id, $params['status'], $params['includepreviews']);
         $attemptresponse = [];
         foreach ($attempts as $attempt) {
             $reviewoptions = quiz_get_review_options($quiz, $attempt, $context);
-            if (!has_capability('mod/quiz:viewreports', $context) &&
+            if (!has_capability('mod/hippotrack:viewreports', $context) &&
                     ($reviewoptions->marks < question_display_options::MARK_AND_MAX || $attempt->state != quiz_attempt::FINISHED)) {
                 // Blank the mark if the teacher does not allow it.
                 $attempt->sumgrades = null;
@@ -427,7 +427,7 @@ class mod_hippotrack_external extends external_api {
         return new external_single_structure(
             array(
                 'id' => new external_value(PARAM_INT, 'Attempt id.', VALUE_OPTIONAL),
-                'quiz' => new external_value(PARAM_INT, 'Foreign key reference to the quiz that was attempted.',
+                'hippotrack' => new external_value(PARAM_INT, 'Foreign key reference to the quiz that was attempted.',
                                                 VALUE_OPTIONAL),
                 'userid' => new external_value(PARAM_INT, 'Foreign key reference to the user whose attempt this is.',
                                                 VALUE_OPTIONAL),
@@ -517,18 +517,18 @@ class mod_hippotrack_external extends external_api {
 
         // Extra checks so only users with permissions can view other users attempts.
         if ($USER->id != $user->id) {
-            require_capability('mod/quiz:viewreports', $context);
+            require_capability('mod/hippotrack:viewreports', $context);
         }
 
         $result = array();
 
-        // This code was mostly copied from mod/quiz/view.php. We need to make the web service logic consistent.
+        // This code was mostly copied from mod/hippotrack/view.php. We need to make the web service logic consistent.
         // Get this user's attempts.
         $attempts = quiz_get_user_attempts($quiz->id, $user->id, 'all');
         $canviewgrade = false;
         if ($attempts) {
             if ($USER->id != $user->id) {
-                // No need to check the permission here. We did it at by require_capability('mod/quiz:viewreports', $context).
+                // No need to check the permission here. We did it at by require_capability('mod/hippotrack:viewreports', $context).
                 $canviewgrade = true;
             } else {
                 // Work out which columns we need, taking account what data is available in each attempt.
@@ -547,7 +547,7 @@ class mod_hippotrack_external extends external_api {
         }
 
         // Inform user of the grade to pass if non-zero.
-        $gradinginfo = grade_get_grades($course->id, 'mod', 'quiz', $quiz->id, $user->id);
+        $gradinginfo = grade_get_grades($course->id, 'mod', 'hippotrack', $quiz->id, $user->id);
         if (!empty($gradinginfo->items)) {
             $item = $gradinginfo->items[0];
 
@@ -624,7 +624,7 @@ class mod_hippotrack_external extends external_api {
 
         // Extra checks so only users with permissions can view other users attempts.
         if ($USER->id != $user->id) {
-            require_capability('mod/quiz:viewreports', $context);
+            require_capability('mod/hippotrack:viewreports', $context);
         }
 
         $attempts = quiz_get_user_attempts($quiz->id, $user->id, 'all', true);
@@ -748,7 +748,7 @@ class mod_hippotrack_external extends external_api {
             // Create warnings with the exact messages.
             foreach ($messages as $message) {
                 $warnings[] = array(
-                    'item' => 'quiz',
+                    'item' => 'hippotrack',
                     'itemid' => $quiz->id,
                     'warningcode' => '1',
                     'message' => clean_text($message, PARAM_TEXT)
@@ -831,7 +831,7 @@ class mod_hippotrack_external extends external_api {
         // General capabilities check.
         $ispreviewuser = $attemptobj->is_preview_user();
         if (!$ispreviewuser) {
-            $attemptobj->require_capability('mod/quiz:attempt');
+            $attemptobj->require_capability('mod/hippotrack:attempt');
         }
 
         // Check the access rules.
@@ -1095,7 +1095,7 @@ class mod_hippotrack_external extends external_api {
                 'attempt' => self::attempt_structure(),
                 'messages' => new external_multiple_structure(
                     new external_value(PARAM_TEXT, 'access message'),
-                    'access messages, will only be returned for users with mod/quiz:preview capability,
+                    'access messages, will only be returned for users with mod/hippotrack:preview capability,
                     for other users this method will throw an exception if there are messages'),
                 'nextpage' => new external_value(PARAM_INT, 'next page number'),
                 'questions' => new external_multiple_structure(self::question_structure()),
@@ -1462,7 +1462,7 @@ class mod_hippotrack_external extends external_api {
         if ($displayoptions->overallfeedback && $feedback) {
             $result['additionaldata'][] = array(
                 'id' => 'feedback',
-                'title' => get_string('feedback', 'quiz'),
+                'title' => get_string('feedback', 'hippotrack'),
                 'content' => $feedback,
             );
         }
@@ -1800,15 +1800,15 @@ class mod_hippotrack_external extends external_api {
 
         $result = array();
         // Capabilities first.
-        $result['canattempt'] = has_capability('mod/quiz:attempt', $context);;
-        $result['canmanage'] = has_capability('mod/quiz:manage', $context);;
-        $result['canpreview'] = has_capability('mod/quiz:preview', $context);;
-        $result['canreviewmyattempts'] = has_capability('mod/quiz:reviewmyattempts', $context);;
-        $result['canviewreports'] = has_capability('mod/quiz:viewreports', $context);;
+        $result['canattempt'] = has_capability('mod/hippotrack:attempt', $context);;
+        $result['canmanage'] = has_capability('mod/hippotrack:manage', $context);;
+        $result['canpreview'] = has_capability('mod/hippotrack:preview', $context);;
+        $result['canreviewmyattempts'] = has_capability('mod/hippotrack:reviewmyattempts', $context);;
+        $result['canviewreports'] = has_capability('mod/hippotrack:viewreports', $context);;
 
         // Access manager now.
         $quizobj = quiz::create($cm->instance, $USER->id);
-        $ignoretimelimits = has_capability('mod/quiz:ignoretimelimits', $context, null, false);
+        $ignoretimelimits = has_capability('mod/hippotrack:ignoretimelimits', $context, null, false);
         $timenow = time();
         $accessmanager = new quiz_access_manager($quizobj, $timenow, $ignoretimelimits);
 
@@ -1894,7 +1894,7 @@ class mod_hippotrack_external extends external_api {
 
         // Access manager now.
         $quizobj = quiz::create($cm->instance, $USER->id);
-        $ignoretimelimits = has_capability('mod/quiz:ignoretimelimits', $context, null, false);
+        $ignoretimelimits = has_capability('mod/hippotrack:ignoretimelimits', $context, null, false);
         $timenow = time();
         $accessmanager = new quiz_access_manager($quizobj, $timenow, $ignoretimelimits);
 

@@ -32,7 +32,7 @@ use \quizaccess_seb\event\access_prevented;
 defined('MOODLE_INTERNAL') || die();
 
 global $CFG;
-require_once($CFG->dirroot . '/mod/quiz/accessrule/accessrulebase.php');
+require_once($CFG->dirroot . '/mod/hippotrack/accessrule/accessrulebase.php');
 
 /**
  * Implementation of the quizaccess_seb plugin.
@@ -64,7 +64,7 @@ class quizaccess_seb extends quiz_access_rule_base {
      * @param quiz $quizobj information about the quiz in question.
      * @param int $timenow the time that should be considered as 'now'.
      * @param bool $canignoretimelimits whether the current user is exempt from
-     *      time limits by the mod/quiz:ignoretimelimits capability.
+     *      time limits by the mod/hippotrack:ignoretimelimits capability.
      * @return quiz_access_rule_base|null the rule, if applicable, else null.
      */
     public static function make (quiz $quizobj, $timenow, $canignoretimelimits) {
@@ -179,7 +179,7 @@ class quizaccess_seb extends quiz_access_rule_base {
             return;
         }
 
-        $cm = get_coursemodule_from_instance('quiz', $quiz->id, $quiz->course, false, MUST_EXIST);
+        $cm = get_coursemodule_from_instance('hippotrack', $quiz->id, $quiz->course, false, MUST_EXIST);
 
         $settings = settings_provider::filter_plugin_settings($quiz);
         $settings->quizid = $quiz->id;
@@ -212,7 +212,7 @@ class quizaccess_seb extends quiz_access_rule_base {
 
     /**
      * Delete any rule-specific settings when the quiz is deleted. This is called
-     * from {@link quiz_delete_instance()} in lib.php.
+     * from {@link quizz_delete_instance()} in lib.php.
      *
      * @param object $quiz the data from the database, including $quiz->id
      *      which is the id of the quiz being deleted.

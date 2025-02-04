@@ -34,8 +34,8 @@ use \core_privacy\manager;
 
 defined('MOODLE_INTERNAL') || die();
 
-require_once($CFG->dirroot . '/mod/quiz/lib.php');
-require_once($CFG->dirroot . '/mod/quiz/locallib.php');
+require_once($CFG->dirroot . '/mod/hippotrack/lib.php');
+require_once($CFG->dirroot . '/mod/hippotrack/locallib.php');
 
 /**
  * Privacy Subsystem implementation for mod_hippotrack.

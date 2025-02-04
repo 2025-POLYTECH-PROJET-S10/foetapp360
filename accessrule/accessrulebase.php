@@ -25,7 +25,7 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-require_once($CFG->dirroot . '/mod/quiz/locallib.php');
+require_once($CFG->dirroot . '/mod/hippotrack/locallib.php');
 
 
 /**
@@ -66,7 +66,7 @@ abstract class quiz_access_rule_base {
      * @param quiz $quizobj information about the quiz in question.
      * @param int $timenow the time that should be considered as 'now'.
      * @param bool $canignoretimelimits whether the current user is exempt from
-     *      time limits by the mod/quiz:ignoretimelimits capability.
+     *      time limits by the mod/hippotrack:ignoretimelimits capability.
      * @return quiz_access_rule_base|null the rule, if applicable, else null.
      */
     public static function make(quiz $quizobj, $timenow, $canignoretimelimits) {
@@ -290,7 +290,7 @@ abstract class quiz_access_rule_base {
 
     /**
      * Delete any rule-specific settings when the quiz is deleted. This is called
-     * from {@link quiz_delete_instance()} in lib.php.
+     * from {@link quizz_delete_instance()} in lib.php.
      * @param object $quiz the data from the database, including $quiz->id
      *      which is the id of the quiz being deleted.
      * @since Moodle 2.7.1, 2.6.4, 2.5.7

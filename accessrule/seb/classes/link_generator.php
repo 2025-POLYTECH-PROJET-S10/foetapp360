@@ -47,9 +47,9 @@ class link_generator {
      */
     public static function get_link(string $cmid, bool $seb = false, bool $secure = true) : string {
         // Check if course module exists.
-        get_coursemodule_from_id('quiz', $cmid, 0, false, MUST_EXIST);
+        get_coursemodule_from_id('hippotrack', $cmid, 0, false, MUST_EXIST);
 
-        $url = new moodle_url('/mod/quiz/accessrule/seb/config.php?cmid=' . $cmid);
+        $url = new moodle_url('/mod/hippotrack/accessrule/seb/config.php?cmid=' . $cmid);
         if ($seb) {
             $secure ? $url->set_scheme('sebs') : $url->set_scheme('seb');
         } else {

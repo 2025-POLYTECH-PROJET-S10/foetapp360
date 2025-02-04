@@ -34,7 +34,7 @@ function xmldb_quiz_grading_install() {
     $record = new stdClass();
     $record->name         = 'grading';
     $record->displayorder = '6000';
-    $record->capability   = 'mod/quiz:grade';
+    $record->capability   = 'mod/hippotrack:grade';
 
     $DB->insert_record('quiz_reports', $record);
 }

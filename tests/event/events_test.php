@@ -32,7 +32,7 @@ use context_module;
 defined('MOODLE_INTERNAL') || die();
 
 global $CFG;
-require_once($CFG->dirroot . '/mod/quiz/attemptlib.php');
+require_once($CFG->dirroot . '/mod/hippotrack/attemptlib.php');
 
 /**
  * Unit tests for quiz events.
@@ -62,7 +62,7 @@ class events_test extends \advanced_testcase {
         $quiz = $quizgenerator->create_instance(array('course' => $course->id, 'questionsperpage' => 0,
                 'grade' => 100.0, 'sumgrades' => 2));
 
-        $cm = get_coursemodule_from_instance('quiz', $quiz->id, $course->id);
+        $cm = get_coursemodule_from_instance('hippotrack', $quiz->id, $course->id);
 
         // Create a couple of questions.
         $questiongenerator = $this->getDataGenerator()->get_plugin_generator('core_question');
@@ -244,7 +244,7 @@ class events_test extends \advanced_testcase {
         $this->assertEquals('quiz_attempt_started', $event->get_legacy_eventname());
         $this->assertEquals(\context_module::instance($quizobj->get_cmid()), $event->get_context());
         // Check legacy log data.
-        $expected = array($quizobj->get_courseid(), 'quiz', 'attempt', 'review.php?attempt=' . $attempt->id,
+        $expected = array($quizobj->get_courseid(), 'hippotrack', 'attempt', 'review.php?attempt=' . $attempt->id,
             $quizobj->get_quizid(), $quizobj->get_cmid());
         $this->assertEventLegacyLogData($expected, $event);
         // Check legacy event data.
@@ -374,7 +374,7 @@ class events_test extends \advanced_testcase {
 
         $this->setAdminUser();
         $course = $this->getDataGenerator()->create_course();
-        $quiz = $this->getDataGenerator()->create_module('quiz', array('course' => $course->id));
+        $quiz = $this->getDataGenerator()->create_module('hippotrack', array('course' => $course->id));
 
         $params = array(
             'courseid' => $course->id,
@@ -394,7 +394,7 @@ class events_test extends \advanced_testcase {
         // Check that the event data is valid.
         $this->assertInstanceOf('\mod_hippotrack\event\edit_page_viewed', $event);
         $this->assertEquals(\context_module::instance($quiz->cmid), $event->get_context());
-        $expected = array($course->id, 'quiz', 'editquestions', 'view.php?id=' . $quiz->cmid, $quiz->id, $quiz->cmid);
+        $expected = array($course->id, 'hippotrack', 'editquestions', 'view.php?id=' . $quiz->cmid, $quiz->id, $quiz->cmid);
         $this->assertEventLegacyLogData($expected, $event);
         $this->assertEventContextNotUsed($event);
     }
@@ -414,7 +414,7 @@ class events_test extends \advanced_testcase {
         // Check that the event data is valid.
         $this->assertInstanceOf('\mod_hippotrack\event\attempt_deleted', $event);
         $this->assertEquals(\context_module::instance($quizobj->get_cmid()), $event->get_context());
-        $expected = array($quizobj->get_courseid(), 'quiz', 'delete attempt', 'report.php?id=' . $quizobj->get_cmid(),
+        $expected = array($quizobj->get_courseid(), 'hippotrack', 'delete attempt', 'report.php?id=' . $quizobj->get_cmid(),
             $attempt->id, $quizobj->get_cmid());
         $this->assertEventLegacyLogData($expected, $event);
         $this->assertEventContextNotUsed($event);
@@ -446,7 +446,7 @@ class events_test extends \advanced_testcase {
 
         $this->setAdminUser();
         $course = $this->getDataGenerator()->create_course();
-        $quiz = $this->getDataGenerator()->create_module('quiz', array('course' => $course->id));
+        $quiz = $this->getDataGenerator()->create_module('hippotrack', array('course' => $course->id));
 
         $params = array(
             'context' => $context = \context_module::instance($quiz->cmid),
@@ -466,7 +466,7 @@ class events_test extends \advanced_testcase {
         // Check that the event data is valid.
         $this->assertInstanceOf('\mod_hippotrack\event\report_viewed', $event);
         $this->assertEquals(\context_module::instance($quiz->cmid), $event->get_context());
-        $expected = array($course->id, 'quiz', 'report', 'report.php?id=' . $quiz->cmid . '&mode=overview',
+        $expected = array($course->id, 'hippotrack', 'report', 'report.php?id=' . $quiz->cmid . '&mode=overview',
             $quiz->id, $quiz->cmid);
         $this->assertEventLegacyLogData($expected, $event);
         $this->assertEventContextNotUsed($event);
@@ -483,7 +483,7 @@ class events_test extends \advanced_testcase {
 
         $this->setAdminUser();
         $course = $this->getDataGenerator()->create_course();
-        $quiz = $this->getDataGenerator()->create_module('quiz', array('course' => $course->id));
+        $quiz = $this->getDataGenerator()->create_module('hippotrack', array('course' => $course->id));
 
         $params = array(
             'objectid' => 1,
@@ -505,7 +505,7 @@ class events_test extends \advanced_testcase {
         // Check that the event data is valid.
         $this->assertInstanceOf('\mod_hippotrack\event\attempt_reviewed', $event);
         $this->assertEquals(\context_module::instance($quiz->cmid), $event->get_context());
-        $expected = array($course->id, 'quiz', 'review', 'review.php?attempt=1', $quiz->id, $quiz->cmid);
+        $expected = array($course->id, 'hippotrack', 'review', 'review.php?attempt=1', $quiz->id, $quiz->cmid);
         $this->assertEventLegacyLogData($expected, $event);
         $this->assertEventContextNotUsed($event);
     }
@@ -521,7 +521,7 @@ class events_test extends \advanced_testcase {
 
         $this->setAdminUser();
         $course = $this->getDataGenerator()->create_course();
-        $quiz = $this->getDataGenerator()->create_module('quiz', array('course' => $course->id));
+        $quiz = $this->getDataGenerator()->create_module('hippotrack', array('course' => $course->id));
 
         $params = array(
             'objectid' => 1,
@@ -543,7 +543,7 @@ class events_test extends \advanced_testcase {
         // Check that the event data is valid.
         $this->assertInstanceOf('\mod_hippotrack\event\attempt_summary_viewed', $event);
         $this->assertEquals(\context_module::instance($quiz->cmid), $event->get_context());
-        $expected = array($course->id, 'quiz', 'view summary', 'summary.php?attempt=1', $quiz->id, $quiz->cmid);
+        $expected = array($course->id, 'hippotrack', 'view summary', 'summary.php?attempt=1', $quiz->id, $quiz->cmid);
         $this->assertEventLegacyLogData($expected, $event);
         $this->assertEventContextNotUsed($event);
     }
@@ -559,7 +559,7 @@ class events_test extends \advanced_testcase {
 
         $this->setAdminUser();
         $course = $this->getDataGenerator()->create_course();
-        $quiz = $this->getDataGenerator()->create_module('quiz', array('course' => $course->id));
+        $quiz = $this->getDataGenerator()->create_module('hippotrack', array('course' => $course->id));
 
         $params = array(
             'objectid' => 1,
@@ -594,7 +594,7 @@ class events_test extends \advanced_testcase {
 
         $this->setAdminUser();
         $course = $this->getDataGenerator()->create_course();
-        $quiz = $this->getDataGenerator()->create_module('quiz', array('course' => $course->id));
+        $quiz = $this->getDataGenerator()->create_module('hippotrack', array('course' => $course->id));
 
         $params = array(
             'objectid' => 1,
@@ -629,7 +629,7 @@ class events_test extends \advanced_testcase {
 
         $this->setAdminUser();
         $course = $this->getDataGenerator()->create_course();
-        $quiz = $this->getDataGenerator()->create_module('quiz', array('course' => $course->id));
+        $quiz = $this->getDataGenerator()->create_module('hippotrack', array('course' => $course->id));
 
         $params = array(
             'objectid' => 1,
@@ -650,7 +650,7 @@ class events_test extends \advanced_testcase {
         // Check that the event data is valid.
         $this->assertInstanceOf('\mod_hippotrack\event\user_override_updated', $event);
         $this->assertEquals(\context_module::instance($quiz->cmid), $event->get_context());
-        $expected = array($course->id, 'quiz', 'edit override', 'overrideedit.php?id=1', $quiz->id, $quiz->cmid);
+        $expected = array($course->id, 'hippotrack', 'edit override', 'overrideedit.php?id=1', $quiz->id, $quiz->cmid);
         $this->assertEventLegacyLogData($expected, $event);
         $this->assertEventContextNotUsed($event);
     }
@@ -666,7 +666,7 @@ class events_test extends \advanced_testcase {
 
         $this->setAdminUser();
         $course = $this->getDataGenerator()->create_course();
-        $quiz = $this->getDataGenerator()->create_module('quiz', array('course' => $course->id));
+        $quiz = $this->getDataGenerator()->create_module('hippotrack', array('course' => $course->id));
 
         $params = array(
             'objectid' => 1,
@@ -687,7 +687,7 @@ class events_test extends \advanced_testcase {
         // Check that the event data is valid.
         $this->assertInstanceOf('\mod_hippotrack\event\group_override_updated', $event);
         $this->assertEquals(\context_module::instance($quiz->cmid), $event->get_context());
-        $expected = array($course->id, 'quiz', 'edit override', 'overrideedit.php?id=1', $quiz->id, $quiz->cmid);
+        $expected = array($course->id, 'hippotrack', 'edit override', 'overrideedit.php?id=1', $quiz->id, $quiz->cmid);
         $this->assertEventLegacyLogData($expected, $event);
         $this->assertEventContextNotUsed($event);
     }
@@ -702,7 +702,7 @@ class events_test extends \advanced_testcase {
 
         $this->setAdminUser();
         $course = $this->getDataGenerator()->create_course();
-        $quiz = $this->getDataGenerator()->create_module('quiz', array('course' => $course->id));
+        $quiz = $this->getDataGenerator()->create_module('hippotrack', array('course' => $course->id));
 
         // Create an override.
         $override = new \stdClass();
@@ -712,14 +712,14 @@ class events_test extends \advanced_testcase {
 
         // Trigger and capture the event.
         $sink = $this->redirectEvents();
-        quiz_delete_override($quiz, $override->id);
+        quizz_delete_override($quiz, $override->id);
         $events = $sink->get_events();
         $event = reset($events);
 
         // Check that the event data is valid.
         $this->assertInstanceOf('\mod_hippotrack\event\user_override_deleted', $event);
         $this->assertEquals(\context_module::instance($quiz->cmid), $event->get_context());
-        $expected = array($course->id, 'quiz', 'delete override', 'overrides.php?cmid=' . $quiz->cmid, $quiz->id, $quiz->cmid);
+        $expected = array($course->id, 'hippotrack', 'delete override', 'overrides.php?cmid=' . $quiz->cmid, $quiz->id, $quiz->cmid);
         $this->assertEventLegacyLogData($expected, $event);
         $this->assertEventContextNotUsed($event);
     }
@@ -734,7 +734,7 @@ class events_test extends \advanced_testcase {
 
         $this->setAdminUser();
         $course = $this->getDataGenerator()->create_course();
-        $quiz = $this->getDataGenerator()->create_module('quiz', array('course' => $course->id));
+        $quiz = $this->getDataGenerator()->create_module('hippotrack', array('course' => $course->id));
 
         // Create an override.
         $override = new \stdClass();
@@ -744,14 +744,14 @@ class events_test extends \advanced_testcase {
 
         // Trigger and capture the event.
         $sink = $this->redirectEvents();
-        quiz_delete_override($quiz, $override->id);
+        quizz_delete_override($quiz, $override->id);
         $events = $sink->get_events();
         $event = reset($events);
 
         // Check that the event data is valid.
         $this->assertInstanceOf('\mod_hippotrack\event\group_override_deleted', $event);
         $this->assertEquals(\context_module::instance($quiz->cmid), $event->get_context());
-        $expected = array($course->id, 'quiz', 'delete override', 'overrides.php?cmid=' . $quiz->cmid, $quiz->id, $quiz->cmid);
+        $expected = array($course->id, 'hippotrack', 'delete override', 'overrides.php?cmid=' . $quiz->cmid, $quiz->id, $quiz->cmid);
         $this->assertEventLegacyLogData($expected, $event);
         $this->assertEventContextNotUsed($event);
     }
@@ -767,7 +767,7 @@ class events_test extends \advanced_testcase {
 
         $this->setAdminUser();
         $course = $this->getDataGenerator()->create_course();
-        $quiz = $this->getDataGenerator()->create_module('quiz', array('course' => $course->id));
+        $quiz = $this->getDataGenerator()->create_module('hippotrack', array('course' => $course->id));
 
         $params = array(
             'objectid' => 1,
@@ -790,7 +790,7 @@ class events_test extends \advanced_testcase {
         // Check that the event data is valid.
         $this->assertInstanceOf('\mod_hippotrack\event\attempt_viewed', $event);
         $this->assertEquals(\context_module::instance($quiz->cmid), $event->get_context());
-        $expected = array($course->id, 'quiz', 'continue attempt', 'review.php?attempt=1', $quiz->id, $quiz->cmid);
+        $expected = array($course->id, 'hippotrack', 'continue attempt', 'review.php?attempt=1', $quiz->id, $quiz->cmid);
         $this->assertEventLegacyLogData($expected, $event);
         $this->assertEventContextNotUsed($event);
     }
@@ -817,7 +817,7 @@ class events_test extends \advanced_testcase {
         // Check that the event data is valid.
         $this->assertInstanceOf('\mod_hippotrack\event\attempt_preview_started', $event);
         $this->assertEquals(\context_module::instance($quizobj->get_cmid()), $event->get_context());
-        $expected = array($quizobj->get_courseid(), 'quiz', 'preview', 'view.php?id=' . $quizobj->get_cmid(),
+        $expected = array($quizobj->get_courseid(), 'hippotrack', 'preview', 'view.php?id=' . $quizobj->get_cmid(),
             $quizobj->get_quizid(), $quizobj->get_cmid());
         $this->assertEventLegacyLogData($expected, $event);
         $this->assertEventContextNotUsed($event);
@@ -853,7 +853,7 @@ class events_test extends \advanced_testcase {
         // Check that the event data is valid.
         $this->assertInstanceOf('\mod_hippotrack\event\question_manually_graded', $event);
         $this->assertEquals(\context_module::instance($quizobj->get_cmid()), $event->get_context());
-        $expected = array($quizobj->get_courseid(), 'quiz', 'manualgrade', 'comment.php?attempt=2&slot=3',
+        $expected = array($quizobj->get_courseid(), 'hippotrack', 'manualgrade', 'comment.php?attempt=2&slot=3',
             $quizobj->get_quizid(), $quizobj->get_cmid());
         $this->assertEventLegacyLogData($expected, $event);
         $this->assertEventContextNotUsed($event);
@@ -870,7 +870,7 @@ class events_test extends \advanced_testcase {
 
       $this->setAdminUser();
       $course = $this->getDataGenerator()->create_course();
-      $quiz = $this->getDataGenerator()->create_module('quiz', array('course' => $course->id));
+      $quiz = $this->getDataGenerator()->create_module('hippotrack', array('course' => $course->id));
 
       $params = array(
         'objectid' => 1,

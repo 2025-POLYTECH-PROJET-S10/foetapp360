@@ -25,7 +25,7 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-require_once($CFG->dirroot . '/mod/quiz/report/grading/gradingsettings_form.php');
+require_once($CFG->dirroot . '/mod/hippotrack/report/grading/gradingsettings_form.php');
 
 
 /**
@@ -118,7 +118,7 @@ class quiz_grading_report extends quiz_default_report {
 
         // Check permissions.
         $this->context = context_module::instance($this->cm->id);
-        require_capability('mod/quiz:grade', $this->context);
+        require_capability('mod/hippotrack:grade', $this->context);
         $shownames = has_capability('quiz/grading:viewstudentnames', $this->context);
         // Whether the current user can see custom user fields.
         $showcustomfields = has_capability('quiz/grading:viewidnumber', $this->context);
@@ -166,7 +166,7 @@ class quiz_grading_report extends quiz_default_report {
             $this->userssql = array();
         } else {
             $this->userssql = get_enrolled_sql($this->context,
-                    array('mod/quiz:reviewmyattempts', 'mod/quiz:attempt'), $this->currentgroup);
+                    array('mod/hippotrack:reviewmyattempts', 'mod/hippotrack:attempt'), $this->currentgroup);
         }
 
         $hasquestions = quiz_has_questions($this->quiz->id);
@@ -218,10 +218,10 @@ class quiz_grading_report extends quiz_default_report {
         $usersjoin = '';
         $currentgroup = groups_get_activity_group($this->cm, true);
         $enrolleduserscount = count_enrolled_users($this->context,
-                array('mod/quiz:reviewmyattempts', 'mod/quiz:attempt'), $currentgroup);
+                array('mod/hippotrack:reviewmyattempts', 'mod/hippotrack:attempt'), $currentgroup);
         if ($currentgroup) {
             $userssql = get_enrolled_sql($this->context,
-                    array('mod/quiz:reviewmyattempts', 'mod/quiz:attempt'), $currentgroup);
+                    array('mod/hippotrack:reviewmyattempts', 'mod/hippotrack:attempt'), $currentgroup);
             if ($enrolleduserscount < 1) {
                 $where .= ' AND quiza.userid = 0';
             } else {
@@ -275,7 +275,7 @@ class quiz_grading_report extends quiz_default_report {
      * @return moodle_url the URL.
      */
     protected function base_url() {
-        return new moodle_url('/mod/quiz/report.php',
+        return new moodle_url('/mod/hippotrack/report.php',
                 ['id' => $this->cm->id, 'mode' => 'grading']);
     }
 

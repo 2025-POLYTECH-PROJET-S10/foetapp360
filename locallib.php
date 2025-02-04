@@ -30,11 +30,11 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-require_once($CFG->dirroot . '/mod/quiz/lib.php');
-require_once($CFG->dirroot . '/mod/quiz/accessmanager.php');
-require_once($CFG->dirroot . '/mod/quiz/accessmanager_form.php');
-require_once($CFG->dirroot . '/mod/quiz/renderer.php');
-require_once($CFG->dirroot . '/mod/quiz/attemptlib.php');
+require_once($CFG->dirroot . '/mod/hippotrack/lib.php');
+require_once($CFG->dirroot . '/mod/hippotrack/accessmanager.php');
+require_once($CFG->dirroot . '/mod/hippotrack/accessmanager_form.php');
+require_once($CFG->dirroot . '/mod/hippotrack/renderer.php');
+require_once($CFG->dirroot . '/mod/hippotrack/attemptlib.php');
 require_once($CFG->libdir . '/completionlib.php');
 require_once($CFG->libdir . '/filelib.php');
 require_once($CFG->libdir . '/questionlib.php');
@@ -99,8 +99,8 @@ function quiz_create_attempt(quiz $quizobj, $attemptnumber, $lastattempt, $timen
 
     $quiz = $quizobj->get_quiz();
     if ($quiz->sumgrades < 0.000005 && $quiz->grade > 0.000005) {
-        throw new moodle_exception('cannotstartgradesmismatch', 'quiz',
-                new moodle_url('/mod/quiz/view.php', array('q' => $quiz->id)),
+        throw new moodle_exception('cannotstartgradesmismatch', 'hippotrack',
+                new moodle_url('/mod/hippotrack/view.php', array('q' => $quiz->id)),
                     array('grade' => quiz_format_grade($quiz, $quiz->grade)));
     }
 
@@ -114,7 +114,7 @@ function quiz_create_attempt(quiz $quizobj, $attemptnumber, $lastattempt, $timen
     } else {
         // Build on last attempt.
         if (empty($lastattempt)) {
-            throw new \moodle_exception('cannotfindprevattempt', 'quiz');
+            throw new \moodle_exception('cannotfindprevattempt', 'hippotrack');
         }
         $attempt = $lastattempt;
     }
@@ -230,7 +230,7 @@ function quiz_start_new_attempt($quizobj, $quba, $attempt, $attemptnumber, $time
             $questionid = $randomloader->get_next_question_id($questiondata->category,
                     $questiondata->randomrecurse, $tagids);
             if ($questionid === null) {
-                throw new moodle_exception('notenoughrandomquestions', 'quiz',
+                throw new moodle_exception('notenoughrandomquestions', 'hippotrack',
                                            $quizobj->view_url(), $questiondata);
             }
 
@@ -379,7 +379,7 @@ function quiz_attempt_save_started($quizobj, $quba, $attempt) {
     }
 
     // Trigger the event.
-    $event->add_record_snapshot('quiz', $quizobj->get_quiz());
+    $event->add_record_snapshot('hippotrack', $quizobj->get_quiz());
     $event->add_record_snapshot('quiz_attempts', $attempt);
     $event->trigger();
 
@@ -425,7 +425,7 @@ function quiz_delete_attempt($attempt, $quiz) {
     }
 
     if (!isset($quiz->cmid)) {
-        $cm = get_coursemodule_from_instance('quiz', $quiz->id, $quiz->course);
+        $cm = get_coursemodule_from_instance('hippotrack', $quiz->id, $quiz->course);
         $quiz->cmid = $cm->id;
     }
 
@@ -446,7 +446,7 @@ function quiz_delete_attempt($attempt, $quiz) {
         $event->add_record_snapshot('quiz_attempts', $attempt);
         $event->trigger();
 
-        $callbackclasses = \core_component::get_plugin_list_with_class('quiz', 'quiz_attempt_deleted');
+        $callbackclasses = \core_component::get_plugin_list_with_class('hippotrack', 'quiz_attempt_deleted');
         foreach ($callbackclasses as $callbackclass) {
             component_class_callback($callbackclass, 'callback', [$quiz->id]);
         }
@@ -456,8 +456,8 @@ function quiz_delete_attempt($attempt, $quiz) {
     // If none, then delete record for this quiz, this user from quiz_grades
     // else recalculate best grade.
     $userid = $attempt->userid;
-    if (!$DB->record_exists('quiz_attempts', array('userid' => $userid, 'quiz' => $quiz->id))) {
-        $DB->delete_records('quiz_grades', array('userid' => $userid, 'quiz' => $quiz->id));
+    if (!$DB->record_exists('quiz_attempts', array('userid' => $userid, 'hippotrack' => $quiz->id))) {
+        $DB->delete_records('quiz_grades', array('userid' => $userid, 'hippotrack' => $quiz->id));
     } else {
         quiz_save_best_grade($quiz, $userid);
     }
@@ -473,7 +473,7 @@ function quiz_delete_attempt($attempt, $quiz) {
  */
 function quiz_delete_previews($quiz, $userid = null) {
     global $DB;
-    $conditions = array('quiz' => $quiz->id, 'preview' => 1);
+    $conditions = array('hippotrack' => $quiz->id, 'preview' => 1);
     if (!empty($userid)) {
         $conditions['userid'] = $userid;
     }
@@ -489,7 +489,7 @@ function quiz_delete_previews($quiz, $userid = null) {
  */
 function quiz_has_attempts($quizid) {
     global $DB;
-    return $DB->record_exists('quiz_attempts', array('quiz' => $quizid, 'preview' => 0));
+    return $DB->record_exists('quiz_attempts', array('hippotrack' => $quizid, 'preview' => 0));
 }
 
 // Functions to do with quiz layout and pages //////////////////////////////////
@@ -531,7 +531,7 @@ function quiz_repaginate_questions($quizid, $slotsperpage) {
     $trans->allow_commit();
 
     // Log quiz re-paginated event.
-    $cm = get_coursemodule_from_instance('quiz', $quizid);
+    $cm = get_coursemodule_from_instance('hippotrack', $quizid);
     $event = \mod_hippotrack\event\quiz_repaginated::create([
         'context' => \context_module::instance($cm->id),
         'objectid' => $quizid,
@@ -660,7 +660,7 @@ function quiz_update_sumgrades($quiz) {
             ), 0)
             WHERE id = ?';
     $DB->execute($sql, array($quiz->id));
-    $quiz->sumgrades = $DB->get_field('quiz', 'sumgrades', array('id' => $quiz->id));
+    $quiz->sumgrades = $DB->get_field('hippotrack', 'sumgrades', array('id' => $quiz->id));
 
     if ($quiz->sumgrades < 0.000005 && quiz_has_attempts($quiz->id)) {
         // If the quiz has been attempted, and the sumgrades has been
@@ -669,7 +669,7 @@ function quiz_update_sumgrades($quiz) {
         quiz_set_grade(0, $quiz);
     }
 
-    $callbackclasses = \core_component::get_plugin_list_with_class('quiz', 'quiz_structure_modified');
+    $callbackclasses = \core_component::get_plugin_list_with_class('hippotrack', 'quiz_structure_modified');
     foreach ($callbackclasses as $callbackclass) {
         component_class_callback($callbackclass, 'callback', [$quiz->id]);
     }
@@ -723,7 +723,7 @@ function quiz_set_grade($newgrade, $quiz) {
     $transaction = $DB->start_delegated_transaction();
 
     // Update the quiz table.
-    $DB->set_field('quiz', 'grade', $newgrade, array('id' => $quiz->instance));
+    $DB->set_field('hippotrack', 'grade', $newgrade, array('id' => $quiz->instance));
 
     if ($oldgrade < 1) {
         // If the old grade was zero, we cannot rescale, we have to recompute.
@@ -758,7 +758,7 @@ function quiz_set_grade($newgrade, $quiz) {
 
     // Log quiz grade updated event.
     // We use $num + 0 as a trick to remove the useless 0 digits from decimals.
-    $cm = get_coursemodule_from_instance('quiz', $quiz->id);
+    $cm = get_coursemodule_from_instance('hippotrack', $quiz->id);
     $event = \mod_hippotrack\event\quiz_grade_updated::create([
         'context' => \context_module::instance($cm->id),
         'objectid' => $quiz->id,
@@ -799,10 +799,10 @@ function quiz_save_best_grade($quiz, $userid = null, $attempts = array()) {
 
     // Save the best grade in the database.
     if (is_null($bestgrade)) {
-        $DB->delete_records('quiz_grades', array('quiz' => $quiz->id, 'userid' => $userid));
+        $DB->delete_records('quiz_grades', array('hippotrack' => $quiz->id, 'userid' => $userid));
 
     } else if ($grade = $DB->get_record('quiz_grades',
-            array('quiz' => $quiz->id, 'userid' => $userid))) {
+            array('hippotrack' => $quiz->id, 'userid' => $userid))) {
         $grade->grade = $bestgrade;
         $grade->timemodified = time();
         $DB->update_record('quiz_grades', $grade);
@@ -1031,7 +1031,7 @@ function quiz_override_summary(stdClass $quiz, stdClass $cm, int $currentgroup =
 
     if ($currentgroup) {
         // Currently only interested in one group.
-        $groupcount = $DB->count_records('quiz_overrides', ['quiz' => $quiz->id, 'groupid' => $currentgroup]);
+        $groupcount = $DB->count_records('quiz_overrides', ['hippotrack' => $quiz->id, 'groupid' => $currentgroup]);
         $usercount = $DB->count_records_sql("
                 SELECT COUNT(1)
                   FROM {quiz_overrides} o
@@ -1277,10 +1277,10 @@ function quiz_calculate_best_attempt($quiz, $attempts) {
  */
 function quiz_get_grading_options() {
     return array(
-        QUIZ_GRADEHIGHEST => get_string('gradehighest', 'quiz'),
-        QUIZ_GRADEAVERAGE => get_string('gradeaverage', 'quiz'),
-        QUIZ_ATTEMPTFIRST => get_string('attemptfirst', 'quiz'),
-        QUIZ_ATTEMPTLAST  => get_string('attemptlast', 'quiz')
+        QUIZ_GRADEHIGHEST => get_string('gradehighest', 'hippotrack'),
+        QUIZ_GRADEAVERAGE => get_string('gradeaverage', 'hippotrack'),
+        QUIZ_ATTEMPTFIRST => get_string('attemptfirst', 'hippotrack'),
+        QUIZ_ATTEMPTLAST  => get_string('attemptlast', 'hippotrack')
     );
 }
 
@@ -1300,9 +1300,9 @@ function quiz_get_grading_option_name($option) {
  */
 function quiz_get_overdue_handling_options() {
     return array(
-        'autosubmit'  => get_string('overduehandlingautosubmit', 'quiz'),
-        'graceperiod' => get_string('overduehandlinggraceperiod', 'quiz'),
-        'autoabandon' => get_string('overduehandlingautoabandon', 'quiz'),
+        'autosubmit'  => get_string('overduehandlingautosubmit', 'hippotrack'),
+        'graceperiod' => get_string('overduehandlinggraceperiod', 'hippotrack'),
+        'autoabandon' => get_string('overduehandlingautoabandon', 'hippotrack'),
     );
 }
 
@@ -1312,9 +1312,9 @@ function quiz_get_overdue_handling_options() {
  */
 function quiz_get_user_image_options() {
     return array(
-        QUIZ_SHOWIMAGE_NONE  => get_string('shownoimage', 'quiz'),
-        QUIZ_SHOWIMAGE_SMALL => get_string('showsmallimage', 'quiz'),
-        QUIZ_SHOWIMAGE_LARGE => get_string('showlargeimage', 'quiz'),
+        QUIZ_SHOWIMAGE_NONE  => get_string('shownoimage', 'hippotrack'),
+        QUIZ_SHOWIMAGE_SMALL => get_string('showsmallimage', 'hippotrack'),
+        QUIZ_SHOWIMAGE_LARGE => get_string('showlargeimage', 'hippotrack'),
     );
 }
 
@@ -1362,10 +1362,10 @@ function quiz_get_user_timeclose($courseid) {
  */
 function quiz_questions_per_page_options() {
     $pageoptions = array();
-    $pageoptions[0] = get_string('neverallononepage', 'quiz');
-    $pageoptions[1] = get_string('everyquestion', 'quiz');
+    $pageoptions[0] = get_string('neverallononepage', 'hippotrack');
+    $pageoptions[1] = get_string('everyquestion', 'hippotrack');
     for ($i = 2; $i <= QUIZ_MAX_QPP_OPTION; ++$i) {
-        $pageoptions[$i] = get_string('everynquestions', 'quiz', $i);
+        $pageoptions[$i] = get_string('everynquestions', 'hippotrack', $i);
     }
     return $pageoptions;
 }
@@ -1378,13 +1378,13 @@ function quiz_questions_per_page_options() {
 function quiz_attempt_state_name($state) {
     switch ($state) {
         case quiz_attempt::IN_PROGRESS:
-            return get_string('stateinprogress', 'quiz');
+            return get_string('stateinprogress', 'hippotrack');
         case quiz_attempt::OVERDUE:
-            return get_string('stateoverdue', 'quiz');
+            return get_string('stateoverdue', 'hippotrack');
         case quiz_attempt::FINISHED:
-            return get_string('statefinished', 'quiz');
+            return get_string('statefinished', 'hippotrack');
         case quiz_attempt::ABANDONED:
-            return get_string('stateabandoned', 'quiz');
+            return get_string('stateabandoned', 'hippotrack');
         default:
             throw new coding_exception('Unknown quiz attempt state.');
     }
@@ -1558,20 +1558,20 @@ function quiz_get_review_options($quiz, $attempt, $context) {
     $options->readonly = true;
     $options->flags = quiz_get_flag_option($attempt, $context);
     if (!empty($attempt->id)) {
-        $options->questionreviewlink = new moodle_url('/mod/quiz/reviewquestion.php',
+        $options->questionreviewlink = new moodle_url('/mod/hippotrack/reviewquestion.php',
                 array('attempt' => $attempt->id));
     }
 
     // Show a link to the comment box only for closed attempts.
     if (!empty($attempt->id) && $attempt->state == quiz_attempt::FINISHED && !$attempt->preview &&
-            !is_null($context) && has_capability('mod/quiz:grade', $context)) {
+            !is_null($context) && has_capability('mod/hippotrack:grade', $context)) {
         $options->manualcomment = question_display_options::VISIBLE;
-        $options->manualcommentlink = new moodle_url('/mod/quiz/comment.php',
+        $options->manualcommentlink = new moodle_url('/mod/hippotrack/comment.php',
                 array('attempt' => $attempt->id));
     }
 
     if (!is_null($context) && !$attempt->preview &&
-            has_capability('mod/quiz:viewreports', $context) &&
+            has_capability('mod/hippotrack:viewreports', $context) &&
             has_capability('moodle/grade:viewhidden', $context)) {
         // People who can see reports and hidden grades should be shown everything,
         // except during preview when teachers want to see what students see.
@@ -1661,18 +1661,18 @@ function quiz_send_confirmation($recipient, $a, $studentisonline) {
 
     $eventdata->userfrom          = core_user::get_noreply_user();
     $eventdata->userto            = $recipient;
-    $eventdata->subject           = get_string('emailconfirmsubject', 'quiz', $a);
+    $eventdata->subject           = get_string('emailconfirmsubject', 'hippotrack', $a);
 
     if ($studentisonline) {
-        $eventdata->fullmessage = get_string('emailconfirmbody', 'quiz', $a);
+        $eventdata->fullmessage = get_string('emailconfirmbody', 'hippotrack', $a);
     } else {
-        $eventdata->fullmessage = get_string('emailconfirmbodyautosubmit', 'quiz', $a);
+        $eventdata->fullmessage = get_string('emailconfirmbodyautosubmit', 'hippotrack', $a);
     }
 
     $eventdata->fullmessageformat = FORMAT_PLAIN;
     $eventdata->fullmessagehtml   = '';
 
-    $eventdata->smallmessage      = get_string('emailconfirmsmall', 'quiz', $a);
+    $eventdata->smallmessage      = get_string('emailconfirmsmall', 'hippotrack', $a);
     $eventdata->contexturl        = $a->quizurl;
     $eventdata->contexturlname    = $a->quizname;
     $eventdata->customdata        = [
@@ -1710,12 +1710,12 @@ function quiz_send_notification($recipient, $submitter, $a) {
 
     $eventdata->userfrom          = $submitter;
     $eventdata->userto            = $recipient;
-    $eventdata->subject           = get_string('emailnotifysubject', 'quiz', $a);
-    $eventdata->fullmessage       = get_string('emailnotifybody', 'quiz', $a);
+    $eventdata->subject           = get_string('emailnotifysubject', 'hippotrack', $a);
+    $eventdata->fullmessage       = get_string('emailnotifybody', 'hippotrack', $a);
     $eventdata->fullmessageformat = FORMAT_PLAIN;
     $eventdata->fullmessagehtml   = '';
 
-    $eventdata->smallmessage      = get_string('emailnotifysmall', 'quiz', $a);
+    $eventdata->smallmessage      = get_string('emailnotifysmall', 'hippotrack', $a);
     $eventdata->contexturl        = $a->quizreviewurl;
     $eventdata->contexturlname    = $a->quizname;
     $userpicture = new user_picture($submitter);
@@ -1757,7 +1757,7 @@ function quiz_send_notification_messages($course, $quiz, $attempt, $context, $cm
     // Check for confirmation required.
     $sendconfirm = false;
     $notifyexcludeusers = '';
-    if (has_capability('mod/quiz:emailconfirmsubmission', $context, $submitter, false)) {
+    if (has_capability('mod/hippotrack:emailconfirmsubmission', $context, $submitter, false)) {
         $notifyexcludeusers = $submitter->id;
         $sendconfirm = true;
     }
@@ -1778,7 +1778,7 @@ function quiz_send_notification_messages($course, $quiz, $attempt, $context, $cm
     } else {
         $groups = '';
     }
-    $userstonotify = get_users_by_capability($context, 'mod/quiz:emailnotifysubmission',
+    $userstonotify = get_users_by_capability($context, 'mod/hippotrack:emailnotifysubmission',
             $notifyfields, '', '', '', $groups, $notifyexcludeusers, false, false, true);
 
     if (empty($userstonotify) && !$sendconfirm) {
@@ -1792,17 +1792,17 @@ function quiz_send_notification_messages($course, $quiz, $attempt, $context, $cm
     $a->courseshortname = $course->shortname;
     // Quiz info.
     $a->quizname        = $quiz->name;
-    $a->quizreporturl   = $CFG->wwwroot . '/mod/quiz/report.php?id=' . $cm->id;
+    $a->quizreporturl   = $CFG->wwwroot . '/mod/hippotrack/report.php?id=' . $cm->id;
     $a->quizreportlink  = '<a href="' . $a->quizreporturl . '">' .
             format_string($quiz->name) . ' report</a>';
-    $a->quizurl         = $CFG->wwwroot . '/mod/quiz/view.php?id=' . $cm->id;
+    $a->quizurl         = $CFG->wwwroot . '/mod/hippotrack/view.php?id=' . $cm->id;
     $a->quizlink        = '<a href="' . $a->quizurl . '">' . format_string($quiz->name) . '</a>';
     $a->quizid          = $quiz->id;
     $a->quizcmid        = $cm->id;
     // Attempt info.
     $a->submissiontime  = userdate($attempt->timefinish);
     $a->timetaken       = format_time($attempt->timefinish - $attempt->timestart);
-    $a->quizreviewurl   = $CFG->wwwroot . '/mod/quiz/review.php?attempt=' . $attempt->id;
+    $a->quizreviewurl   = $CFG->wwwroot . '/mod/hippotrack/review.php?attempt=' . $attempt->id;
     $a->quizreviewlink  = '<a href="' . $a->quizreviewurl . '">' .
             format_string($quiz->name) . ' review</a>';
     $a->attemptid       = $attempt->id;
@@ -1841,7 +1841,7 @@ function quiz_send_overdue_message($attemptobj) {
 
     $submitter = $DB->get_record('user', array('id' => $attemptobj->get_userid()), '*', MUST_EXIST);
 
-    if (!$attemptobj->has_capability('mod/quiz:emailwarnoverdue', $submitter->id, false)) {
+    if (!$attemptobj->has_capability('mod/hippotrack:emailwarnoverdue', $submitter->id, false)) {
         return; // Message not required.
     }
 
@@ -1891,12 +1891,12 @@ function quiz_send_overdue_message($attemptobj) {
 
     $eventdata->userfrom          = core_user::get_noreply_user();
     $eventdata->userto            = $submitter;
-    $eventdata->subject           = get_string('emailoverduesubject', 'quiz', $a);
-    $eventdata->fullmessage       = get_string('emailoverduebody', 'quiz', $a);
+    $eventdata->subject           = get_string('emailoverduesubject', 'hippotrack', $a);
+    $eventdata->fullmessage       = get_string('emailoverduebody', 'hippotrack', $a);
     $eventdata->fullmessageformat = FORMAT_PLAIN;
     $eventdata->fullmessagehtml   = '';
 
-    $eventdata->smallmessage      = get_string('emailoverduesmall', 'quiz', $a);
+    $eventdata->smallmessage      = get_string('emailoverduesmall', 'hippotrack', $a);
     $eventdata->contexturl        = $a->quizurl;
     $eventdata->contexturlname    = $a->quizname;
     $eventdata->customdata        = [
@@ -1921,8 +1921,8 @@ function quiz_attempt_submitted_handler($event) {
 
     $course  = $DB->get_record('course', array('id' => $event->courseid));
     $attempt = $event->get_record_snapshot('quiz_attempts', $event->objectid);
-    $quiz    = $event->get_record_snapshot('quiz', $attempt->quiz);
-    $cm      = get_coursemodule_from_id('quiz', $event->get_context()->instanceid, $event->courseid);
+    $quiz    = $event->get_record_snapshot('hippotrack', $attempt->quiz);
+    $cm      = get_coursemodule_from_id('hippotrack', $event->get_context()->instanceid, $event->courseid);
     $eventdata = $event->get_data();
 
     if (!($course && $quiz && $cm && $attempt)) {
@@ -1959,7 +1959,7 @@ function quiz_send_notify_manual_graded_message(quiz_attempt $attemptobj, object
     $a->coursename         = format_string($attemptobj->get_course()->fullname);
     // Quiz info.
     $a->quizname           = $quizname;
-    $a->quizurl            = $CFG->wwwroot . '/mod/quiz/view.php?id=' . $attemptobj->get_cmid();
+    $a->quizurl            = $CFG->wwwroot . '/mod/hippotrack/view.php?id=' . $attemptobj->get_cmid();
 
     // Attempt info.
     $a->attempttimefinish  = userdate($attemptobj->get_attempt()->timefinish);
@@ -1973,8 +1973,8 @@ function quiz_send_notify_manual_graded_message(quiz_attempt $attemptobj, object
     $eventdata->userfrom = core_user::get_noreply_user();
     $eventdata->userto = $userto;
 
-    $eventdata->subject = get_string('emailmanualgradedsubject', 'quiz', $a);
-    $eventdata->fullmessage = get_string('emailmanualgradedbody', 'quiz', $a);
+    $eventdata->subject = get_string('emailmanualgradedsubject', 'hippotrack', $a);
+    $eventdata->fullmessage = get_string('emailmanualgradedbody', 'hippotrack', $a);
     $eventdata->fullmessageformat = FORMAT_PLAIN;
     $eventdata->fullmessagehtml = '';
 
@@ -2051,7 +2051,7 @@ function quiz_process_group_deleted_in_course($courseid) {
     foreach ($records as $record) {
         $cache->delete("{$record->quiz}_g_{$record->groupid}");
     }
-    quiz_update_open_attempts(['quizid' => array_unique(array_column($records, 'quiz'))]);
+    quiz_update_open_attempts(['quizid' => array_unique(array_column($records, 'hippotrack'))]);
 }
 
 /**
@@ -2079,15 +2079,15 @@ function quiz_get_js_module() {
 
     return array(
         'name' => 'mod_hippotrack',
-        'fullpath' => '/mod/quiz/module.js',
+        'fullpath' => '/mod/hippotrack/module.js',
         'requires' => array('base', 'dom', 'event-delegate', 'event-key',
                 'core_question_engine'),
         'strings' => array(
             array('cancel', 'moodle'),
             array('flagged', 'question'),
-            array('functiondisabledbysecuremode', 'quiz'),
-            array('startattempt', 'quiz'),
-            array('timesup', 'quiz'),
+            array('functiondisabledbysecuremode', 'hippotrack'),
+            array('startattempt', 'hippotrack'),
+            array('timesup', 'hippotrack'),
         ),
     );
 }
@@ -2342,7 +2342,7 @@ function quiz_add_quiz_question($questionid, $quiz, $page = 0, $maxmark = null) 
     global $DB;
 
     if (!isset($quiz->cmid)) {
-        $cm = get_coursemodule_from_instance('quiz', $quiz->id, $quiz->course);
+        $cm = get_coursemodule_from_instance('hippotrack', $quiz->id, $quiz->course);
         $quiz->cmid = $cm->id;
     }
 
@@ -2479,7 +2479,7 @@ function quiz_add_quiz_question($questionid, $quiz, $page = 0, $maxmark = null) 
     $trans->allow_commit();
 
     // Log slot created event.
-    $cm = get_coursemodule_from_instance('quiz', $quiz->id);
+    $cm = get_coursemodule_from_instance('hippotrack', $quiz->id);
     $event = \mod_hippotrack\event\slot_created::create([
         'context' => context_module::instance($cm->id),
         'objectid' => $slotid,
@@ -2551,7 +2551,7 @@ function quiz_add_random_questions($quiz, $addonpage, $categoryid, $number,
         }
 
         if (!isset($quiz->cmid)) {
-            $cm = get_coursemodule_from_instance('quiz', $quiz->id, $quiz->course);
+            $cm = get_coursemodule_from_instance('hippotrack', $quiz->id, $quiz->course);
             $quiz->cmid = $cm->id;
         }
 
@@ -2586,7 +2586,7 @@ function quiz_view($quiz, $course, $cm, $context) {
     );
 
     $event = \mod_hippotrack\event\course_module_viewed::create($params);
-    $event->add_record_snapshot('quiz', $quiz);
+    $event->add_record_snapshot('hippotrack', $quiz);
     $event->trigger();
 
     // Completion.
@@ -2616,7 +2616,7 @@ function quiz_validate_new_attempt(quiz $quizobj, quiz_access_manager $accessman
 
     // Check capabilities.
     if (!$quizobj->is_preview_user()) {
-        $quizobj->require_capability('mod/quiz:attempt');
+        $quizobj->require_capability('mod/hippotrack:attempt');
     }
 
     // Check to see if a new preview was requested.
@@ -2624,7 +2624,7 @@ function quiz_validate_new_attempt(quiz $quizobj, quiz_access_manager $accessman
         // To force the creation of a new preview, we mark the current attempt (if any)
         // as abandoned. It will then automatically be deleted below.
         $DB->set_field('quiz_attempts', 'state', quiz_attempt::ABANDONED,
-                array('quiz' => $quizobj->get_quizid(), 'userid' => $USER->id));
+                array('hippotrack' => $quizobj->get_quizid(), 'userid' => $USER->id));
     }
 
     // Look for an existing attempt.
@@ -2702,7 +2702,7 @@ function quiz_prepare_and_start_new_attempt(quiz $quizobj, $attemptnumber, $last
         $userid = $USER->id;
         $ispreviewuser = $quizobj->is_preview_user();
     } else {
-        $ispreviewuser = has_capability('mod/quiz:preview', $quizobj->get_context(), $userid);
+        $ispreviewuser = has_capability('mod/hippotrack:preview', $quizobj->get_context(), $userid);
     }
     // Delete any previous preview attempts belonging to this user.
     quiz_delete_previews($quizobj->get_quiz(), $userid);
@@ -2748,7 +2748,7 @@ function quiz_is_overriden_calendar_event(\calendar_event $event) {
         return false;
     }
 
-    if ($event->modulename != 'quiz') {
+    if ($event->modulename != 'hippotrack') {
         return false;
     }
 
@@ -2761,7 +2761,7 @@ function quiz_is_overriden_calendar_event(\calendar_event $event) {
     }
 
     $overrideparams = [
-        'quiz' => $event->instance
+        'hippotrack' => $event->instance
     ];
 
     if (isset($event->groupid)) {
@@ -2863,16 +2863,16 @@ function quiz_create_attempt_handling_errors($attemptid, $cmid = null) {
         $attempobj = quiz_attempt::create($attemptid);
     } catch (moodle_exception $e) {
         if (!empty($cmid)) {
-            list($course, $cm) = get_course_and_cm_from_cmid($cmid, 'quiz');
-            $continuelink = new moodle_url('/mod/quiz/view.php', array('id' => $cmid));
+            list($course, $cm) = get_course_and_cm_from_cmid($cmid, 'hippotrack');
+            $continuelink = new moodle_url('/mod/hippotrack/view.php', array('id' => $cmid));
             $context = context_module::instance($cm->id);
-            if (has_capability('mod/quiz:preview', $context)) {
-                throw new moodle_exception('attempterrorcontentchange', 'quiz', $continuelink);
+            if (has_capability('mod/hippotrack:preview', $context)) {
+                throw new moodle_exception('attempterrorcontentchange', 'hippotrack', $continuelink);
             } else {
-                throw new moodle_exception('attempterrorcontentchangeforuser', 'quiz', $continuelink);
+                throw new moodle_exception('attempterrorcontentchangeforuser', 'hippotrack', $continuelink);
             }
         } else {
-            throw new moodle_exception('attempterrorinvalid', 'quiz');
+            throw new moodle_exception('attempterrorinvalid', 'hippotrack');
         }
     }
     if (!empty($cmid) && $attempobj->get_cmid() != $cmid) {

@@ -156,7 +156,7 @@ class access_manager_test extends \advanced_testcase {
         $configkey = quiz_settings::get_record(['quizid' => $this->quiz->id])->get_config_key();
 
         // Set up dummy request.
-        $FULLME = 'https://example.com/moodle/mod/quiz/attempt.php?attemptid=123&page=4';
+        $FULLME = 'https://example.com/moodle/mod/hippotrack/attempt.php?attemptid=123&page=4';
         $expectedhash = hash('sha256', $FULLME . $configkey);
         $_SERVER['HTTP_X_SAFEEXAMBROWSER_CONFIGKEYHASH'] = $expectedhash;
 
@@ -251,7 +251,7 @@ class access_manager_test extends \advanced_testcase {
         $accessmanager = $this->get_access_manager();
 
         // Set up dummy request.
-        $FULLME = 'https://example.com/moodle/mod/quiz/attempt.php?attemptid=123&page=4';
+        $FULLME = 'https://example.com/moodle/mod/hippotrack/attempt.php?attemptid=123&page=4';
         $expectedhash = hash('sha256', $FULLME . $browserexamkey);
         $_SERVER['HTTP_X_SAFEEXAMBROWSER_REQUESTHASH'] = $expectedhash;
         $this->assertTrue($accessmanager->validate_browser_exam_key());
@@ -450,7 +450,7 @@ class access_manager_test extends \advanced_testcase {
         $configkey = $accessmanager->get_valid_config_key();
 
         // Set up dummy request.
-        $FULLME = 'https://example.com/moodle/mod/quiz/attempt.php?attemptid=123&page=4';
+        $FULLME = 'https://example.com/moodle/mod/hippotrack/attempt.php?attemptid=123&page=4';
         $expectedhash = hash('sha256', $FULLME . $configkey);
         $_SERVER['HTTP_X_SAFEEXAMBROWSER_CONFIGKEYHASH'] = $expectedhash;
 

@@ -70,7 +70,7 @@ class rule_test extends \advanced_testcase {
      * @return string
      */
     private function get_seb_launch_link() {
-        return 'sebs://www.example.com/moodle/mod/quiz/accessrule/seb/config.php';
+        return 'sebs://www.example.com/moodle/mod/hippotrack/accessrule/seb/config.php';
     }
 
     /**
@@ -79,7 +79,7 @@ class rule_test extends \advanced_testcase {
      * @return string
      */
     private function get_seb_config_download_link() {
-        return 'https://www.example.com/moodle/mod/quiz/accessrule/seb/config.php';
+        return 'https://www.example.com/moodle/mod/hippotrack/accessrule/seb/config.php';
     }
 
     /**
@@ -301,7 +301,7 @@ class rule_test extends \advanced_testcase {
         $this->setAdminUser();
 
         $this->quiz = $this->create_test_quiz($this->course, settings_provider::USE_SEB_CONFIG_MANUALLY);
-        $DB->delete_records('quiz', ['id' => $this->quiz->id]);
+        $DB->delete_records('hippotrack', ['id' => $this->quiz->id]);
         $this->quiz->seb_requiresafeexambrowser = settings_provider::USE_SEB_NO;
         quizaccess_seb::save_settings($this->quiz);
     }
@@ -369,7 +369,7 @@ class rule_test extends \advanced_testcase {
         $this->quiz = $this->create_test_quiz($this->course, settings_provider::USE_SEB_CONFIG_MANUALLY);
 
         // Set up dummy request.
-        $FULLME = 'https://example.com/moodle/mod/quiz/attempt.php?attemptid=123&page=4';
+        $FULLME = 'https://example.com/moodle/mod/hippotrack/attempt.php?attemptid=123&page=4';
         $_SERVER['HTTP_X_SAFEEXAMBROWSER_CONFIGKEYHASH'] = 'Broken config key';
 
         $user = $this->getDataGenerator()->create_user();
@@ -395,7 +395,7 @@ class rule_test extends \advanced_testcase {
         $quizsettings->save();
 
         // Set up dummy request.
-        $FULLME = 'https://example.com/moodle/mod/quiz/attempt.php?attemptid=123&page=4';
+        $FULLME = 'https://example.com/moodle/mod/hippotrack/attempt.php?attemptid=123&page=4';
         $_SERVER['HTTP_X_SAFEEXAMBROWSER_CONFIGKEYHASH'] = 'Broken config key';
 
         $user = $this->getDataGenerator()->create_user();
@@ -420,7 +420,7 @@ class rule_test extends \advanced_testcase {
         $quizsettings->save();
 
         // Set up dummy request.
-        $FULLME = 'https://example.com/moodle/mod/quiz/attempt.php?attemptid=123&page=4';
+        $FULLME = 'https://example.com/moodle/mod/hippotrack/attempt.php?attemptid=123&page=4';
         $_SERVER['HTTP_X_SAFEEXAMBROWSER_CONFIGKEYHASH'] = 'Broken config key';
 
         $user = $this->getDataGenerator()->create_user();
@@ -445,7 +445,7 @@ class rule_test extends \advanced_testcase {
         $quizsettings = quiz_settings::get_record(['quizid' => $this->quiz->id]);
 
         // Set up dummy request.
-        $FULLME = 'https://example.com/moodle/mod/quiz/attempt.php?attemptid=123&page=4';
+        $FULLME = 'https://example.com/moodle/mod/hippotrack/attempt.php?attemptid=123&page=4';
         $expectedhash = hash('sha256', $FULLME . $quizsettings->get_config_key());
         $_SERVER['HTTP_X_SAFEEXAMBROWSER_CONFIGKEYHASH'] = $expectedhash;
 
@@ -472,7 +472,7 @@ class rule_test extends \advanced_testcase {
         $this->setUser($user);
 
         // Set up dummy request.
-        $FULLME = 'https://example.com/moodle/mod/quiz/attempt.php?attemptid=123&page=4';
+        $FULLME = 'https://example.com/moodle/mod/hippotrack/attempt.php?attemptid=123&page=4';
         $expectedhash = hash('sha256', $FULLME . $quizsettings->get_config_key());
         $_SERVER['HTTP_X_SAFEEXAMBROWSER_CONFIGKEYHASH'] = $expectedhash;
 
@@ -500,7 +500,7 @@ class rule_test extends \advanced_testcase {
         $this->setUser($user);
 
         // Set up dummy request.
-        $FULLME = 'https://example.com/moodle/mod/quiz/attempt.php?attemptid=123&page=4';
+        $FULLME = 'https://example.com/moodle/mod/hippotrack/attempt.php?attemptid=123&page=4';
         $expectedhash = hash('sha256', $FULLME . $quizsettings->get_config_key());
         $_SERVER['HTTP_X_SAFEEXAMBROWSER_CONFIGKEYHASH'] = $expectedhash;
 
@@ -528,7 +528,7 @@ class rule_test extends \advanced_testcase {
         $quizsettings->save();
 
         // Set up dummy request.
-        $FULLME = 'https://example.com/moodle/mod/quiz/attempt.php?attemptid=123&page=4';
+        $FULLME = 'https://example.com/moodle/mod/hippotrack/attempt.php?attemptid=123&page=4';
         $expectedhash = hash('sha256', $FULLME . $browserexamkey);
         $_SERVER['HTTP_X_SAFEEXAMBROWSER_REQUESTHASH'] = $expectedhash;
         $_SERVER['HTTP_USER_AGENT'] = 'SEB';
@@ -556,7 +556,7 @@ class rule_test extends \advanced_testcase {
         $quizsettings->save();
 
         // Set up dummy request.
-        $FULLME = 'https://example.com/moodle/mod/quiz/attempt.php?attemptid=123&page=4';
+        $FULLME = 'https://example.com/moodle/mod/hippotrack/attempt.php?attemptid=123&page=4';
         $expectedbrowserkey = hash('sha256', $FULLME . $browserexamkey);
         $_SERVER['HTTP_X_SAFEEXAMBROWSER_REQUESTHASH'] = $expectedbrowserkey;
         $expectedconfigkey = hash('sha256', $FULLME . $quizsettings->get_config_key());
@@ -674,7 +674,7 @@ class rule_test extends \advanced_testcase {
         $quizsettings->save();
 
         // Set up dummy request.
-        $FULLME = 'https://example.com/moodle/mod/quiz/attempt.php?attemptid=123&page=4';
+        $FULLME = 'https://example.com/moodle/mod/hippotrack/attempt.php?attemptid=123&page=4';
         $expectedhash = hash('sha256', $FULLME . $quizsettings->get_config_key());
         $_SERVER['HTTP_X_SAFEEXAMBROWSER_CONFIGKEYHASH'] = $expectedhash;
 
@@ -705,7 +705,7 @@ class rule_test extends \advanced_testcase {
         $quizsettings->save();
 
         // Set up dummy request.
-        $FULLME = 'https://example.com/moodle/mod/quiz/attempt.php?attemptid=123&page=4';
+        $FULLME = 'https://example.com/moodle/mod/hippotrack/attempt.php?attemptid=123&page=4';
         $expectedhash = hash('sha256', $FULLME . $quizsettings->get_config_key());
         $_SERVER['HTTP_X_SAFEEXAMBROWSER_CONFIGKEYHASH'] = $expectedhash;
 
@@ -802,7 +802,7 @@ class rule_test extends \advanced_testcase {
         $quizsettings->save();
 
         // Set up dummy request.
-        $FULLME = 'https://example.com/moodle/mod/quiz/attempt.php?attemptid=123&page=4';
+        $FULLME = 'https://example.com/moodle/mod/hippotrack/attempt.php?attemptid=123&page=4';
         $expectedhash = hash('sha256', $FULLME . $quizsettings->get_config_key());
         $_SERVER['HTTP_X_SAFEEXAMBROWSER_CONFIGKEYHASH'] = $expectedhash;
         $_SERVER['HTTP_USER_AGENT'] = 'WRONG_TEST_SITE';
@@ -830,7 +830,7 @@ class rule_test extends \advanced_testcase {
         $quizsettings->save();
 
         // Set up dummy request.
-        $FULLME = 'https://example.com/moodle/mod/quiz/attempt.php?attemptid=123&page=4';
+        $FULLME = 'https://example.com/moodle/mod/hippotrack/attempt.php?attemptid=123&page=4';
         $expectedhash = hash('sha256', $FULLME . $quizsettings->get_config_key());
         $_SERVER['HTTP_X_SAFEEXAMBROWSER_CONFIGKEYHASH'] = $expectedhash;
         $_SERVER['HTTP_USER_AGENT'] = 'WRONG_TEST_SITE';

@@ -22,8 +22,8 @@ use qubaid_condition;
 
 defined('MOODLE_INTERNAL') || die();
 
-require_once($CFG->dirroot . '/mod/quiz/accessmanager.php');
-require_once($CFG->dirroot . '/mod/quiz/attemptlib.php');
+require_once($CFG->dirroot . '/mod/hippotrack/accessmanager.php');
+require_once($CFG->dirroot . '/mod/hippotrack/attemptlib.php');
 
 /**
  * Helper class for question bank and its associated data.
@@ -178,14 +178,14 @@ class qbank_helper {
                 $slot->randomrecurse = (bool) $filtercondition->includingsubcategories;
                 $slot->randomtags = isset($filtercondition->tags) ? (array) $filtercondition->tags : [];
                 $slot->qtype = 'random';
-                $slot->name = get_string('random', 'quiz');
+                $slot->name = get_string('random', 'hippotrack');
                 $slot->length = 1;
             } else if ($slot->qtype === null) {
                 // This question must have gone missing. Put in a placeholder.
                 $slot->questionid = 's' . $slot->id; // Sometimes this is used as an array key, so needs to be unique.
                 $slot->category = 0;
                 $slot->qtype = 'missingtype';
-                $slot->name = get_string('missingquestion', 'quiz');
+                $slot->name = get_string('missingquestion', 'hippotrack');
                 $slot->questiontext = ' ';
                 $slot->questiontextformat = FORMAT_HTML;
                 $slot->length = 1;
@@ -253,7 +253,7 @@ class qbank_helper {
                 $slotdata->randomrecurse, self::get_tag_ids_for_slot($slotdata));
 
         if ($newqusetionid === null) {
-            throw new \moodle_exception('notenoughrandomquestions', 'quiz');
+            throw new \moodle_exception('notenoughrandomquestions', 'hippotrack');
         }
         return $newqusetionid;
     }

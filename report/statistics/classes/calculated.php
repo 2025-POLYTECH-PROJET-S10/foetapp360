@@ -149,10 +149,10 @@ class calculated {
             $quizinfo[get_string('idnumbermod')] = $cm->idnumber;
         }
         if ($quiz->timeopen) {
-            $quizinfo[get_string('quizopen', 'quiz')] = userdate($quiz->timeopen);
+            $quizinfo[get_string('quizopen', 'hippotrack')] = userdate($quiz->timeopen);
         }
         if ($quiz->timeclose) {
-            $quizinfo[get_string('quizclose', 'quiz')] = userdate($quiz->timeclose);
+            $quizinfo[get_string('quizclose', 'hippotrack')] = userdate($quiz->timeclose);
         }
         if ($quiz->timeopen && $quiz->timeclose) {
             $quizinfo[get_string('duration', 'quiz_statistics')] =

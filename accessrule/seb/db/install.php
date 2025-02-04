@@ -25,7 +25,7 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-require_once($CFG->dirroot  . '/mod/quiz/accessrule/seb/lib.php');
+require_once($CFG->dirroot  . '/mod/hippotrack/accessrule/seb/lib.php');
 
 /**
  * Custom code to be run on installing the plugin.
@@ -36,16 +36,16 @@ function xmldb_quizaccess_seb_install() {
     // Reconfigure all existing quizzes to use a new quizaccess_seb.
     $params = ['browsersecurity' => 'safebrowser'];
 
-    $total = $DB->count_records('quiz', $params);
+    $total = $DB->count_records('hippotrack', $params);
     if ($total > 0) {
-        $rs = $DB->get_recordset('quiz', $params);
+        $rs = $DB->get_recordset('hippotrack', $params);
 
         $i = 0;
         $pbar = new progress_bar('updatequizrecords', 500, true);
 
         foreach ($rs as $quiz) {
             if (!$DB->record_exists('quizaccess_seb_quizsettings', ['quizid' => $quiz->id])) {
-                $cm = get_coursemodule_from_instance('quiz', $quiz->id, $quiz->course);
+                $cm = get_coursemodule_from_instance('hippotrack', $quiz->id, $quiz->course);
 
                 $sebsettings = new stdClass();
 
@@ -81,7 +81,7 @@ function xmldb_quizaccess_seb_install() {
                 $DB->insert_record('quizaccess_seb_quizsettings', $sebsettings);
 
                 $quiz->browsersecurity = '-';
-                $DB->update_record('quiz', $quiz);
+                $DB->update_record('hippotrack', $quiz);
             }
 
             $i++;

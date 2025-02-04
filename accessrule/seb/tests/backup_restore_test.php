@@ -270,7 +270,7 @@ class backup_restore_test extends \advanced_testcase {
         $this->assertEquals(1, quiz_settings::count_records());
         $this->assertEquals(1, template::count_records());
 
-        $newxml = file_get_contents($CFG->dirroot . '/mod/quiz/accessrule/seb/tests/fixtures/simpleunencrypted.seb');
+        $newxml = file_get_contents($CFG->dirroot . '/mod/hippotrack/accessrule/seb/tests/fixtures/simpleunencrypted.seb');
         $this->template->set('content', $newxml);
         $this->template->save();
 

@@ -19,10 +19,10 @@ namespace quiz_statistics;
 defined('MOODLE_INTERNAL') || die();
 
 global $CFG;
-require_once($CFG->dirroot . '/mod/quiz/report/statistics/report.php');
-require_once($CFG->dirroot . '/mod/quiz/report/statistics/statisticslib.php');
-require_once($CFG->dirroot . '/mod/quiz/report/reportlib.php');
-require_once($CFG->dirroot . '/mod/quiz/tests/quiz_question_helper_test_trait.php');
+require_once($CFG->dirroot . '/mod/hippotrack/report/statistics/report.php');
+require_once($CFG->dirroot . '/mod/hippotrack/report/statistics/statisticslib.php');
+require_once($CFG->dirroot . '/mod/hippotrack/report/reportlib.php');
+require_once($CFG->dirroot . '/mod/hippotrack/tests/quiz_question_helper_test_trait.php');
 
 /**
  * Tests for statistics report

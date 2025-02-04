@@ -43,9 +43,9 @@ class quiz_question_bank_view_test extends \advanced_testcase {
 
         // Create a course and a quiz.
         $course = $generator->create_course();
-        $quiz = $this->getDataGenerator()->create_module('quiz', array('course' => $course->id));
+        $quiz = $this->getDataGenerator()->create_module('hippotrack', array('course' => $course->id));
         $context = \context_module::instance($quiz->cmid);
-        $cm = get_coursemodule_from_instance('quiz', $quiz->id);
+        $cm = get_coursemodule_from_instance('hippotrack', $quiz->id);
 
         // Create a question in the default category.
         $contexts = new question_edit_contexts($context);

@@ -27,15 +27,15 @@
 
 
 require_once(__DIR__ . '/../../config.php');
-require_once($CFG->dirroot . '/mod/quiz/locallib.php');
-require_once($CFG->dirroot . '/mod/quiz/report/reportlib.php');
+require_once($CFG->dirroot . '/mod/hippotrack/locallib.php');
+require_once($CFG->dirroot . '/mod/hippotrack/report/reportlib.php');
 
 $attemptid = required_param('attempt', PARAM_INT);
 $page      = optional_param('page', 0, PARAM_INT);
 $showall   = optional_param('showall', null, PARAM_BOOL);
 $cmid      = optional_param('cmid', null, PARAM_INT);
 
-$url = new moodle_url('/mod/quiz/review.php', array('attempt'=>$attemptid));
+$url = new moodle_url('/mod/hippotrack/review.php', array('attempt'=>$attemptid));
 if ($page !== 0) {
     $url->param('page', $page);
 } else if ($showall) {
@@ -128,7 +128,7 @@ if ($attempt->state == quiz_attempt::FINISHED) {
         $timetaken = "-";
     }
 } else {
-    $timetaken = get_string('unfinished', 'quiz');
+    $timetaken = get_string('unfinished', 'hippotrack');
 }
 
 // Prepare summary informat about the whole attempt.
@@ -146,12 +146,12 @@ if (!$attemptobj->get_quiz()->showuserpicture && $attemptobj->get_userid() != $U
     );
 }
 
-if ($attemptobj->has_capability('mod/quiz:viewreports')) {
+if ($attemptobj->has_capability('mod/hippotrack:viewreports')) {
     $attemptlist = $attemptobj->links_to_other_attempts($attemptobj->review_url(null, $page,
             $showall));
     if ($attemptlist) {
         $summarydata['attemptlist'] = array(
-            'title'   => get_string('attempts', 'quiz'),
+            'title'   => get_string('attempts', 'hippotrack'),
             'content' => $attemptlist,
         );
     }
@@ -159,29 +159,29 @@ if ($attemptobj->has_capability('mod/quiz:viewreports')) {
 
 // Timing information.
 $summarydata['startedon'] = array(
-    'title'   => get_string('startedon', 'quiz'),
+    'title'   => get_string('startedon', 'hippotrack'),
     'content' => userdate($attempt->timestart),
 );
 
 $summarydata['state'] = array(
-    'title'   => get_string('attemptstate', 'quiz'),
+    'title'   => get_string('attemptstate', 'hippotrack'),
     'content' => quiz_attempt::state_name($attempt->state),
 );
 
 if ($attempt->state == quiz_attempt::FINISHED) {
     $summarydata['completedon'] = array(
-        'title'   => get_string('completedon', 'quiz'),
+        'title'   => get_string('completedon', 'hippotrack'),
         'content' => userdate($attempt->timefinish),
     );
     $summarydata['timetaken'] = array(
-        'title'   => get_string('timetaken', 'quiz'),
+        'title'   => get_string('timetaken', 'hippotrack'),
         'content' => $timetaken,
     );
 }
 
 if (!empty($overtime)) {
     $summarydata['overdue'] = array(
-        'title'   => get_string('overdue', 'quiz'),
+        'title'   => get_string('overdue', 'hippotrack'),
         'content' => $overtime,
     );
 }
@@ -195,7 +195,7 @@ if ($options->marks >= question_display_options::MARK_AND_MAX && quiz_has_grades
 
     } else if (is_null($grade)) {
         $summarydata['grade'] = array(
-            'title'   => get_string('grade', 'quiz'),
+            'title'   => get_string('grade', 'hippotrack'),
             'content' => quiz_format_grade($quiz, $grade),
         );
 
@@ -206,8 +206,8 @@ if ($options->marks >= question_display_options::MARK_AND_MAX && quiz_has_grades
             $a->grade = quiz_format_grade($quiz, $attempt->sumgrades);
             $a->maxgrade = quiz_format_grade($quiz, $quiz->sumgrades);
             $summarydata['marks'] = array(
-                'title'   => get_string('marks', 'quiz'),
-                'content' => get_string('outofshort', 'quiz', $a),
+                'title'   => get_string('marks', 'hippotrack'),
+                'content' => get_string('outofshort', 'hippotrack', $a),
             );
         }
 
@@ -221,12 +221,12 @@ if ($options->marks >= question_display_options::MARK_AND_MAX && quiz_has_grades
             $a->percent = html_writer::tag('b', format_float(
                     $attempt->sumgrades * 100 / $quiz->sumgrades,
                     $quiz->decimalpoints, true, true));
-            $formattedgrade = get_string('outofpercent', 'quiz', $a);
+            $formattedgrade = get_string('outofpercent', 'hippotrack', $a);
         } else {
-            $formattedgrade = get_string('outof', 'quiz', $a);
+            $formattedgrade = get_string('outof', 'hippotrack', $a);
         }
         $summarydata['grade'] = array(
-            'title'   => get_string('grade', 'quiz'),
+            'title'   => get_string('grade', 'hippotrack'),
             'content' => $formattedgrade,
         );
     }
@@ -239,7 +239,7 @@ $summarydata = array_merge($summarydata, $attemptobj->get_additional_summary_dat
 $feedback = $attemptobj->get_overall_feedback($grade);
 if ($options->overallfeedback && $feedback) {
     $summarydata['feedback'] = array(
-        'title'   => get_string('feedback', 'quiz'),
+        'title'   => get_string('feedback', 'hippotrack'),
         'content' => $feedback,
     );
 }

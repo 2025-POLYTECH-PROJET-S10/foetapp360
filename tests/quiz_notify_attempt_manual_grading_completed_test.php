@@ -84,9 +84,9 @@ class quiz_notify_attempt_manual_grading_completed_test extends advanced_testcas
 
         // Setup test data.
         $this->course = $this->getDataGenerator()->create_course();
-        $this->quiz = $this->getDataGenerator()->create_module('quiz', ['course' => $this->course->id]);
+        $this->quiz = $this->getDataGenerator()->create_module('hippotrack', ['course' => $this->course->id]);
         $this->context = context_module::instance($this->quiz->cmid);
-        $this->cm = get_coursemodule_from_instance('quiz', $this->quiz->id);
+        $this->cm = get_coursemodule_from_instance('hippotrack', $this->quiz->id);
 
         // Create users.
         $this->student = self::getDataGenerator()->create_user();
@@ -98,7 +98,7 @@ class quiz_notify_attempt_manual_grading_completed_test extends advanced_testcas
 
         // Allow student to receive messages.
         $coursecontext = context_course::instance($this->course->id);
-        assign_capability('mod/quiz:emailnotifyattemptgraded', CAP_ALLOW, $studentrole->id, $coursecontext, true);
+        assign_capability('mod/hippotrack:emailnotifyattemptgraded', CAP_ALLOW, $studentrole->id, $coursecontext, true);
 
         $this->getDataGenerator()->enrol_user($this->student->id, $this->course->id, $studentrole->id);
         $this->getDataGenerator()->enrol_user($this->teacher->id, $this->course->id, $teacherrole->id);

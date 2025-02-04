@@ -25,7 +25,7 @@ use question_display_options;
 use mod_hippotrack_display_options;
 use quiz_attempt;
 
-require_once($CFG->dirroot . '/mod/quiz/locallib.php');
+require_once($CFG->dirroot . '/mod/hippotrack/locallib.php');
 
 /**
  * Cron Quiz Notify Attempts Graded Task.
@@ -92,8 +92,8 @@ class quiz_notify_attempt_manual_grading_completed extends \core\task\scheduled_
             mtrace('Checking attempt ' . $attempt->id . ' at quiz ' . $attempt->quiz . '.');
 
             if (!$quiz || $attempt->quiz != $quiz->id) {
-                $quiz = $DB->get_record('quiz', ['id' => $attempt->quiz], '*', MUST_EXIST);
-                $cm = get_coursemodule_from_instance('quiz', $attempt->quiz);
+                $quiz = $DB->get_record('hippotrack', ['id' => $attempt->quiz], '*', MUST_EXIST);
+                $cm = get_coursemodule_from_instance('hippotrack', $attempt->quiz);
             }
 
             if (!$course || $course->id != $quiz->course) {
@@ -101,7 +101,7 @@ class quiz_notify_attempt_manual_grading_completed extends \core\task\scheduled_
                 $coursecontext = context_course::instance($quiz->course);
             }
 
-            $quiz = quiz_update_effective_access($quiz, $attempt->userid);
+            $quiz = quizz_update_effective_access($quiz, $attempt->userid);
             $attemptobj = new quiz_attempt($attempt, $quiz, $cm, $course, false);
             $options = mod_hippotrack_display_options::make_from_quiz($quiz, quiz_attempt_state($quiz, $attempt));
 
@@ -111,7 +111,7 @@ class quiz_notify_attempt_manual_grading_completed extends \core\task\scheduled_
                 continue;
             }
 
-            if (!has_capability('mod/quiz:emailnotifyattemptgraded', $coursecontext, $attempt->userid, false)) {
+            if (!has_capability('mod/hippotrack:emailnotifyattemptgraded', $coursecontext, $attempt->userid, false)) {
                 // User not eligible to get a notification. Mark them done while doing nothing.
                 $DB->set_field('quiz_attempts', 'gradednotificationsenttime', $attempt->timefinish, ['id' => $attempt->id]);
                 continue;
@@ -140,7 +140,7 @@ class quiz_notify_attempt_manual_grading_completed extends \core\task\scheduled_
     public function get_list_of_attempts(): moodle_recordset {
         global $DB;
 
-        $delaytime = $this->get_time() - get_config('quiz', 'notifyattemptgradeddelay');
+        $delaytime = $this->get_time() - get_config('hippotrack', 'notifyattemptgradeddelay');
 
         $sql = "SELECT qa.*
                   FROM {quiz_attempts} qa

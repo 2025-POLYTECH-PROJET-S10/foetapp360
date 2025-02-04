@@ -47,7 +47,7 @@ function quiz_completion_check_passing_grade_or_all_attempts($course, $cm, $user
     // Check for passing grade.
     require_once($CFG->libdir . '/gradelib.php');
     $item = grade_item::fetch(array('courseid' => $course->id, 'itemtype' => 'mod',
-            'itemmodule' => 'quiz', 'iteminstance' => $cm->instance, 'outcomeid' => null));
+            'itemmodule' => 'hippotrack', 'iteminstance' => $cm->instance, 'outcomeid' => null));
     if ($item) {
         $grades = grade_grade::fetch_users_grades($item, array($userid), false);
         if (!empty($grades[$userid]) && $grades[$userid]->is_passed($item)) {
@@ -70,7 +70,7 @@ function quiz_completion_check_passing_grade_or_all_attempts($course, $cm, $user
     $context = context_module::instance($cm->id);
     $quizobj = quiz::create($quiz->id, $userid);
     $accessmanager = new quiz_access_manager($quizobj, time(),
-            has_capability('mod/quiz:ignoretimelimits', $context, $userid, false));
+            has_capability('mod/hippotrack:ignoretimelimits', $context, $userid, false));
 
     return $accessmanager->is_finished(count($attempts), $lastfinishedattempt);
 }
@@ -117,7 +117,7 @@ function quiz_get_completion_state($course, $cm, $userid, $type) {
 
     // No need to call debugging here. Deprecation debugging notice already being called in \completion_info::internal_get_state().
 
-    $quiz = $DB->get_record('quiz', array('id' => $cm->instance), '*', MUST_EXIST);
+    $quiz = $DB->get_record('hippotrack', array('id' => $cm->instance), '*', MUST_EXIST);
     if (!$quiz->completionattemptsexhausted && !$cm->completionpassgrade && !$quiz->completionminattempts) {
         return $type;
     }

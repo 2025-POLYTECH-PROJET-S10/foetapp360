@@ -25,7 +25,7 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-require_once($CFG->dirroot . '/mod/quiz/report/attemptsreport_table.php');
+require_once($CFG->dirroot . '/mod/hippotrack/report/attemptsreport_table.php');
 
 
 /**

@@ -318,11 +318,11 @@ YUI.add('moodle-mod_hippotrack-dragdrop', function (Y, NAME) {
 
             this.samenodelabel = {
                 identifier: 'dragtoafter',
-                component: 'quiz'
+                component: 'hippotrack'
             };
             this.parentnodelabel = {
                 identifier: 'dragtostart',
-                component: 'quiz'
+                component: 'hippotrack'
             };
 
             // Go through all sections

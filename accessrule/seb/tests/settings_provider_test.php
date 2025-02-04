@@ -587,7 +587,7 @@ class settings_provider_test extends \advanced_testcase {
         $this->setAdminUser();
         $this->course = $this->getDataGenerator()->create_course();
 
-        $this->quiz = $this->getDataGenerator()->create_module('quiz', ['course' => $this->course->id]);
+        $this->quiz = $this->getDataGenerator()->create_module('hippotrack', ['course' => $this->course->id]);
         $this->context = \context_module::instance($this->quiz->cmid);
 
         $this->set_up_user_and_role();
@@ -631,7 +631,7 @@ class settings_provider_test extends \advanced_testcase {
         $this->setAdminUser();
         $this->course = $this->getDataGenerator()->create_course();
 
-        $this->quiz = $this->getDataGenerator()->create_module('quiz', ['course' => $this->course->id]);
+        $this->quiz = $this->getDataGenerator()->create_module('hippotrack', ['course' => $this->course->id]);
         $this->context = \context_module::instance($this->quiz->cmid);
 
         $options = settings_provider::get_requiresafeexambrowser_options($this->context);
@@ -925,7 +925,7 @@ class settings_provider_test extends \advanced_testcase {
     public function test_save_filemanager_sebconfigfile_draftarea() {
         $this->resetAfterTest();
         $this->course = $this->getDataGenerator()->create_course();
-        $this->quiz = $this->getDataGenerator()->create_module('quiz', ['course' => $this->course->id]);
+        $this->quiz = $this->getDataGenerator()->create_module('hippotrack', ['course' => $this->course->id]);
         $this->context = \context_module::instance($this->quiz->cmid);
         $this->set_up_user_and_role();
 
@@ -947,7 +947,7 @@ class settings_provider_test extends \advanced_testcase {
     public function test_delete_uploaded_config_file() {
         $this->resetAfterTest();
         $this->course = $this->getDataGenerator()->create_course();
-        $this->quiz = $this->getDataGenerator()->create_module('quiz', ['course' => $this->course->id]);
+        $this->quiz = $this->getDataGenerator()->create_module('hippotrack', ['course' => $this->course->id]);
         $this->context = \context_module::instance($this->quiz->cmid);
         $this->set_up_user_and_role();
 
@@ -1017,7 +1017,7 @@ class settings_provider_test extends \advanced_testcase {
         $this->resetAfterTest();
 
         $this->course = $this->getDataGenerator()->create_course();
-        $this->quiz = $this->getDataGenerator()->create_module('quiz', ['course' => $this->course->id]);
+        $this->quiz = $this->getDataGenerator()->create_module('hippotrack', ['course' => $this->course->id]);
         $this->context = \context_module::instance($this->quiz->cmid);
         $this->setAdminUser();
 
@@ -1038,7 +1038,7 @@ class settings_provider_test extends \advanced_testcase {
         $this->resetAfterTest();
 
         $this->course = $this->getDataGenerator()->create_course();
-        $this->quiz = $this->getDataGenerator()->create_module('quiz', ['course' => $this->course->id]);
+        $this->quiz = $this->getDataGenerator()->create_module('hippotrack', ['course' => $this->course->id]);
         $this->context = \context_module::instance($this->quiz->cmid);
         $this->setAdminUser();
 
@@ -1059,7 +1059,7 @@ class settings_provider_test extends \advanced_testcase {
         $this->resetAfterTest();
 
         $this->course = $this->getDataGenerator()->create_course();
-        $this->quiz = $this->getDataGenerator()->create_module('quiz', ['course' => $this->course->id]);
+        $this->quiz = $this->getDataGenerator()->create_module('hippotrack', ['course' => $this->course->id]);
         $this->context = \context_module::instance($this->quiz->cmid);
         $this->setAdminUser();
 
@@ -1080,7 +1080,7 @@ class settings_provider_test extends \advanced_testcase {
         $this->resetAfterTest();
 
         $this->course = $this->getDataGenerator()->create_course();
-        $this->quiz = $this->getDataGenerator()->create_module('quiz', ['course' => $this->course->id]);
+        $this->quiz = $this->getDataGenerator()->create_module('hippotrack', ['course' => $this->course->id]);
         $this->context = \context_module::instance($this->quiz->cmid);
         $this->setAdminUser();
         $this->assertTrue(settings_provider::can_change_seb_showsebdownloadlink($this->context));
@@ -1100,7 +1100,7 @@ class settings_provider_test extends \advanced_testcase {
         $this->resetAfterTest();
         $this->course = $this->getDataGenerator()->create_course();
 
-        $this->quiz = $this->getDataGenerator()->create_module('quiz', ['course' => $this->course->id]);
+        $this->quiz = $this->getDataGenerator()->create_module('hippotrack', ['course' => $this->course->id]);
         $this->context = \context_module::instance($this->quiz->cmid);
         $this->setAdminUser();
         $this->assertTrue(settings_provider::can_change_seb_allowedbrowserexamkeys($this->context));
@@ -1124,7 +1124,7 @@ class settings_provider_test extends \advanced_testcase {
         $this->resetAfterTest();
         $this->course = $this->getDataGenerator()->create_course();
 
-        $this->quiz = $this->getDataGenerator()->create_module('quiz', ['course' => $this->course->id]);
+        $this->quiz = $this->getDataGenerator()->create_module('hippotrack', ['course' => $this->course->id]);
         $this->context = \context_module::instance($this->quiz->cmid);
         $this->setAdminUser();
 

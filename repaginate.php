@@ -23,7 +23,7 @@
  */
 
 require_once(__DIR__ . '/../../config.php');
-require_once($CFG->dirroot . '/mod/quiz/locallib.php');
+require_once($CFG->dirroot . '/mod/hippotrack/locallib.php');
 
 $quizid = required_param('quizid', PARAM_INT);
 $slotnumber = required_param('slot', PARAM_INT);
@@ -32,12 +32,12 @@ $repagtype = required_param('repag', PARAM_INT);
 require_sesskey();
 $quizobj = quiz::create($quizid);
 require_login($quizobj->get_course(), false, $quizobj->get_cm());
-require_capability('mod/quiz:manage', $quizobj->get_context());
+require_capability('mod/hippotrack:manage', $quizobj->get_context());
 if (quiz_has_attempts($quizid)) {
     $reportlink = quiz_attempt_summary_link_to_reports($quizobj->get_quiz(),
                     $quizobj->get_cm(), $quizobj->get_context());
-    throw new \moodle_exception('cannoteditafterattempts', 'quiz',
-            new moodle_url('/mod/quiz/edit.php', array('cmid' => $quizobj->get_cmid())), $reportlink);
+    throw new \moodle_exception('cannoteditafterattempts', 'hippotrack',
+            new moodle_url('/mod/hippotrack/edit.php', array('cmid' => $quizobj->get_cmid())), $reportlink);
 }
 
 $slotnumber++;

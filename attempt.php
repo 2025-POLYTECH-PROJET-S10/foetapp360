@@ -23,16 +23,16 @@
  */
 
 require_once(__DIR__ . '/../../config.php');
-require_once($CFG->dirroot . '/mod/quiz/locallib.php');
+require_once($CFG->dirroot . '/mod/hippotrack/locallib.php');
 
 // Look for old-style URLs, such as may be in the logs, and redirect them to startattemtp.php.
 if ($id = optional_param('id', 0, PARAM_INT)) {
-    redirect($CFG->wwwroot . '/mod/quiz/startattempt.php?cmid=' . $id . '&sesskey=' . sesskey());
+    redirect($CFG->wwwroot . '/mod/hippotrack/startattempt.php?cmid=' . $id . '&sesskey=' . sesskey());
 } else if ($qid = optional_param('q', 0, PARAM_INT)) {
-    if (!$cm = get_coursemodule_from_instance('quiz', $qid)) {
-        throw new \moodle_exception('invalidquizid', 'quiz');
+    if (!$cm = get_coursemodule_from_instance('hippotrack', $qid)) {
+        throw new \moodle_exception('invalidquizid', 'hippotrack');
     }
-    redirect(new moodle_url('/mod/quiz/startattempt.php',
+    redirect(new moodle_url('/mod/hippotrack/startattempt.php',
             array('cmid' => $cm->id, 'sesskey' => sesskey())));
 }
 
@@ -54,7 +54,7 @@ require_login($attemptobj->get_course(), false, $attemptobj->get_cm());
 
 // Check that this attempt belongs to this user.
 if ($attemptobj->get_userid() != $USER->id) {
-    if ($attemptobj->has_capability('mod/quiz:viewreports')) {
+    if ($attemptobj->has_capability('mod/hippotrack:viewreports')) {
         redirect($attemptobj->review_url(null, $page));
     } else {
         throw new moodle_quiz_exception($attemptobj->get_quizobj(), 'notyourattempt');
@@ -63,7 +63,7 @@ if ($attemptobj->get_userid() != $USER->id) {
 
 // Check capabilities and block settings.
 if (!$attemptobj->is_preview_user()) {
-    $attemptobj->require_capability('mod/quiz:attempt');
+    $attemptobj->require_capability('mod/hippotrack:attempt');
     if (empty($attemptobj->get_quiz()->showblocks)) {
         $PAGE->blocks->show_only_fake_blocks();
     }
@@ -85,7 +85,7 @@ $accessmanager->setup_attempt_page($PAGE);
 $output = $PAGE->get_renderer('mod_hippotrack');
 $messages = $accessmanager->prevent_access();
 if (!$attemptobj->is_preview_user() && $messages) {
-    throw new \moodle_exception('attempterror', 'quiz', $attemptobj->view_url(),
+    throw new \moodle_exception('attempterror', 'hippotrack', $attemptobj->view_url(),
             $output->access_messages($messages));
 }
 if ($accessmanager->is_preflight_check_required($attemptobj->get_attemptid())) {
@@ -93,7 +93,7 @@ if ($accessmanager->is_preflight_check_required($attemptobj->get_attemptid())) {
 }
 
 // Set up auto-save if required.
-$autosaveperiod = get_config('quiz', 'autosaveperiod');
+$autosaveperiod = get_config('hippotrack', 'autosaveperiod');
 if ($autosaveperiod) {
     $PAGE->requires->yui_module('moodle-mod_hippotrack-autosave',
             'M.mod_hippotrack.autosave.init', array($autosaveperiod));

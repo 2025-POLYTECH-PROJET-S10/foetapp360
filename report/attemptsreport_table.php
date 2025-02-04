@@ -118,7 +118,7 @@ abstract class quiz_attempts_report_table extends table_sql {
                 'id' => "attemptid_{$attempt->attempt}",
                 'name' => 'attemptid[]',
                 'value' => $attempt->attempt,
-                'label' => get_string('selectattempt', 'quiz'),
+                'label' => get_string('selectattempt', 'hippotrack'),
                 'labelclasses' => 'accesshide',
             ]);
             return $OUTPUT->render($checkbox);
@@ -153,8 +153,8 @@ abstract class quiz_attempts_report_table extends table_sql {
         }
 
         return $html . html_writer::empty_tag('br') . html_writer::link(
-                new moodle_url('/mod/quiz/review.php', array('attempt' => $attempt->attempt)),
-                get_string('reviewattempt', 'quiz'), array('class' => 'reviewlink'));
+                new moodle_url('/mod/hippotrack/review.php', array('attempt' => $attempt->attempt)),
+                get_string('reviewattempt', 'hippotrack'), array('class' => 'reviewlink'));
     }
 
     /**
@@ -267,11 +267,11 @@ abstract class quiz_attempts_report_table extends table_sql {
         if (isset($attempt->try)) {
             $reviewparams['step'] = $this->step_no_for_try($attempt->usageid, $slot, $attempt->try);
         }
-        $url = new moodle_url('/mod/quiz/reviewquestion.php', $reviewparams);
+        $url = new moodle_url('/mod/hippotrack/reviewquestion.php', $reviewparams);
         $output = $OUTPUT->action_link($url, $output,
                 new popup_action('click', $url, 'reviewquestion',
                         array('height' => 450, 'width' => 650)),
-                array('title' => get_string('reviewresponse', 'quiz')));
+                array('title' => get_string('reviewresponse', 'hippotrack')));
 
         if (!empty($CFG->enableplagiarism)) {
             require_once($CFG->libdir . '/plagiarismlib.php');
@@ -650,7 +650,7 @@ abstract class quiz_attempts_report_table extends table_sql {
      */
     protected function submit_buttons() {
         global $PAGE;
-        if (has_capability('mod/quiz:deleteattempts', $this->context)) {
+        if (has_capability('mod/hippotrack:deleteattempts', $this->context)) {
             $deletebuttonparams = [
                 'type'  => 'submit',
                 'class' => 'btn btn-secondary mr-1',
@@ -664,7 +664,7 @@ abstract class quiz_attempts_report_table extends table_sql {
             ];
             echo html_writer::empty_tag('input', $deletebuttonparams);
             $PAGE->requires->event_handler('#deleteattemptsbutton', 'click', 'M.util.show_confirm_dialog',
-                    array('message' => get_string('deleteattemptcheck', 'quiz')));
+                    array('message' => get_string('deleteattemptcheck', 'hippotrack')));
         }
     }
 
@@ -684,8 +684,8 @@ abstract class quiz_attempts_report_table extends table_sql {
 
         // Build the select/deselect all control.
         $selectallid = $this->uniqueid . '-selectall-attempts';
-        $selectalltext = get_string('selectall', 'quiz');
-        $deselectalltext = get_string('selectnone', 'quiz');
+        $selectalltext = get_string('selectall', 'hippotrack');
+        $deselectalltext = get_string('selectnone', 'hippotrack');
         $mastercheckbox = new \core\output\checkbox_toggleall($this->togglegroup, true, [
             'id' => $selectallid,
             'name' => $selectallid,

@@ -40,7 +40,7 @@ namespace mod_hippotrack\event;
  */
 class quiz_grade_updated extends \core\event\base {
     protected function init() {
-        $this->data['objecttable'] = 'quiz';
+        $this->data['objecttable'] = 'hippotrack';
         $this->data['crud'] = 'u';
         $this->data['edulevel'] = self::LEVEL_TEACHING;
     }
@@ -56,7 +56,7 @@ class quiz_grade_updated extends \core\event\base {
     }
 
     public function get_url() {
-        return new \moodle_url('/mod/quiz/edit.php', [
+        return new \moodle_url('/mod/hippotrack/edit.php', [
             'cmid' => $this->contextinstanceid
         ]);
     }
@@ -82,7 +82,7 @@ class quiz_grade_updated extends \core\event\base {
     }
 
     public static function get_objectid_mapping() {
-        return ['db' => 'quiz', 'restore' => 'quiz'];
+        return ['db' => 'hippotrack', 'restore' => 'hippotrack'];
     }
 
     public static function get_other_mapping() {

@@ -77,7 +77,7 @@ class custom_completion_test extends advanced_testcase {
             'completion' => COMPLETION_TRACKING_AUTOMATIC
         ], $completionoptions['quizoptions']);
         $quiz = $quizgenerator->create_instance($data);
-        $litecm = get_coursemodule_from_id('quiz', $quiz->cmid);
+        $litecm = get_coursemodule_from_id('hippotrack', $quiz->cmid);
         $cm = cm_info::create($litecm);
 
         // Create a question.
@@ -94,7 +94,7 @@ class custom_completion_test extends advanced_testcase {
         }
 
         // Set grade to pass.
-        $item = grade_item::fetch(['courseid' => $course->id, 'itemtype' => 'mod', 'itemmodule' => 'quiz',
+        $item = grade_item::fetch(['courseid' => $course->id, 'itemtype' => 'mod', 'itemmodule' => 'hippotrack',
             'iteminstance' => $quiz->id, 'outcomeid' => null]);
         $item->gradepass = 80;
         $item->update();
@@ -110,10 +110,10 @@ class custom_completion_test extends advanced_testcase {
      * Helper function for tests.
      * Starts an attempt, processes responses and finishes the attempt.
      *
-     * @param array $attemptoptions ['quiz'] => object, ['student'] => object, ['tosubmit'] => array, ['attemptnumber'] => int
+     * @param array $attemptoptions ['hippotrack'] => object, ['student'] => object, ['tosubmit'] => array, ['attemptnumber'] => int
      */
     private function do_attempt_quiz(array $attemptoptions) {
-        $quizobj = quiz::create($attemptoptions['quiz']->id);
+        $quizobj = quiz::create($attemptoptions['hippotrack']->id);
 
         // Start the passing attempt.
         $quba = question_engine::make_questions_usage_by_activity('mod_hippotrack', $quizobj->get_context());
@@ -153,7 +153,7 @@ class custom_completion_test extends advanced_testcase {
 
         // Do a passing attempt.
         $this->do_attempt_quiz([
-            'quiz' => $quiz,
+            'hippotrack' => $quiz,
             'student' => $passstudent,
             'attemptnumber' => 1,
             'tosubmit' => [1 => ['answer' => '3.14']]
@@ -171,7 +171,7 @@ class custom_completion_test extends advanced_testcase {
 
         // Do a failing attempt.
         $this->do_attempt_quiz([
-            'quiz' => $quiz,
+            'hippotrack' => $quiz,
             'student' => $failstudent,
             'attemptnumber' => 1,
             'tosubmit' => [1 => ['answer' => '0']]
@@ -210,7 +210,7 @@ class custom_completion_test extends advanced_testcase {
 
         // Start a passing attempt.
         $this->do_attempt_quiz([
-            'quiz' => $quiz,
+            'hippotrack' => $quiz,
             'student' => $passstudent,
             'attemptnumber' => 1,
             'tosubmit' => [1 => ['answer' => '3.14']]
@@ -230,7 +230,7 @@ class custom_completion_test extends advanced_testcase {
 
         // Do a failing attempt.
         $this->do_attempt_quiz([
-            'quiz' => $quiz,
+            'hippotrack' => $quiz,
             'student' => $exhauststudent,
             'attemptnumber' => 1,
             'tosubmit' => [1 => ['answer' => '0']]
@@ -248,7 +248,7 @@ class custom_completion_test extends advanced_testcase {
 
         // Do a second failing attempt.
         $this->do_attempt_quiz([
-            'quiz' => $quiz,
+            'hippotrack' => $quiz,
             'student' => $exhauststudent,
             'attemptnumber' => 2,
             'tosubmit' => [1 => ['answer' => '0']]
@@ -286,7 +286,7 @@ class custom_completion_test extends advanced_testcase {
 
         // Do a first attempt.
         $this->do_attempt_quiz([
-            'quiz' => $quiz,
+            'hippotrack' => $quiz,
             'student' => $student,
             'attemptnumber' => 1,
             'tosubmit' => [1 => ['answer' => 'Lorem ipsum.', 'answerformat' => '1']]
@@ -303,7 +303,7 @@ class custom_completion_test extends advanced_testcase {
 
         // Do a second attempt.
         $this->do_attempt_quiz([
-            'quiz' => $quiz,
+            'hippotrack' => $quiz,
             'student' => $student,
             'attemptnumber' => 2,
             'tosubmit' => [1 => ['answer' => 'Lorem ipsum.', 'answerformat' => '1']]
@@ -358,7 +358,7 @@ class custom_completion_test extends advanced_testcase {
         list($student) = $students;
         // Do a first attempt with a pass marks = 20.
         $this->do_attempt_quiz([
-            'quiz' => $quiz,
+            'hippotrack' => $quiz,
             'student' => $student,
             'attemptnumber' => 1,
             'tosubmit' => [1 => ['answer' => '3.14']]
@@ -389,7 +389,7 @@ class custom_completion_test extends advanced_testcase {
 
         // Do a second attempt with pass marks = 80.
         $this->do_attempt_quiz([
-            'quiz' => $quiz,
+            'hippotrack' => $quiz,
             'student' => $student,
             'attemptnumber' => 2,
             'tosubmit' => [2 => ['answer' => '3.14']]
@@ -481,7 +481,7 @@ class custom_completion_test extends advanced_testcase {
         $draftideditor = 0;
         file_prepare_draft_area($draftideditor, null, null, null, null);
         $moduleinfo->introeditor = ['text' => 'This is a module', 'format' => FORMAT_HTML, 'itemid' => $draftideditor];
-        $moduleinfo->modulename = 'quiz';
+        $moduleinfo->modulename = 'hippotrack';
         $moduleinfo->quizpassword = '';
         $moduleinfo->cmidnumber = '';
         $moduleinfo->marksopen = 1;

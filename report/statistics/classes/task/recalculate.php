@@ -22,10 +22,10 @@ use quiz_statistics_report;
 
 defined('MOODLE_INTERNAL') || die();
 
-require_once($CFG->dirroot . '/mod/quiz/locallib.php');
-require_once($CFG->dirroot . '/mod/quiz/report/statistics/statisticslib.php');
-require_once($CFG->dirroot . '/mod/quiz/report/reportlib.php');
-require_once($CFG->dirroot . '/mod/quiz/report/statistics/report.php');
+require_once($CFG->dirroot . '/mod/hippotrack/locallib.php');
+require_once($CFG->dirroot . '/mod/hippotrack/report/statistics/statisticslib.php');
+require_once($CFG->dirroot . '/mod/hippotrack/report/reportlib.php');
+require_once($CFG->dirroot . '/mod/hippotrack/report/statistics/report.php');
 
 /**
  * Re-calculate question statistics.
@@ -67,7 +67,7 @@ class recalculate extends \core\task\adhoc_task {
         global $DB;
         $dateformat = get_string('strftimedatetimeshortaccurate', 'core_langconfig');
         $data = $this->get_custom_data();
-        $quiz = $DB->get_record('quiz', ['id' => $data->quizid]);
+        $quiz = $DB->get_record('hippotrack', ['id' => $data->quizid]);
         if (!$quiz) {
             mtrace('Could not find quiz with ID ' . $data->quizid . '.');
             return;
@@ -77,7 +77,7 @@ class recalculate extends \core\task\adhoc_task {
             mtrace('Could not find course with ID ' . $quiz->course . '.');
             return;
         }
-        $attemptcount = $DB->count_records('quiz_attempts', ['quiz' => $data->quizid, 'state' => quiz_attempt::FINISHED]);
+        $attemptcount = $DB->count_records('quiz_attempts', ['hippotrack' => $data->quizid, 'state' => quiz_attempt::FINISHED]);
         if ($attemptcount === 0) {
             mtrace('Could not find any finished attempts for course with ID ' . $data->quizid . '.');
             return;

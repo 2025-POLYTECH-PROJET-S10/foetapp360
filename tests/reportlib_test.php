@@ -21,8 +21,8 @@ use quiz_attempt;
 defined('MOODLE_INTERNAL') || die();
 
 global $CFG;
-require_once($CFG->dirroot . '/mod/quiz/attemptlib.php');
-require_once($CFG->dirroot . '/mod/quiz/report/reportlib.php');
+require_once($CFG->dirroot . '/mod/hippotrack/attemptlib.php');
+require_once($CFG->dirroot . '/mod/hippotrack/report/reportlib.php');
 
 /**
  * This class contains the test cases for the functions in reportlib.php.

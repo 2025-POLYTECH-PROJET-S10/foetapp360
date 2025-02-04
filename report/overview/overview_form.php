@@ -25,7 +25,7 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-require_once($CFG->dirroot . '/mod/quiz/report/attemptsreport_form.php');
+require_once($CFG->dirroot . '/mod/hippotrack/report/attemptsreport_form.php');
 
 
 /**
@@ -37,15 +37,15 @@ require_once($CFG->dirroot . '/mod/quiz/report/attemptsreport_form.php');
 class quiz_overview_settings_form extends mod_hippotrack_attempts_report_form {
 
     protected function other_attempt_fields(MoodleQuickForm $mform) {
-        if (has_capability('mod/quiz:regrade', $this->_customdata['context'])) {
-            $mform->addElement('advcheckbox', 'onlyregraded', get_string('reportshowonly', 'quiz'),
+        if (has_capability('mod/hippotrack:regrade', $this->_customdata['context'])) {
+            $mform->addElement('advcheckbox', 'onlyregraded', get_string('reportshowonly', 'hippotrack'),
                     get_string('optonlyregradedattempts', 'quiz_overview'));
             $mform->disabledIf('onlyregraded', 'attempts', 'eq', quiz_attempts_report::ENROLLED_WITHOUT);
         }
     }
 
     protected function other_preference_fields(MoodleQuickForm $mform) {
-        if (quiz_has_grades($this->_customdata['quiz'])) {
+        if (quiz_has_grades($this->_customdata['hippotrack'])) {
             $mform->addElement('selectyesno', 'slotmarks',
                     get_string('showdetailedmarks', 'quiz_overview'));
         } else {

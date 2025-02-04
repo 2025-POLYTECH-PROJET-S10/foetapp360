@@ -24,7 +24,7 @@ use quiz_attempt;
 defined('MOODLE_INTERNAL') || die();
 
 global $CFG;
-require_once($CFG->dirroot . '/mod/quiz/locallib.php');
+require_once($CFG->dirroot . '/mod/hippotrack/locallib.php');
 
 /**
  * Tests for the quiz_attempt class.
@@ -87,7 +87,7 @@ class attempt_test extends \advanced_testcase {
 
         $attemptid = $attempt->get_attempt()->id;
         $cmid = $attempt->get_cmid();
-        $url = '/mod/quiz/attempt.php';
+        $url = '/mod/hippotrack/attempt.php';
         $params = ['attempt' => $attemptid, 'cmid' => $cmid, 'page' => 2];
 
         $this->assertEquals(new \moodle_url($url, $params), $attempt->attempt_url(null, 2));
@@ -109,12 +109,12 @@ class attempt_test extends \advanced_testcase {
         $this->assertEquals(new \moodle_url(null, null, $expecteanchor, null), $attempt->attempt_url(4, -1, 1));
 
         // Summary page.
-        $url = '/mod/quiz/summary.php';
+        $url = '/mod/hippotrack/summary.php';
         unset($params['page']);
         $this->assertEquals(new \moodle_url($url, $params), $attempt->summary_url());
 
         // Review page.
-        $url = '/mod/quiz/review.php';
+        $url = '/mod/hippotrack/review.php';
         $this->assertEquals(new \moodle_url($url, $params), $attempt->review_url());
 
         $params['page'] = 1;
@@ -291,7 +291,7 @@ class attempt_test extends \advanced_testcase {
         $course = $this->getDataGenerator()->create_course();
         $student = $this->getDataGenerator()->create_and_enrol($course, 'student');
         $student2 = $this->getDataGenerator()->create_and_enrol($course, 'student', [], 'manual', 0, 0, ENROL_USER_SUSPENDED);
-        $quiz = $this->getDataGenerator()->create_module('quiz', array('course' => $course->id));
+        $quiz = $this->getDataGenerator()->create_module('hippotrack', array('course' => $course->id));
         $quizobj = quiz::create($quiz->id);
 
         // Login as student.
@@ -538,12 +538,12 @@ class attempt_test extends \advanced_testcase {
         $viewobj->attemptobjs[] = new quiz_attempt($attempt->get_attempt(),
             $quiz, $attempt->get_cm(), $attempt->get_course(), false);
         $viewobj->accessmanager = new \quiz_access_manager($attempt->get_quizobj(), $timenow,
-            has_capability('mod/quiz:ignoretimelimits', $context, null, false));
+            has_capability('mod/hippotrack:ignoretimelimits', $context, null, false));
 
         // Render summary previous attempts table.
         $renderer = $PAGE->get_renderer('mod_hippotrack');
         $table = $renderer->view_table($quiz, $context, $viewobj);
-        $captionpattern = '/<caption\b[^>]*>' . get_string('summaryofattempts', 'quiz') . '<\/caption>/';
+        $captionpattern = '/<caption\b[^>]*>' . get_string('summaryofattempts', 'hippotrack') . '<\/caption>/';
 
         // Check caption existed.
         $this->assertMatchesRegularExpression($captionpattern, $table);

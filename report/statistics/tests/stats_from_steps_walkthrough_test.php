@@ -50,9 +50,9 @@ final class stats_from_steps_walkthrough_test extends \mod_hippotrack\tests\atte
 
         parent::setUpBeforeClass();
 
-        require_once($CFG->dirroot . '/mod/quiz/report/statistics/report.php');
-        require_once($CFG->dirroot . '/mod/quiz/report/default.php');
-        require_once($CFG->dirroot . '/mod/quiz/report/reportlib.php');
+        require_once($CFG->dirroot . '/mod/hippotrack/report/statistics/report.php');
+        require_once($CFG->dirroot . '/mod/hippotrack/report/default.php');
+        require_once($CFG->dirroot . '/mod/hippotrack/report/reportlib.php');
     }
 
     #[\Override]

@@ -47,12 +47,12 @@ const registerEventListeners = (unAnsweredQuestions) => {
             e.preventDefault();
             try {
                 await saveCancelPromise(
-                    getString('submission_confirmation', 'quiz'),
+                    getString('submission_confirmation', 'hippotrack'),
                     Templates.render(TEMPLATES.submissionConfirmation, {
                         hasunanswered: unAnsweredQuestions > 0,
                         totalunanswered: unAnsweredQuestions
                     }),
-                    getString('submitallandfinish', 'quiz')
+                    getString('submitallandfinish', 'hippotrack')
                 );
 
                 // Save pressed.
@@ -72,7 +72,7 @@ const registerEventListeners = (unAnsweredQuestions) => {
 export const init = (unAnsweredQuestions) => {
     Prefetch.prefetchStrings('core', ['submit']);
     Prefetch.prefetchStrings('core_admin', ['confirmation']);
-    Prefetch.prefetchStrings('quiz', ['submitallandfinish', 'submission_confirmation']);
+    Prefetch.prefetchStrings('hippotrack', ['submitallandfinish', 'submission_confirmation']);
     Prefetch.prefetchTemplate(TEMPLATES.submissionConfirmation);
     registerEventListeners(unAnsweredQuestions);
 };

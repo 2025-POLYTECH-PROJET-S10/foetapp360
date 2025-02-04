@@ -25,7 +25,7 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-require_once($CFG->dirroot . '/mod/quiz/report/attemptsreport_table.php');
+require_once($CFG->dirroot . '/mod/hippotrack/report/attemptsreport_table.php');
 
 
 /**
@@ -214,7 +214,7 @@ class quiz_overview_table extends quiz_attempts_report_table {
     }
 
     protected function submit_buttons() {
-        if (has_capability('mod/quiz:regrade', $this->context)) {
+        if (has_capability('mod/hippotrack:regrade', $this->context)) {
             $regradebuttonparams = [
                 'type'  => 'submit',
                 'class' => 'btn btn-secondary mr-1',
@@ -261,15 +261,15 @@ class quiz_overview_table extends quiz_attempts_report_table {
             $grade = html_writer::tag('del', $oldsumgrade) . '/' .
                     html_writer::empty_tag('br') . $newsumgrade;
         }
-        return html_writer::link(new moodle_url('/mod/quiz/review.php',
+        return html_writer::link(new moodle_url('/mod/hippotrack/review.php',
                 array('attempt' => $attempt->attempt)), $grade,
-                array('title' => get_string('reviewattempt', 'quiz')));
+                array('title' => get_string('reviewattempt', 'hippotrack')));
     }
 
     /**
      * @param string $colname the name of the column.
      * @param object $attempt the row of data - see the SQL in display() in
-     * mod/quiz/report/overview/report.php to see what fields are present,
+     * mod/hippotrack/report/overview/report.php to see what fields are present,
      * and what they are called.
      * @return string the contents of the cell.
      */
@@ -364,7 +364,7 @@ class quiz_overview_table extends quiz_attempts_report_table {
     public function query_db($pagesize, $useinitialsbar = true) {
         parent::query_db($pagesize, $useinitialsbar);
 
-        if ($this->options->slotmarks && has_capability('mod/quiz:regrade', $this->context)) {
+        if ($this->options->slotmarks && has_capability('mod/hippotrack:regrade', $this->context)) {
             $this->regradedqs = $this->get_regraded_questions();
         }
     }

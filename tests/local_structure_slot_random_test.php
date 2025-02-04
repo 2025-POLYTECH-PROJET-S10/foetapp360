@@ -160,7 +160,7 @@ class local_structure_slot_random_test extends \advanced_testcase {
         $randomslot->set_quiz($quiz);
 
         $rc = new \ReflectionClass('\mod_hippotrack\local\structure\slot_random');
-        $rcp = $rc->getProperty('quiz');
+        $rcp = $rc->getProperty('hippotrack');
         $rcp->setAccessible(true);
         $quizpropery = $rcp->getValue($randomslot);
 

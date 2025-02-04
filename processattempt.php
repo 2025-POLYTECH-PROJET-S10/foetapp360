@@ -29,7 +29,7 @@
  */
 
 require_once(__DIR__ . '/../../config.php');
-require_once($CFG->dirroot . '/mod/quiz/locallib.php');
+require_once($CFG->dirroot . '/mod/hippotrack/locallib.php');
 
 // Remember the current time as the time any responses were submitted
 // (so as to make sure students don't get penalized for slow processing on this page).
@@ -76,7 +76,7 @@ if ($attemptobj->get_userid() != $USER->id) {
 
 // Check capabilities.
 if (!$attemptobj->is_preview_user()) {
-    $attemptobj->require_capability('mod/quiz:attempt');
+    $attemptobj->require_capability('mod/hippotrack:attempt');
 }
 
 // If the attempt is already closed, send them to the review page.

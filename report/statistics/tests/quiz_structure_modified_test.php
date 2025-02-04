@@ -18,7 +18,7 @@ namespace quiz_statistics;
 defined('MOODLE_INTERNAL') || die();
 
 global $CFG;
-require_once($CFG->dirroot . '/mod/quiz/tests/quiz_question_helper_test_trait.php');
+require_once($CFG->dirroot . '/mod/hippotrack/tests/quiz_question_helper_test_trait.php');
 
 use core\progress\none;
 use mod_hippotrack\grade_calculator;

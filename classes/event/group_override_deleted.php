@@ -76,7 +76,7 @@ class group_override_deleted extends \core\event\base {
      * @return \moodle_url
      */
     public function get_url() {
-        return new \moodle_url('/mod/quiz/overrides.php', array('cmid' => $this->contextinstanceid));
+        return new \moodle_url('/mod/hippotrack/overrides.php', array('cmid' => $this->contextinstanceid));
     }
 
     /**
@@ -85,7 +85,7 @@ class group_override_deleted extends \core\event\base {
      * @return array
      */
     protected function get_legacy_logdata() {
-        return array($this->courseid, 'quiz', 'delete override', 'overrides.php?cmid=' . $this->contextinstanceid,
+        return array($this->courseid, 'hippotrack', 'delete override', 'overrides.php?cmid=' . $this->contextinstanceid,
             $this->other['quizid'], $this->contextinstanceid);
     }
 
@@ -113,7 +113,7 @@ class group_override_deleted extends \core\event\base {
 
     public static function get_other_mapping() {
         $othermapped = array();
-        $othermapped['quizid'] = array('db' => 'quiz', 'restore' => 'quiz');
+        $othermapped['quizid'] = array('db' => 'hippotrack', 'restore' => 'hippotrack');
         $othermapped['groupid'] = array('db' => 'groups', 'restore' => 'group');
 
         return $othermapped;

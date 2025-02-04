@@ -33,7 +33,7 @@ class tags_test extends \advanced_testcase {
         global $CFG, $USER, $DB;
 
         require_once($CFG->dirroot . '/backup/util/includes/restore_includes.php');
-        require_once($CFG->dirroot . '/mod/quiz/locallib.php');
+        require_once($CFG->dirroot . '/mod/hippotrack/locallib.php');
 
         $this->resetAfterTest();
         $this->setAdminUser();
@@ -55,7 +55,7 @@ class tags_test extends \advanced_testcase {
 
         // Get the information about the resulting course and check that it is set up correctly.
         $modinfo = get_fast_modinfo($newcourseid);
-        $quiz = array_values($modinfo->get_instances_of('quiz'))[0];
+        $quiz = array_values($modinfo->get_instances_of('hippotrack'))[0];
         $quizobj = quiz::create($quiz->instance);
         $structure = structure::create_for_quiz($quizobj);
 

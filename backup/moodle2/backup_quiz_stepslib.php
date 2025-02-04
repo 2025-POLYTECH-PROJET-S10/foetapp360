@@ -30,7 +30,7 @@ class backup_quiz_activity_structure_step extends backup_questions_activity_stru
         $userinfo = $this->get_setting_value('userinfo');
 
         // Define each element separated.
-        $quiz = new backup_nested_element('quiz', ['id'], [
+        $quiz = new backup_nested_element('hippotrack', ['id'], [
             'name', 'intro', 'introformat', 'timeopen', 'timeclose', 'timelimit',
             'overduehandling', 'graceperiod', 'preferredbehaviour', 'canredoquestions', 'attempts_number',
             'attemptonlast', 'grademethod', 'decimalpoints', 'questiondecimalpoints',
@@ -107,7 +107,7 @@ class backup_quiz_activity_structure_step extends backup_questions_activity_stru
         $attempts->add_child($attempt);
 
         // Define sources.
-        $quiz->set_source_table('quiz', ['id' => backup::VAR_ACTIVITYID]);
+        $quiz->set_source_table('hippotrack', ['id' => backup::VAR_ACTIVITYID]);
 
         $qinstance->set_source_table('quiz_slots', ['quizid' => backup::VAR_PARENTID]);
 
@@ -116,7 +116,7 @@ class backup_quiz_activity_structure_step extends backup_questions_activity_stru
         $feedback->set_source_table('quiz_feedback', ['quizid' => backup::VAR_PARENTID]);
 
         // Quiz overrides to backup are different depending of user info.
-        $overrideparams = ['quiz' => backup::VAR_PARENTID];
+        $overrideparams = ['hippotrack' => backup::VAR_PARENTID];
         if (!$userinfo) { //  Without userinfo, skip user overrides.
             $overrideparams['userid'] = backup_helper::is_sqlparam(null);
 
@@ -132,11 +132,11 @@ class backup_quiz_activity_structure_step extends backup_questions_activity_stru
 
         // All the rest of elements only happen if we are including user info.
         if ($userinfo) {
-            $grade->set_source_table('quiz_grades', ['quiz' => backup::VAR_PARENTID]);
+            $grade->set_source_table('quiz_grades', ['hippotrack' => backup::VAR_PARENTID]);
             $attempt->set_source_sql('
                     SELECT *
                     FROM {quiz_attempts}
-                    WHERE quiz = :quiz AND preview = 0', ['quiz' => backup::VAR_PARENTID]);
+                    WHERE quiz = :quiz AND preview = 0', ['hippotrack' => backup::VAR_PARENTID]);
         }
 
         // Define source alias.

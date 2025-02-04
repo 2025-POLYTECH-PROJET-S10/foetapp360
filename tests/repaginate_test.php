@@ -29,8 +29,8 @@ use quiz;
 defined('MOODLE_INTERNAL') || die();
 
 global $CFG;
-require_once($CFG->dirroot . '/mod/quiz/locallib.php');
-require_once($CFG->dirroot . '/mod/quiz/classes/repaginate.php');
+require_once($CFG->dirroot . '/mod/hippotrack/locallib.php');
+require_once($CFG->dirroot . '/mod/hippotrack/classes/repaginate.php');
 
 /**
  * Testable subclass, giving access to the protected methods of {@link \mod_hippotrack\repaginate}
@@ -93,7 +93,7 @@ class repaginate_test extends \advanced_testcase {
 
         $quiz = $quizgenerator->create_instance(array(
                 'course' => $SITE->id, 'questionsperpage' => 0, 'grade' => 100.0, 'sumgrades' => 2));
-        $cm = get_coursemodule_from_instance('quiz', $quiz->id, $SITE->id);
+        $cm = get_coursemodule_from_instance('hippotrack', $quiz->id, $SITE->id);
 
         // Create five questions.
         $questiongenerator = $this->getDataGenerator()->get_plugin_generator('core_question');

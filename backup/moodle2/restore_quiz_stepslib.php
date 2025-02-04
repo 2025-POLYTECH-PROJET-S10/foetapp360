@@ -50,7 +50,7 @@ class restore_quiz_activity_structure_step extends restore_questions_activity_st
         $paths = array();
         $userinfo = $this->get_setting_value('userinfo');
 
-        $quiz = new restore_path_element('quiz', '/activity/quiz');
+        $quiz = new restore_path_element('hippotrack', '/activity/quiz');
         $paths[] = $quiz;
 
         // A chance for access subplugings to set up their quiz data.
@@ -148,7 +148,7 @@ class restore_quiz_activity_structure_step extends restore_questions_activity_st
         // The old review column from 2.0 need to be split into the seven new
         // review columns. See MDL-20636.
         if (isset($data->review)) {
-            require_once($CFG->dirroot . '/mod/quiz/locallib.php');
+            require_once($CFG->dirroot . '/mod/hippotrack/locallib.php');
 
             if (!defined('QUIZ_OLD_IMMEDIATELY')) {
                 define('QUIZ_OLD_IMMEDIATELY', 0x3c003f);
@@ -255,7 +255,7 @@ class restore_quiz_activity_structure_step extends restore_questions_activity_st
         }
 
         if (!isset($data->overduehandling)) {
-            $data->overduehandling = get_config('quiz', 'overduehandling');
+            $data->overduehandling = get_config('hippotrack', 'overduehandling');
         }
 
         // Old shufflequestions setting is now stored in quiz sections,
@@ -263,7 +263,7 @@ class restore_quiz_activity_structure_step extends restore_questions_activity_st
         $this->legacyshufflequestionsoption = !empty($data->shufflequestions);
 
         // Insert the quiz record.
-        $newitemid = $DB->insert_record('quiz', $data);
+        $newitemid = $DB->insert_record('hippotrack', $data);
         // Immediately after inserting "activity" record, call this.
         $this->apply_activity_instance($newitemid);
 
@@ -331,7 +331,7 @@ class restore_quiz_activity_structure_step extends restore_questions_activity_st
                   JOIN {question_categories} qc ON qc.id = qbe.questioncategoryid
                  WHERE q.id = ?';
         $question = $DB->get_record_sql($sql, [$questionid]);
-        $module = $DB->get_record('quiz', ['id' => $data->quizid]);
+        $module = $DB->get_record('hippotrack', ['id' => $data->quizid]);
 
         if ($question->qtype === 'random') {
             // Set reference data.
@@ -402,12 +402,12 @@ class restore_quiz_activity_structure_step extends restore_questions_activity_st
             // There was a question_instance in the backup file for a question
             // that was not actually in the quiz. Drop it.
             $this->log('question ' . $data->questionid . ' was associated with quiz ' .
-                    $this->get_new_parentid('quiz') . ' but not actually used. ' .
+                    $this->get_new_parentid('hippotrack') . ' but not actually used. ' .
                     'The instance has been ignored.', backup::LOG_INFO);
             return;
         }
 
-        $data->quizid = $this->get_new_parentid('quiz');
+        $data->quizid = $this->get_new_parentid('hippotrack');
 
         $newitemid = $DB->insert_record('quiz_slots', $data);
         // Add mapping, restore of slot tags (for random questions) need it.
@@ -452,7 +452,7 @@ class restore_quiz_activity_structure_step extends restore_questions_activity_st
         global $DB;
 
         $data = (object) $data;
-        $data->quizid = $this->get_new_parentid('quiz');
+        $data->quizid = $this->get_new_parentid('hippotrack');
         $oldid = $data->id;
         $newitemid = $DB->insert_record('quiz_sections', $data);
         $this->sectioncreated = true;
@@ -465,7 +465,7 @@ class restore_quiz_activity_structure_step extends restore_questions_activity_st
         $data = (object)$data;
         $oldid = $data->id;
 
-        $data->quizid = $this->get_new_parentid('quiz');
+        $data->quizid = $this->get_new_parentid('hippotrack');
 
         $newitemid = $DB->insert_record('quiz_feedback', $data);
         $this->set_mapping('quiz_feedback', $oldid, $newitemid, true); // Has related files.
@@ -485,7 +485,7 @@ class restore_quiz_activity_structure_step extends restore_questions_activity_st
             return;
         }
 
-        $data->quiz = $this->get_new_parentid('quiz');
+        $data->quiz = $this->get_new_parentid('hippotrack');
 
         if ($data->userid !== null) {
             $data->userid = $this->get_mappingid('user', $data->userid);
@@ -515,7 +515,7 @@ class restore_quiz_activity_structure_step extends restore_questions_activity_st
         $data = (object)$data;
         $oldid = $data->id;
 
-        $data->quiz = $this->get_new_parentid('quiz');
+        $data->quiz = $this->get_new_parentid('hippotrack');
 
         $data->userid = $this->get_mappingid('user', $data->userid);
         $data->grade = $data->gradeval;
@@ -526,14 +526,14 @@ class restore_quiz_activity_structure_step extends restore_questions_activity_st
     protected function process_quiz_attempt($data) {
         $data = (object)$data;
 
-        $data->quiz = $this->get_new_parentid('quiz');
+        $data->quiz = $this->get_new_parentid('hippotrack');
         $data->attempt = $data->attemptnum;
 
         // Get user mapping, return early if no mapping found for the quiz attempt.
         $olduserid = $data->userid;
         $data->userid = $this->get_mappingid('user', $olduserid, 0);
         if ($data->userid === 0) {
-            $this->log('Mapped user ID not found for user ' . $olduserid . ', quiz ' . $this->get_new_parentid('quiz') .
+            $this->log('Mapped user ID not found for user ' . $olduserid . ', quiz ' . $this->get_new_parentid('hippotrack') .
                 ', attempt ' . $data->attempt . '. Skipping quiz attempt', backup::LOG_INFO);
 
             $this->currentquizattempt = null;
@@ -570,7 +570,7 @@ class restore_quiz_activity_structure_step extends restore_questions_activity_st
 
         $this->process_quiz_attempt($data);
 
-        $quiz = $DB->get_record('quiz', array('id' => $this->get_new_parentid('quiz')));
+        $quiz = $DB->get_record('hippotrack', array('id' => $this->get_new_parentid('hippotrack')));
         $quiz->oldquestions = $this->oldquizlayout;
         $this->process_legacy_quiz_attempt_data($data, $quiz);
     }
@@ -603,7 +603,7 @@ class restore_quiz_activity_structure_step extends restore_questions_activity_st
 
         if (!$this->sectioncreated) {
             $DB->insert_record('quiz_sections', array(
-                    'quizid' => $this->get_new_parentid('quiz'),
+                    'quizid' => $this->get_new_parentid('hippotrack'),
                     'firstslot' => 1, 'heading' => '',
                     'shufflequestions' => $this->legacyshufflequestionsoption));
         }

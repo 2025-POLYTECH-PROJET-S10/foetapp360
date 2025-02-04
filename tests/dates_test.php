@@ -145,7 +145,7 @@ class dates_test extends advanced_testcase {
 
             if ($usertimeopen || $usertimeclose) {
                 $quizgenerator->create_override([
-                    'quiz' => $quiz->id,
+                    'hippotrack' => $quiz->id,
                     'userid' => $user->id,
                     'timeopen' => $usertimeopen,
                     'timeclose' => $usertimeclose,
@@ -154,7 +154,7 @@ class dates_test extends advanced_testcase {
 
             if ($grouptimeopen || $grouptimeclose) {
                 $quizgenerator->create_override([
-                    'quiz' => $quiz->id,
+                    'hippotrack' => $quiz->id,
                     'groupid' => $group->id,
                     'timeopen' => $grouptimeopen,
                     'timeclose' => $grouptimeclose,
@@ -164,7 +164,7 @@ class dates_test extends advanced_testcase {
 
         $this->setUser($user);
 
-        $cm = get_coursemodule_from_instance('quiz', $quiz->id);
+        $cm = get_coursemodule_from_instance('hippotrack', $quiz->id);
         // Make sure we're using a cm_info object.
         $cm = cm_info::create($cm);
 

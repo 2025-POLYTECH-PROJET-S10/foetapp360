@@ -54,7 +54,7 @@ class moodle_quiz_exception extends moodle_exception {
         if (!$link) {
             $link = $quizobj->view_url();
         }
-        parent::__construct($errorcode, 'quiz', $link, $a, $debuginfo);
+        parent::__construct($errorcode, 'hippotrack', $link, $a, $debuginfo);
     }
 }
 
@@ -91,7 +91,7 @@ class quiz {
     protected $sections = null;
     /** @var quiz_access_manager the access manager for this quiz. */
     protected $accessmanager = null;
-    /** @var bool whether the current user has capability mod/quiz:preview. */
+    /** @var bool whether the current user has capability mod/hippotrack:preview. */
     protected $ispreviewuser = null;
 
     // Constructor =============================================================
@@ -125,11 +125,11 @@ class quiz {
 
         $quiz = quiz_access_manager::load_quiz_and_settings($quizid);
         $course = $DB->get_record('course', array('id' => $quiz->course), '*', MUST_EXIST);
-        $cm = get_coursemodule_from_instance('quiz', $quiz->id, $course->id, false, MUST_EXIST);
+        $cm = get_coursemodule_from_instance('hippotrack', $quiz->id, $course->id, false, MUST_EXIST);
 
         // Update quiz with override information.
         if ($userid) {
-            $quiz = quiz_update_effective_access($quiz, $userid);
+            $quiz = quizz_update_effective_access($quiz, $userid);
         }
 
         return new quiz($quiz, $cm, $course);
@@ -284,7 +284,7 @@ class quiz {
      */
     public function is_preview_user() {
         if (is_null($this->ispreviewuser)) {
-            $this->ispreviewuser = has_capability('mod/quiz:preview', $this->context);
+            $this->ispreviewuser = has_capability('mod/hippotrack:preview', $this->context);
         }
         return $this->ispreviewuser;
     }
@@ -296,7 +296,7 @@ class quiz {
      * @return bool whether the user is enrolled.
      */
     public function is_participant($userid) {
-        return is_enrolled($this->get_context(), $userid, 'mod/quiz:attempt', $this->show_only_active_users());
+        return is_enrolled($this->get_context(), $userid, 'mod/hippotrack:attempt', $this->show_only_active_users());
     }
 
     /**
@@ -337,7 +337,7 @@ class quiz {
         $questions = array();
         foreach ($questionids as $id) {
             if (!array_key_exists($id, $this->questions)) {
-                throw new moodle_exception('cannotstartmissingquestion', 'quiz', $this->view_url());
+                throw new moodle_exception('cannotstartmissingquestion', 'hippotrack', $this->view_url());
             }
             $questions[$id] = $this->questions[$id];
             $this->ensure_question_loaded($id);
@@ -370,7 +370,7 @@ class quiz {
     public function get_access_manager($timenow) {
         if (is_null($this->accessmanager)) {
             $this->accessmanager = new quiz_access_manager($this, $timenow,
-                    has_capability('mod/quiz:ignoretimelimits', $this->context, null, false));
+                    has_capability('mod/hippotrack:ignoretimelimits', $this->context, null, false));
         }
         return $this->accessmanager;
     }
@@ -378,7 +378,7 @@ class quiz {
     /**
      * Wrapper round the has_capability funciton that automatically passes in the quiz context.
      *
-     * @param string $capability the name of the capability to check. For example mod/quiz:view.
+     * @param string $capability the name of the capability to check. For example mod/hippotrack:view.
      * @param int|null $userid A user id. By default (null) checks the permissions of the current user.
      * @param bool $doanything If false, ignore effect of admin role assignment.
      * @return boolean true if the user has this capability. Otherwise false.
@@ -390,7 +390,7 @@ class quiz {
     /**
      * Wrapper round the require_capability function that automatically passes in the quiz context.
      *
-     * @param string $capability the name of the capability to check. For example mod/quiz:view.
+     * @param string $capability the name of the capability to check. For example mod/hippotrack:view.
      * @param int|null $userid A user id. By default (null) checks the permissions of the current user.
      * @param bool $doanything If false, ignore effect of admin role assignment.
      */
@@ -404,7 +404,7 @@ class quiz {
      */
     public function view_url() {
         global $CFG;
-        return $CFG->wwwroot . '/mod/quiz/view.php?id=' . $this->cm->id;
+        return $CFG->wwwroot . '/mod/hippotrack/view.php?id=' . $this->cm->id;
     }
 
     /**
@@ -412,7 +412,7 @@ class quiz {
      */
     public function edit_url() {
         global $CFG;
-        return $CFG->wwwroot . '/mod/quiz/edit.php?cmid=' . $this->cm->id;
+        return $CFG->wwwroot . '/mod/hippotrack/edit.php?cmid=' . $this->cm->id;
     }
 
     /**
@@ -422,7 +422,7 @@ class quiz {
      */
     public function attempt_url($attemptid, $page = 0) {
         global $CFG;
-        $url = $CFG->wwwroot . '/mod/quiz/attempt.php?attempt=' . $attemptid;
+        $url = $CFG->wwwroot . '/mod/hippotrack/attempt.php?attempt=' . $attemptid;
         if ($page) {
             $url .= '&page=' . $page;
         }
@@ -441,7 +441,7 @@ class quiz {
         if ($page) {
             $params['page'] = $page;
         }
-        return new moodle_url('/mod/quiz/startattempt.php', $params);
+        return new moodle_url('/mod/hippotrack/startattempt.php', $params);
     }
 
     /**
@@ -449,7 +449,7 @@ class quiz {
      * @return string the URL of the review of that attempt.
      */
     public function review_url($attemptid) {
-        return new moodle_url('/mod/quiz/review.php', array('attempt' => $attemptid, 'cmid' => $this->get_cmid()));
+        return new moodle_url('/mod/hippotrack/review.php', array('attempt' => $attemptid, 'cmid' => $this->get_cmid()));
     }
 
     /**
@@ -457,7 +457,7 @@ class quiz {
      * @return string the URL of the review of that attempt.
      */
     public function summary_url($attemptid) {
-        return new moodle_url('/mod/quiz/summary.php', array('attempt' => $attemptid, 'cmid' => $this->get_cmid()));
+        return new moodle_url('/mod/hippotrack/summary.php', array('attempt' => $attemptid, 'cmid' => $this->get_cmid()));
     }
 
     // Bits of content =========================================================
@@ -497,10 +497,10 @@ class quiz {
             return '';
         } else if ($when == mod_hippotrack_display_options::LATER_WHILE_OPEN && $this->quiz->timeclose &&
                 $this->quiz->reviewattempt & mod_hippotrack_display_options::AFTER_CLOSE) {
-            return get_string('noreviewuntil' . $langstrsuffix, 'quiz',
+            return get_string('noreviewuntil' . $langstrsuffix, 'hippotrack',
                     userdate($this->quiz->timeclose, $dateformat));
         } else {
-            return get_string('noreview' . $langstrsuffix, 'quiz');
+            return get_string('noreview' . $langstrsuffix, 'hippotrack');
         }
     }
 
@@ -671,10 +671,10 @@ class quiz_attempt {
         $attempt = $DB->get_record('quiz_attempts', $conditions, '*', MUST_EXIST);
         $quiz = quiz_access_manager::load_quiz_and_settings($attempt->quiz);
         $course = $DB->get_record('course', array('id' => $quiz->course), '*', MUST_EXIST);
-        $cm = get_coursemodule_from_instance('quiz', $quiz->id, $course->id, false, MUST_EXIST);
+        $cm = get_coursemodule_from_instance('hippotrack', $quiz->id, $course->id, false, MUST_EXIST);
 
         // Update quiz with override information.
-        $quiz = quiz_update_effective_access($quiz, $attempt->userid);
+        $quiz = quizz_update_effective_access($quiz, $attempt->userid);
 
         return new quiz_attempt($attempt, $quiz, $cm, $course);
     }
@@ -803,7 +803,7 @@ class quiz_attempt {
                     $this->questionnumbers[$slot] = $number;
                     $number += $length;
                 } else {
-                    $this->questionnumbers[$slot] = get_string('infoshort', 'quiz');
+                    $this->questionnumbers[$slot] = get_string('infoshort', 'hippotrack');
                 }
                 $this->questionpages[$slot] = $page;
             }
@@ -978,7 +978,7 @@ class quiz_attempt {
      * @return bool whether the review should be allowed.
      */
     public function is_review_allowed() {
-        if (!$this->has_capability('mod/quiz:viewreports')) {
+        if (!$this->has_capability('mod/hippotrack:viewreports')) {
             return false;
         }
 
@@ -1086,9 +1086,9 @@ class quiz_attempt {
      */
     public function check_review_capability() {
         if ($this->get_attempt_state() == mod_hippotrack_display_options::IMMEDIATELY_AFTER) {
-            $capability = 'mod/quiz:attempt';
+            $capability = 'mod/hippotrack:attempt';
         } else {
-            $capability = 'mod/quiz:reviewmyattempts';
+            $capability = 'mod/hippotrack:reviewmyattempts';
         }
 
         // These next tests are in a slighly funny order. The point is that the
@@ -1100,8 +1100,8 @@ class quiz_attempt {
             return;
         }
 
-        if ($this->has_capability('mod/quiz:viewreports') ||
-                $this->has_capability('mod/quiz:preview')) {
+        if ($this->has_capability('mod/hippotrack:viewreports') ||
+                $this->has_capability('mod/hippotrack:preview')) {
             // User has the permission that lets teachers review. Fine.
             return;
         }
@@ -1569,9 +1569,9 @@ class quiz_attempt {
             $a->name = $this->get_quiz_name();
             $a->currentpage = $page + 1;
             $a->totalpages = $this->get_num_pages();
-            $title = get_string('attempttitlepaged', 'quiz', $a);
+            $title = get_string('attempttitlepaged', 'hippotrack', $a);
         } else {
-            $title = get_string('attempttitle', 'quiz', $this->get_quiz_name());
+            $title = get_string('attempttitle', 'hippotrack', $this->get_quiz_name());
         }
 
         return $title;
@@ -1595,21 +1595,21 @@ class quiz_attempt {
      * @return string summary page title.
      */
     public function summary_page_title() : string {
-        return get_string('attemptsummarytitle', 'quiz', $this->get_quiz_name());
+        return get_string('attemptsummarytitle', 'hippotrack', $this->get_quiz_name());
     }
 
     /**
      * @return moodle_url the URL of this quiz's summary page.
      */
     public function summary_url() {
-        return new moodle_url('/mod/quiz/summary.php', array('attempt' => $this->attempt->id, 'cmid' => $this->get_cmid()));
+        return new moodle_url('/mod/hippotrack/summary.php', array('attempt' => $this->attempt->id, 'cmid' => $this->get_cmid()));
     }
 
     /**
      * @return moodle_url the URL of this quiz's summary page.
      */
     public function processattempt_url() {
-        return new moodle_url('/mod/quiz/processattempt.php');
+        return new moodle_url('/mod/hippotrack/processattempt.php');
     }
 
     /**
@@ -1625,9 +1625,9 @@ class quiz_attempt {
             $a->name = $this->get_quiz_name();
             $a->currentpage = $page + 1;
             $a->totalpages = $this->get_num_pages();
-            $title = get_string('attemptreviewtitlepaged', 'quiz', $a);
+            $title = get_string('attemptreviewtitlepaged', 'hippotrack', $a);
         } else {
-            $title = get_string('attemptreviewtitle', 'quiz', $this->get_quiz_name());
+            $title = get_string('attemptreviewtitle', 'hippotrack', $this->get_quiz_name());
         }
 
         return $title;
@@ -1712,7 +1712,7 @@ class quiz_attempt {
         if ($this->is_preview() && $this->is_preview_user()) {
             return $OUTPUT->single_button(new moodle_url(
                     $this->start_attempt_url(), array('forcenew' => true)),
-                    get_string('startnewpreview', 'quiz'));
+                    get_string('startnewpreview', 'hippotrack'));
         } else {
             return '';
         }
@@ -1775,7 +1775,7 @@ class quiz_attempt {
             $links = $this->links_to_other_redos($slot, $displayoptions->questionreviewlink);
             if ($links) {
                 $displayoptions->extrahistorycontent = html_writer::tag('p',
-                        get_string('redoesofthisquestion', 'quiz', $renderer->render($links)));
+                        get_string('redoesofthisquestion', 'hippotrack', $renderer->render($links)));
             }
         }
 
@@ -1809,7 +1809,7 @@ class quiz_attempt {
         $question->parent = 0;
         $question->qtype = question_bank::get_qtype('description');
         $question->name = '';
-        $question->questiontext = get_string('questiondependsonprevious', 'quiz');
+        $question->questiontext = get_string('questiondependsonprevious', 'hippotrack');
         $question->questiontextformat = FORMAT_HTML;
         $question->generalfeedback = '';
         $question->defaultmark = $this->quba->get_question_max_mark($slot);
@@ -1906,7 +1906,7 @@ class quiz_attempt {
         $bc = new block_contents();
         $bc->attributes['id'] = 'mod_hippotrack_navblock';
         $bc->attributes['role'] = 'navigation';
-        $bc->title = get_string('quiznavigation', 'quiz');
+        $bc->title = get_string('quiznavigation', 'hippotrack');
         $bc->content = $output->navigation_panel($panel);
         return $bc;
     }
@@ -2206,7 +2206,7 @@ class quiz_attempt {
         $this->attempt->gradednotificationsenttime = null;
 
         if (!$this->requires_manual_grading() ||
-                !has_capability('mod/quiz:emailnotifyattemptgraded', $this->get_quizobj()->get_context(),
+                !has_capability('mod/hippotrack:emailnotifyattemptgraded', $this->get_quizobj()->get_context(),
                         $this->get_userid())) {
             $this->attempt->gradednotificationsenttime = $this->attempt->timefinish;
         }
@@ -2305,7 +2305,7 @@ class quiz_attempt {
             )
         );
         $event = $eventclass::create($params);
-        $event->add_record_snapshot('quiz', $this->get_quiz());
+        $event->add_record_snapshot('hippotrack', $this->get_quiz());
         $event->add_record_snapshot('quiz_attempts', $this->get_attempt());
         $event->trigger();
     }
@@ -2316,7 +2316,7 @@ class quiz_attempt {
      * Get a URL for a particular question on a particular page of the quiz.
      * Used by {@link attempt_url()} and {@link review_url()}.
      *
-     * @param string $script. Used in the URL like /mod/quiz/$script.php.
+     * @param string $script. Used in the URL like /mod/hippotrack/$script.php.
      * @param int $slot identifies the specific question on the page to jump to.
      *      0 to just use the $page parameter.
      * @param int $page -1 to look up the page number from the slot, otherwise
@@ -2365,7 +2365,7 @@ class quiz_attempt {
             return new moodle_url($fragment);
 
         } else {
-            $url = new moodle_url('/mod/quiz/' . $script . '.php' . $fragment,
+            $url = new moodle_url('/mod/hippotrack/' . $script . '.php' . $fragment,
                     array('attempt' => $this->attempt->id, 'cmid' => $this->get_cmid()));
             if ($page == 0 && $showall != $defaultshowall) {
                 $url->param('showall', (int) $showall);
@@ -2394,7 +2394,7 @@ class quiz_attempt {
         // Get key times.
         $accessmanager = $this->get_access_manager($timenow);
         $timeclose = $accessmanager->get_end_time($this->get_attempt());
-        $graceperiodmin = get_config('quiz', 'graceperiodmin');
+        $graceperiodmin = get_config('hippotrack', 'graceperiodmin');
 
         // Don't enforce timeclose for previews.
         if ($this->is_preview()) {
@@ -2850,7 +2850,7 @@ abstract class quiz_nav_panel_base {
             if ($this->attemptobj->is_blocked_by_previous_question($slot)) {
                 $button->url = null;
                 $button->stateclass = 'blocked';
-                $button->statestring = get_string('questiondependsonprevious', 'quiz');
+                $button->statestring = get_string('questiondependsonprevious', 'hippotrack');
             }
             $buttons[] = $button;
         }
@@ -2865,9 +2865,9 @@ abstract class quiz_nav_panel_base {
 
         // Special case handling for 'information' items.
         if ($qa->get_state() == question_state::$todo) {
-            return get_string('notyetviewed', 'quiz');
+            return get_string('notyetviewed', 'hippotrack');
         } else {
-            return get_string('viewed', 'quiz');
+            return get_string('viewed', 'hippotrack');
         }
     }
 
@@ -2947,7 +2947,7 @@ class quiz_attempt_nav_panel extends quiz_nav_panel_base {
     }
 
     public function render_before_button_bits(mod_hippotrack_renderer $output) {
-        return html_writer::tag('div', get_string('navnojswarning', 'quiz'),
+        return html_writer::tag('div', get_string('navnojswarning', 'hippotrack'),
                 array('id' => 'quiznojswarning'));
     }
 
@@ -2957,7 +2957,7 @@ class quiz_attempt_nav_panel extends quiz_nav_panel_base {
             return '';
         }
         return html_writer::link($this->attemptobj->summary_url(),
-                get_string('endtest', 'quiz'), array('class' => 'endtestlink aalink')) .
+                get_string('endtest', 'hippotrack'), array('class' => 'endtestlink aalink')) .
                 $this->render_restart_preview_link($output);
     }
 }
@@ -2980,10 +2980,10 @@ class quiz_review_nav_panel extends quiz_nav_panel_base {
         if ($this->attemptobj->get_num_pages() > 1) {
             if ($this->showall) {
                 $html .= html_writer::link($this->attemptobj->review_url(null, 0, false),
-                        get_string('showeachpage', 'quiz'));
+                        get_string('showeachpage', 'hippotrack'));
             } else {
                 $html .= html_writer::link($this->attemptobj->review_url(null, 0, true),
-                        get_string('showall', 'quiz'));
+                        get_string('showall', 'hippotrack'));
             }
         }
         $html .= $output->finish_review_link($this->attemptobj);

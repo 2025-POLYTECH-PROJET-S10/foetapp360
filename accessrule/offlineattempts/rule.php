@@ -25,7 +25,7 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-require_once($CFG->dirroot . '/mod/quiz/accessrule/accessrulebase.php');
+require_once($CFG->dirroot . '/mod/hippotrack/accessrule/accessrulebase.php');
 
 /**
  * A rule implementing the offlineattempts check.

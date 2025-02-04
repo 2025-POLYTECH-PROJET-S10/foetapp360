@@ -88,7 +88,7 @@ class slot_random {
             if (empty($this->record->quizid)) {
                 throw new \coding_exception('quizid is not set.');
             }
-            $this->quiz = $DB->get_record('quiz', array('id' => $this->record->quizid));
+            $this->quiz = $DB->get_record('hippotrack', array('id' => $this->record->quizid));
         }
 
         return $this->quiz;
@@ -208,7 +208,7 @@ class slot_random {
         $trans->allow_commit();
 
         // Log slot created event.
-        $cm = get_coursemodule_from_instance('quiz', $quiz->id);
+        $cm = get_coursemodule_from_instance('hippotrack', $quiz->id);
         $event = \mod_hippotrack\event\slot_created::create([
             'context' => \context_module::instance($cm->id),
             'objectid' => $this->record->id,

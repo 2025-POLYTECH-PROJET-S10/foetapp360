@@ -35,9 +35,9 @@ class quiz_structure_modified {
      */
     public static function callback(int $quizid): void {
         global $DB, $CFG;
-        require_once($CFG->dirroot . '/mod/quiz/report/statistics/statisticslib.php');
-        require_once($CFG->dirroot . '/mod/quiz/report/statistics/report.php');
-        $quiz = $DB->get_record('quiz', ['id' => $quizid]);
+        require_once($CFG->dirroot . '/mod/hippotrack/report/statistics/statisticslib.php');
+        require_once($CFG->dirroot . '/mod/hippotrack/report/statistics/report.php');
+        $quiz = $DB->get_record('hippotrack', ['id' => $quizid]);
         if (!$quiz) {
             throw new \coding_exception('Could not find quiz with ID ' . $quizid . '.');
         }

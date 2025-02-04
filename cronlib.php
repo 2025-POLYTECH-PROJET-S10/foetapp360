@@ -25,7 +25,7 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-require_once($CFG->dirroot . '/mod/quiz/locallib.php');
+require_once($CFG->dirroot . '/mod/hippotrack/locallib.php');
 
 
 /**
@@ -59,8 +59,8 @@ class mod_hippotrack_overdue_attempt_updater {
 
                 // If we have moved on to a different quiz, fetch the new data.
                 if (!$quiz || $attempt->quiz != $quiz->id) {
-                    $quiz = $DB->get_record('quiz', array('id' => $attempt->quiz), '*', MUST_EXIST);
-                    $cm = get_coursemodule_from_instance('quiz', $attempt->quiz);
+                    $quiz = $DB->get_record('hippotrack', array('id' => $attempt->quiz), '*', MUST_EXIST);
+                    $cm = get_coursemodule_from_instance('hippotrack', $attempt->quiz);
                     $quizcount += 1;
                 }
 

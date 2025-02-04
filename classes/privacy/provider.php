@@ -37,8 +37,8 @@ use core_privacy\manager;
 
 defined('MOODLE_INTERNAL') || die();
 
-require_once($CFG->dirroot . '/mod/quiz/lib.php');
-require_once($CFG->dirroot . '/mod/quiz/locallib.php');
+require_once($CFG->dirroot . '/mod/hippotrack/lib.php');
+require_once($CFG->dirroot . '/mod/hippotrack/locallib.php');
 
 /**
  * Privacy Subsystem implementation for mod_hippotrack.
@@ -63,7 +63,7 @@ class provider implements
      * @return  collection  The array of metadata
      */
     public static function get_metadata(collection $items) : collection {
-        // The table 'quiz' stores a record for each quiz.
+        // The table 'hippotrack' stores a record for each quiz.
         // It does not contain user personal data, but data is returned from it for contextual requirements.
 
         // The table 'quiz_attempts' stores a record of each quiz attempt.
@@ -89,7 +89,7 @@ class provider implements
 
         // The table 'quiz_grades' contains the current grade for each quiz/user combination.
         $items->add_database_table('quiz_grades', [
-                'quiz'                  => 'privacy:metadata:quiz_grades:quiz',
+                'hippotrack'                  => 'privacy:metadata:quiz_grades:quiz',
                 'userid'                => 'privacy:metadata:quiz_grades:userid',
                 'grade'                 => 'privacy:metadata:quiz_grades:grade',
                 'timemodified'          => 'privacy:metadata:quiz_grades:timemodified',
@@ -98,7 +98,7 @@ class provider implements
         // The table 'quiz_overrides' contains any user or group overrides for users.
         // It should be included where data exists for a user.
         $items->add_database_table('quiz_overrides', [
-                'quiz'                  => 'privacy:metadata:quiz_overrides:quiz',
+                'hippotrack'                  => 'privacy:metadata:quiz_overrides:quiz',
                 'userid'                => 'privacy:metadata:quiz_overrides:userid',
                 'timeopen'              => 'privacy:metadata:quiz_overrides:timeopen',
                 'timeclose'             => 'privacy:metadata:quiz_overrides:timeclose',
@@ -123,7 +123,7 @@ class provider implements
         $items->add_subsystem_link('core_question', [], 'privacy:metadata:core_question');
 
         // The quiz has two subplugins..
-        $items->add_plugintype_link('quiz', [], 'privacy:metadata:quiz');
+        $items->add_plugintype_link('hippotrack', [], 'privacy:metadata:quiz');
         $items->add_plugintype_link('quizaccess', [], 'privacy:metadata:quizaccess');
 
         // Although the quiz supports the core_completion API and defines custom completion items, these will be
@@ -150,7 +150,7 @@ class provider implements
                   JOIN {quiz} q ON q.id = cm.instance
                   JOIN {quiz_attempts} qa ON qa.quiz = q.id
                  WHERE qa.userid = :userid AND qa.preview = 0";
-        $params = ['contextlevel' => CONTEXT_MODULE, 'modname' => 'quiz', 'userid' => $userid];
+        $params = ['contextlevel' => CONTEXT_MODULE, 'modname' => 'hippotrack', 'userid' => $userid];
         $resultset->add_from_sql($sql, $params);
 
         // Users with quiz overrides.
@@ -161,7 +161,7 @@ class provider implements
                   JOIN {quiz} q ON q.id = cm.instance
                   JOIN {quiz_overrides} qo ON qo.quiz = q.id
                  WHERE qo.userid = :userid";
-        $params = ['contextlevel' => CONTEXT_MODULE, 'modname' => 'quiz', 'userid' => $userid];
+        $params = ['contextlevel' => CONTEXT_MODULE, 'modname' => 'hippotrack', 'userid' => $userid];
         $resultset->add_from_sql($sql, $params);
 
         // Get the SQL used to link indirect question usages for the user.
@@ -177,7 +177,7 @@ class provider implements
                   JOIN {quiz_attempts} qa ON qa.quiz = q.id
             " . $qubaid->from . "
             WHERE " . $qubaid->where() . " AND qa.preview = 0";
-        $params = ['contextlevel' => CONTEXT_MODULE, 'modname' => 'quiz'] + $qubaid->from_where_params();
+        $params = ['contextlevel' => CONTEXT_MODULE, 'modname' => 'hippotrack'] + $qubaid->from_where_params();
         $resultset->add_from_sql($sql, $params);
 
         return $resultset;
@@ -197,7 +197,7 @@ class provider implements
 
         $params = [
             'cmid'    => $context->instanceid,
-            'modname' => 'quiz',
+            'modname' => 'hippotrack',
         ];
 
         // Users who attempted the quiz.
@@ -266,7 +266,7 @@ class provider implements
 
         $params = [
             'contextlevel'      => CONTEXT_MODULE,
-            'modname'           => 'quiz',
+            'modname'           => 'hippotrack',
             'qguserid'          => $userid,
             'qouserid'          => $userid,
         ];
@@ -275,7 +275,7 @@ class provider implements
         // Fetch the individual quizzes.
         $quizzes = $DB->get_recordset_sql($sql, $params);
         foreach ($quizzes as $quiz) {
-            list($course, $cm) = get_course_and_cm_from_cmid($quiz->cmid, 'quiz');
+            list($course, $cm) = get_course_and_cm_from_cmid($quiz->cmid, 'hippotrack');
             $quizobj = new \quiz($quiz, $cm, $course);
             $context = $quizobj->get_context();
 
@@ -347,7 +347,7 @@ class provider implements
             return;
         }
 
-        $cm = get_coursemodule_from_id('quiz', $context->instanceid);
+        $cm = get_coursemodule_from_id('hippotrack', $context->instanceid);
         if (!$cm) {
             // Only quiz module will be handled.
             return;
@@ -365,7 +365,7 @@ class provider implements
             );
 
         // Delete all overrides - do not log.
-        quiz_delete_all_overrides($quiz, false);
+        quizz_delete_all_overrides($quiz, false);
 
         // This will delete all question attempts, quiz attempts, and quiz grades for this quiz.
         quiz_delete_all_attempts($quiz);
@@ -385,7 +385,7 @@ class provider implements
                 continue;
             }
 
-            $cm = get_coursemodule_from_id('quiz', $context->instanceid);
+            $cm = get_coursemodule_from_id('hippotrack', $context->instanceid);
             if (!$cm) {
                 // Only quiz module will be handled.
                 continue;
@@ -406,12 +406,12 @@ class provider implements
 
             // Remove overrides for this user.
             $overrides = $DB->get_records('quiz_overrides' , [
-                'quiz' => $quizobj->get_quizid(),
+                'hippotrack' => $quizobj->get_quizid(),
                 'userid' => $user->id,
             ]);
 
             foreach ($overrides as $override) {
-                quiz_delete_override($quiz, $override->id, false);
+                quizz_delete_override($quiz, $override->id, false);
             }
 
             // This will delete all question attempts, quiz attempts, and quiz grades for this quiz.
@@ -434,7 +434,7 @@ class provider implements
             return;
         }
 
-        $cm = get_coursemodule_from_id('quiz', $context->instanceid);
+        $cm = get_coursemodule_from_id('hippotrack', $context->instanceid);
         if (!$cm) {
             // Only quiz module will be handled.
             return;
@@ -456,12 +456,12 @@ class provider implements
         foreach ($userids as $userid) {
             // Remove overrides for this user.
             $overrides = $DB->get_records('quiz_overrides' , [
-                'quiz' => $quizobj->get_quizid(),
+                'hippotrack' => $quizobj->get_quizid(),
                 'userid' => $userid,
             ]);
 
             foreach ($overrides as $override) {
-                quiz_delete_override($quiz, $override->id, false);
+                quizz_delete_override($quiz, $override->id, false);
             }
 
             // This will delete all question attempts, quiz attempts, and quiz grades for this user in the given quiz.
@@ -487,7 +487,7 @@ class provider implements
                     qa.*
                   FROM {context} c
                   JOIN {course_modules} cm ON cm.id = c.instanceid AND c.contextlevel = :contextlevel
-                  JOIN {modules} m ON m.id = cm.module AND m.name = 'quiz'
+                  JOIN {modules} m ON m.id = cm.module AND m.name = 'hippotrack'
                   JOIN {quiz} q ON q.id = cm.instance
                   JOIN {quiz_attempts} qa ON qa.quiz = q.id
             " . $qubaid->from. "
@@ -507,7 +507,7 @@ class provider implements
 
         $attempts = $DB->get_recordset_sql($sql, $params);
         foreach ($attempts as $attempt) {
-            $quiz = $DB->get_record('quiz', ['id' => $attempt->quiz]);
+            $quiz = $DB->get_record('hippotrack', ['id' => $attempt->quiz]);
             $context = \context_module::instance($attempt->cmid);
             $attemptsubcontext = helper::get_quiz_attempt_subcontext($attempt, $contextlist->get_user());
             $options = quiz_get_review_options($quiz, $attempt, $context);

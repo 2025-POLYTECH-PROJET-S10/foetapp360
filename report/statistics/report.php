@@ -28,12 +28,12 @@ defined('MOODLE_INTERNAL') || die();
 use core_question\statistics\responses\analyser;
 use core_question\statistics\questions\all_calculated_for_qubaid_condition;
 
-require_once($CFG->dirroot . '/mod/quiz/report/default.php');
-require_once($CFG->dirroot . '/mod/quiz/report/reportlib.php');
-require_once($CFG->dirroot . '/mod/quiz/report/statistics/statistics_form.php');
-require_once($CFG->dirroot . '/mod/quiz/report/statistics/statistics_table.php');
-require_once($CFG->dirroot . '/mod/quiz/report/statistics/statistics_question_table.php');
-require_once($CFG->dirroot . '/mod/quiz/report/statistics/statisticslib.php');
+require_once($CFG->dirroot . '/mod/hippotrack/report/default.php');
+require_once($CFG->dirroot . '/mod/hippotrack/report/reportlib.php');
+require_once($CFG->dirroot . '/mod/hippotrack/report/statistics/statistics_form.php');
+require_once($CFG->dirroot . '/mod/hippotrack/report/statistics/statistics_table.php');
+require_once($CFG->dirroot . '/mod/hippotrack/report/statistics/statistics_question_table.php');
+require_once($CFG->dirroot . '/mod/hippotrack/report/statistics/statisticslib.php');
 
 /**
  * The quiz statistics report provides summary information about each question in
@@ -85,9 +85,9 @@ class quiz_statistics_report extends quiz_default_report {
         $pageoptions['id'] = $cm->id;
         $pageoptions['mode'] = 'statistics';
 
-        $reporturl = new moodle_url('/mod/quiz/report.php', $pageoptions);
+        $reporturl = new moodle_url('/mod/hippotrack/report.php', $pageoptions);
 
-        $mform = new quiz_statistics_settings_form($reporturl, compact('quiz'));
+        $mform = new quiz_statistics_settings_form($reporturl, compact('hippotrack'));
 
         $mform->set_data(array('whichattempts' => $whichattempts, 'whichtries' => $whichtries));
 
@@ -113,7 +113,7 @@ class quiz_statistics_report extends quiz_default_report {
         } else {
             // All users who can attempt quizzes and who are in the currently selected group.
             $groupstudentsjoins = get_enrolled_with_capabilities_join($this->context, '',
-                    array('mod/quiz:reviewmyattempts', 'mod/quiz:attempt'), $currentgroup);
+                    array('mod/hippotrack:reviewmyattempts', 'mod/hippotrack:attempt'), $currentgroup);
             if (!empty($groupstudentsjoins->joins)) {
                 $sql = "SELECT DISTINCT u.id
                     FROM {user} u
@@ -306,7 +306,7 @@ class quiz_statistics_report extends quiz_default_report {
         $questioninfotable->attributes['class'] = 'generaltable titlesleft';
 
         $questioninfotable->data = array();
-        $questioninfotable->data[] = array(get_string('modulename', 'quiz'), $quiz->name);
+        $questioninfotable->data[] = array(get_string('modulename', 'hippotrack'), $quiz->name);
         $questioninfotable->data[] = array(get_string('questionname', 'quiz_statistics'),
                 $questionstat->question->name.'&nbsp;'.$datumfromtable['actions']);
 
@@ -551,7 +551,7 @@ class quiz_statistics_report extends quiz_default_report {
 
         $quiz = $quizorid;
         if (!is_object($quiz)) {
-            $quiz = $DB->get_record('quiz', array('id' => $quizorid), '*', MUST_EXIST);
+            $quiz = $DB->get_record('hippotrack', array('id' => $quizorid), '*', MUST_EXIST);
         }
 
         // Load the rest of the required data.
@@ -897,8 +897,8 @@ class quiz_statistics_report extends quiz_default_report {
         foreach ($questions as $qs => $question) {
             if ($question->qtype === 'random') {
                 $question->id = 0;
-                $question->name = get_string('random', 'quiz');
-                $question->questiontext = get_string('random', 'quiz');
+                $question->name = get_string('random', 'hippotrack');
+                $question->questiontext = get_string('random', 'hippotrack');
                 $question->parenttype = 'random';
                 $questiondata[$question->slot] = $question;
             } else if ($question->qtype === 'missingtype') {
@@ -997,7 +997,7 @@ class quiz_statistics_report extends quiz_default_report {
             bool $performanalysis = true
         ): ?all_calculated_for_qubaid_condition {
         global $DB;
-        $quiz = $DB->get_record('quiz', ['id' => $quizid], '*', MUST_EXIST);
+        $quiz = $DB->get_record('hippotrack', ['id' => $quizid], '*', MUST_EXIST);
         $questions = $this->load_and_initialise_questions_for_calculations($quiz);
 
         [, $questionstats] = $this->get_all_stats_and_analysis($quiz,

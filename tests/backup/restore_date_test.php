@@ -39,7 +39,7 @@ class restore_date_test extends \restore_date_testcase {
         // Create quiz data.
         $record = ['timeopen' => 100, 'timeclose' => 100, 'timemodified' => 100, 'tiemcreated' => 100, 'questionsperpage' => 0,
             'grade' => 100.0, 'sumgrades' => 2];
-        list($course, $quiz) = $this->create_course_and_module('quiz', $record);
+        list($course, $quiz) = $this->create_course_and_module('hippotrack', $record);
 
         // Create questions.
         $questiongenerator = $this->getDataGenerator()->get_plugin_generator('core_question');
@@ -67,7 +67,7 @@ class restore_date_test extends \restore_date_testcase {
 
         // User override.
         $override = (object)[
-            'quiz' => $quiz->id,
+            'hippotrack' => $quiz->id,
             'groupid' => 0,
             'userid' => $USER->id,
             'sortorder' => 1,
@@ -81,15 +81,15 @@ class restore_date_test extends \restore_date_testcase {
 
         // Do backup and restore.
         $newcourseid = $this->backup_and_restore($course);
-        $newquiz = $DB->get_record('quiz', ['course' => $newcourseid]);
+        $newquiz = $DB->get_record('hippotrack', ['course' => $newcourseid]);
 
         $this->assertFieldsNotRolledForward($quiz, $newquiz, ['timecreated', 'timemodified']);
         $props = ['timeclose', 'timeopen'];
         $this->assertFieldsRolledForward($quiz, $newquiz, $props);
 
-        $newattempt = $DB->get_record('quiz_attempts', ['quiz' => $newquiz->id]);
-        $newoverride = $DB->get_record('quiz_overrides', ['quiz' => $newquiz->id]);
-        $newgrade = $DB->get_record('quiz_grades', ['quiz' => $newquiz->id]);
+        $newattempt = $DB->get_record('quiz_attempts', ['hippotrack' => $newquiz->id]);
+        $newoverride = $DB->get_record('quiz_overrides', ['hippotrack' => $newquiz->id]);
+        $newgrade = $DB->get_record('quiz_grades', ['hippotrack' => $newquiz->id]);
 
         // Attempt time checks.
         $diff = $this->get_diff();

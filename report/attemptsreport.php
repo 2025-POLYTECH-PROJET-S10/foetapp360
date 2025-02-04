@@ -90,7 +90,7 @@ abstract class quiz_attempts_report extends quiz_default_report {
         $this->qmsubselect = quiz_report_qm_filter_select($quiz);
 
         $this->form = new $formclass($this->get_base_url(),
-                array('quiz' => $quiz, 'currentgroup' => $currentgroup, 'context' => $this->context));
+                array('hippotrack' => $quiz, 'currentgroup' => $currentgroup, 'context' => $this->context));
 
         return array($currentgroup, $studentsjoins, $groupstudentsjoins, $allowedjoins);
     }
@@ -100,7 +100,7 @@ abstract class quiz_attempts_report extends quiz_default_report {
      * @return moodle_url the URL.
      */
     protected function get_base_url() {
-        return new moodle_url('/mod/quiz/report.php',
+        return new moodle_url('/mod/hippotrack/report.php',
                 array('id' => $this->context->instanceid, 'mode' => $this->mode));
     }
 
@@ -126,7 +126,7 @@ abstract class quiz_attempts_report extends quiz_default_report {
         }
 
         $studentsjoins = get_enrolled_with_capabilities_join($this->context, '',
-                array('mod/quiz:attempt', 'mod/quiz:reviewmyattempts'));
+                array('mod/hippotrack:attempt', 'mod/hippotrack:reviewmyattempts'));
 
         if (empty($currentgroup)) {
             return array($currentgroup, $studentsjoins, $empty, $studentsjoins);
@@ -134,7 +134,7 @@ abstract class quiz_attempts_report extends quiz_default_report {
 
         // We have a currently selected group.
         $groupstudentsjoins = get_enrolled_with_capabilities_join($this->context, '',
-                array('mod/quiz:attempt', 'mod/quiz:reviewmyattempts'), $currentgroup);
+                array('mod/hippotrack:attempt', 'mod/hippotrack:reviewmyattempts'), $currentgroup);
 
         return array($currentgroup, $studentsjoins, $groupstudentsjoins, $groupstudentsjoins);
     }
@@ -236,7 +236,7 @@ abstract class quiz_attempts_report extends quiz_default_report {
      */
     protected function add_state_column(&$columns, &$headers) {
         $columns[] = 'state';
-        $headers[] = get_string('attemptstate', 'quiz');
+        $headers[] = get_string('attemptstate', 'hippotrack');
     }
 
     /**
@@ -246,13 +246,13 @@ abstract class quiz_attempts_report extends quiz_default_report {
      */
     protected function add_time_columns(&$columns, &$headers) {
         $columns[] = 'timestart';
-        $headers[] = get_string('startedon', 'quiz');
+        $headers[] = get_string('startedon', 'hippotrack');
 
         $columns[] = 'timefinish';
-        $headers[] = get_string('timecompleted', 'quiz');
+        $headers[] = get_string('timecompleted', 'hippotrack');
 
         $columns[] = 'duration';
-        $headers[] = get_string('attemptduration', 'quiz');
+        $headers[] = get_string('attemptduration', 'hippotrack');
     }
 
     /**
@@ -267,13 +267,13 @@ abstract class quiz_attempts_report extends quiz_default_report {
     protected function add_grade_columns($quiz, $usercanseegrades, &$columns, &$headers, $includefeedback = true) {
         if ($usercanseegrades) {
             $columns[] = 'sumgrades';
-            $headers[] = get_string('grade', 'quiz') . '/' .
+            $headers[] = get_string('grade', 'hippotrack') . '/' .
                     quiz_format_grade($quiz, $quiz->grade);
         }
 
         if ($includefeedback && quiz_has_feedback($quiz)) {
             $columns[] = 'feedbacktext';
-            $headers[] = get_string('feedback', 'quiz');
+            $headers[] = get_string('feedback', 'hippotrack');
         }
     }
 
@@ -318,7 +318,7 @@ abstract class quiz_attempts_report extends quiz_default_report {
         if (empty($currentgroup) || $this->hasgroupstudents) {
             if (optional_param('delete', 0, PARAM_BOOL) && confirm_sesskey()) {
                 if ($attemptids = optional_param_array('attemptid', array(), PARAM_INT)) {
-                    require_capability('mod/quiz:deleteattempts', $this->context);
+                    require_capability('mod/hippotrack:deleteattempts', $this->context);
                     $this->delete_selected_attempts($quiz, $cm, $attemptids, $allowedjoins);
                     redirect($redirecturl);
                 }

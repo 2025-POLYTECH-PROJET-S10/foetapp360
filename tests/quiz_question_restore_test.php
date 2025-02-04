@@ -21,7 +21,7 @@ defined('MOODLE_INTERNAL') || die();
 global $CFG;
 require_once(__DIR__ . '/quiz_question_helper_test_trait.php');
 require_once($CFG->dirroot . '/backup/util/includes/restore_includes.php');
-require_once($CFG->dirroot . '/mod/quiz/locallib.php');
+require_once($CFG->dirroot . '/mod/hippotrack/locallib.php');
 
 /**
  * Quiz backup and restore tests.
@@ -84,7 +84,7 @@ class quiz_question_restore_test extends \advanced_testcase {
         $this->restore_quiz($backupid, $newcourse, $this->user);
 
         // Verify.
-        $modules = get_fast_modinfo($newcourse->id)->get_instances_of('quiz');
+        $modules = get_fast_modinfo($newcourse->id)->get_instances_of('hippotrack');
         $module = reset($modules);
         $questions = \mod_hippotrack\question\bank\qbank_helper::get_question_structure(
                 $module->instance, $module->context);
@@ -122,7 +122,7 @@ class quiz_question_restore_test extends \advanced_testcase {
         $this->restore_quiz($backupid, $newcourse, $this->user);
 
         // Verify.
-        $modules = get_fast_modinfo($newcourse->id)->get_instances_of('quiz');
+        $modules = get_fast_modinfo($newcourse->id)->get_instances_of('hippotrack');
         $module = reset($modules);
         $this->assertEquals(3, count(\mod_hippotrack\question\bank\qbank_helper::get_question_structure(
                 $module->instance, $module->context)));
@@ -223,7 +223,7 @@ class quiz_question_restore_test extends \advanced_testcase {
         $this->restore_quiz($backupid, $newcourse, $this->user);
 
         // Verify.
-        $modules = get_fast_modinfo($newcourse->id)->get_instances_of('quiz');
+        $modules = get_fast_modinfo($newcourse->id)->get_instances_of('hippotrack');
         $module = reset($modules);
         $this->assertCount(1, quiz_get_user_attempts($module->instance, $this->student->id));
         $this->assertCount(3, \mod_hippotrack\question\bank\qbank_helper::get_question_structure(
@@ -255,7 +255,7 @@ class quiz_question_restore_test extends \advanced_testcase {
 
         // Get the information about the resulting course and check that it is set up correctly.
         $modinfo = get_fast_modinfo($newcourseid);
-        $quiz = array_values($modinfo->get_instances_of('quiz'))[0];
+        $quiz = array_values($modinfo->get_instances_of('hippotrack'))[0];
         $quizobj = \quiz::create($quiz->instance);
         $structure = structure::create_for_quiz($quizobj);
 
@@ -298,7 +298,7 @@ class quiz_question_restore_test extends \advanced_testcase {
 
         // Get the information about the resulting course and check that it is set up correctly.
         $modinfo = get_fast_modinfo($newcourseid);
-        $quiz = array_values($modinfo->get_instances_of('quiz'))[0];
+        $quiz = array_values($modinfo->get_instances_of('hippotrack'))[0];
         $quizobj = \quiz::create($quiz->instance);
         $structure = structure::create_for_quiz($quizobj);
 
@@ -350,7 +350,7 @@ class quiz_question_restore_test extends \advanced_testcase {
 
         // Get the information about the resulting course and check that it is set up correctly.
         $modinfo = get_fast_modinfo($newcourseid);
-        $quiz = array_values($modinfo->get_instances_of('quiz'))[0];
+        $quiz = array_values($modinfo->get_instances_of('hippotrack'))[0];
         $quizobj = \quiz::create($quiz->instance);
         $structure = \mod_hippotrack\structure::create_for_quiz($quizobj);
 
@@ -404,7 +404,7 @@ class quiz_question_restore_test extends \advanced_testcase {
         // Get the information about the resulting course and check that it is set up correctly.
         // Each quiz should contain an instance of the random question.
         $modinfo = get_fast_modinfo($newcourseid);
-        $quizzes = $modinfo->get_instances_of('quiz');
+        $quizzes = $modinfo->get_instances_of('hippotrack');
         $this->assertCount(2, $quizzes);
         foreach ($quizzes as $quiz) {
             $quizobj = \quiz::create($quiz->instance);
@@ -483,7 +483,7 @@ class quiz_question_restore_test extends \advanced_testcase {
 
         // Ensure the restored slots match the original slots.
         $modinfo = get_fast_modinfo($course2);
-        $quizzes = $modinfo->get_instances_of('quiz');
+        $quizzes = $modinfo->get_instances_of('hippotrack');
         $restoredquiz = reset($quizzes);
         $restoredquizobj = \quiz::create($restoredquiz->instance, $user1->id);
         $restoredstructure = \mod_hippotrack\structure::create_for_quiz($restoredquizobj);

@@ -29,8 +29,8 @@ defined('MOODLE_INTERNAL') || die();
 
 global $CFG;
 require_once($CFG->libdir . '/questionlib.php');
-require_once($CFG->dirroot . '/mod/quiz/locallib.php');
-require_once($CFG->dirroot . '/mod/quiz/report/reportlib.php');
+require_once($CFG->dirroot . '/mod/hippotrack/locallib.php');
+require_once($CFG->dirroot . '/mod/hippotrack/report/reportlib.php');
 
 class testable_all_calculated_for_qubaid_condition extends \core_question\statistics\questions\all_calculated_for_qubaid_condition {
 

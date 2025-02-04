@@ -179,7 +179,7 @@ Y.extend(RESOURCETOOLBOX, TOOLBOX, {
             confirmstring = '',
             qtypename = M.util.get_string('pluginname',
                 'qtype_' + element.getAttribute('class').match(/qtype_([^\s]*)/)[1]);
-        confirmstring = M.util.get_string('confirmremovequestion', 'quiz', qtypename);
+        confirmstring = M.util.get_string('confirmremovequestion', 'hippotrack', qtypename);
 
         // Create the confirmation dialogue.
         var confirm = new M.core.confirm({
@@ -249,8 +249,8 @@ Y.extend(RESOURCETOOLBOX, TOOLBOX, {
 
         if (typeof problemsection !== 'undefined') {
             var alert = new M.core.alert({
-                title: M.util.get_string('cannotremoveslots', 'quiz'),
-                message: M.util.get_string('cannotremoveallsectionslots', 'quiz', problemsection)
+                title: M.util.get_string('cannotremoveslots', 'hippotrack'),
+                message: M.util.get_string('cannotremoveallsectionslots', 'hippotrack', problemsection)
             });
 
             alert.show();
@@ -286,7 +286,7 @@ Y.extend(RESOURCETOOLBOX, TOOLBOX, {
 
         // Create the confirmation dialogue.
         var confirm = new M.core.confirm({
-            question: M.util.get_string('areyousureremoveselected', 'quiz'),
+            question: M.util.get_string('areyousureremoveselected', 'hippotrack'),
             modal: true
         });
 

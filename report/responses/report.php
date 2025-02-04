@@ -25,11 +25,11 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-require_once($CFG->dirroot . '/mod/quiz/report/attemptsreport.php');
-require_once($CFG->dirroot . '/mod/quiz/report/responses/responses_options.php');
-require_once($CFG->dirroot . '/mod/quiz/report/responses/responses_form.php');
-require_once($CFG->dirroot . '/mod/quiz/report/responses/last_responses_table.php');
-require_once($CFG->dirroot . '/mod/quiz/report/responses/first_or_all_responses_table.php');
+require_once($CFG->dirroot . '/mod/hippotrack/report/attemptsreport.php');
+require_once($CFG->dirroot . '/mod/hippotrack/report/responses/responses_options.php');
+require_once($CFG->dirroot . '/mod/hippotrack/report/responses/responses_form.php');
+require_once($CFG->dirroot . '/mod/hippotrack/report/responses/last_responses_table.php');
+require_once($CFG->dirroot . '/mod/hippotrack/report/responses/first_or_all_responses_table.php');
 
 
 /**

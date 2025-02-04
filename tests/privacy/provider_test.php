@@ -71,13 +71,13 @@ class provider_test extends \core_privacy\tests\provider_testcase {
         $this->setUser();
         $quiz = $this->create_test_quiz($course);
         $DB->insert_record('quiz_overrides', [
-            'quiz' => $quiz->id,
+            'hippotrack' => $quiz->id,
             'userid' => $user->id,
             'timeclose' => 1300,
             'timelimit' => null,
         ]);
 
-        $cm = get_coursemodule_from_instance('quiz', $quiz->id);
+        $cm = get_coursemodule_from_instance('hippotrack', $quiz->id);
         $context = \context_module::instance($cm->id);
 
         // Fetch the contexts - only one context should be returned.
@@ -142,7 +142,7 @@ class provider_test extends \core_privacy\tests\provider_testcase {
         $this->setUser();
         $quiz = $this->create_test_quiz($course);
         $DB->insert_record('quiz_overrides', [
-                'quiz' => $quiz->id,
+                'hippotrack' => $quiz->id,
                 'userid' => $user->id,
                 'timeclose' => 1300,
                 'timelimit' => null,
@@ -293,7 +293,7 @@ class provider_test extends \core_privacy\tests\provider_testcase {
         $this->setUser();
         $quiz = $this->create_test_quiz($course);
         $DB->insert_record('quiz_overrides', [
-                'quiz' => $quiz->id,
+                'hippotrack' => $quiz->id,
                 'userid' => $user->id,
                 'timeclose' => 1300,
                 'timelimit' => null,
@@ -307,7 +307,7 @@ class provider_test extends \core_privacy\tests\provider_testcase {
         $this->setUser();
         $otherquiz = $this->create_test_quiz($course);
         $DB->insert_record('quiz_overrides', [
-                'quiz' => $otherquiz->id,
+                'hippotrack' => $otherquiz->id,
                 'userid' => $user->id,
                 'timeclose' => 1300,
                 'timelimit' => null,
@@ -323,13 +323,13 @@ class provider_test extends \core_privacy\tests\provider_testcase {
         provider::delete_data_for_all_users_in_context($context);
 
         // The quiz attempt should have been deleted from this quiz.
-        $this->assertCount(0, $DB->get_records('quiz_attempts', ['quiz' => $quizobj->get_quizid()]));
-        $this->assertCount(0, $DB->get_records('quiz_overrides', ['quiz' => $quizobj->get_quizid()]));
+        $this->assertCount(0, $DB->get_records('quiz_attempts', ['hippotrack' => $quizobj->get_quizid()]));
+        $this->assertCount(0, $DB->get_records('quiz_overrides', ['hippotrack' => $quizobj->get_quizid()]));
         $this->assertCount(0, $DB->get_records('question_attempts', ['questionusageid' => $quba->get_id()]));
 
         // But not for the other quiz.
-        $this->assertNotCount(0, $DB->get_records('quiz_attempts', ['quiz' => $otherquizobj->get_quizid()]));
-        $this->assertNotCount(0, $DB->get_records('quiz_overrides', ['quiz' => $otherquizobj->get_quizid()]));
+        $this->assertNotCount(0, $DB->get_records('quiz_attempts', ['hippotrack' => $otherquizobj->get_quizid()]));
+        $this->assertNotCount(0, $DB->get_records('quiz_overrides', ['hippotrack' => $otherquizobj->get_quizid()]));
         $this->assertNotCount(0, $DB->get_records('question_attempts', ['questionusageid' => $otherquba->get_id()]));
     }
 
@@ -477,7 +477,7 @@ class provider_test extends \core_privacy\tests\provider_testcase {
 
         // Create an override for user1.
         $DB->insert_record('quiz_overrides', [
-            'quiz' => $quiz->id,
+            'hippotrack' => $quiz->id,
             'userid' => $user->id,
             'timeclose' => 1300,
             'timelimit' => null,
@@ -519,7 +519,7 @@ class provider_test extends \core_privacy\tests\provider_testcase {
 
         // Create an override in quiz1 for user3.
         $DB->insert_record('quiz_overrides', [
-            'quiz' => $quiz1->id,
+            'hippotrack' => $quiz1->id,
             'userid' => $user3->id,
             'timeclose' => 1300,
             'timelimit' => null,

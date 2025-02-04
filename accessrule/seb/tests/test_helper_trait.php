@@ -29,8 +29,8 @@ use quizaccess_seb\settings_provider;
 defined('MOODLE_INTERNAL') || die();
 
 global $CFG;
-require_once($CFG->dirroot . "/mod/quiz/accessrule/seb/rule.php"); // Include plugin rule class.
-require_once($CFG->dirroot . "/mod/quiz/mod_form.php"); // Include plugin rule class.
+require_once($CFG->dirroot . "/mod/hippotrack/accessrule/seb/rule.php"); // Include plugin rule class.
+require_once($CFG->dirroot . "/mod/hippotrack/mod_form.php"); // Include plugin rule class.
 
 /**
  * A test helper trait. It has some common helper methods.
@@ -241,7 +241,7 @@ trait quizaccess_seb_test_helper_trait {
      */
     protected function get_access_manager() {
         return new access_manager(new \quiz($this->quiz,
-            get_coursemodule_from_id('quiz', $this->quiz->cmid), $this->course));
+            get_coursemodule_from_id('hippotrack', $this->quiz->cmid), $this->course));
     }
 
     /**
@@ -251,7 +251,7 @@ trait quizaccess_seb_test_helper_trait {
      */
     protected function make_rule() {
         return \quizaccess_seb::make(
-            new \quiz($this->quiz, get_coursemodule_from_id('quiz', $this->quiz->cmid), $this->course),
+            new \quiz($this->quiz, get_coursemodule_from_id('hippotrack', $this->quiz->cmid), $this->course),
             0,
             true
         );
@@ -268,7 +268,7 @@ trait quizaccess_seb_test_helper_trait {
         $page->set_course($this->course);
         $page->set_pagelayout('standard');
         $page->set_pagetype("mod-quiz-view");
-        $page->set_url('/mod/quiz/view.php?id=' . $this->quiz->cmid);
+        $page->set_url('/mod/hippotrack/view.php?id=' . $this->quiz->cmid);
 
         $PAGE = $page;
     }

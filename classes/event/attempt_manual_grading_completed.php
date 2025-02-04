@@ -41,7 +41,7 @@ class attempt_manual_grading_completed extends \core\event\base {
     }
 
     public function get_url() {
-        return new \moodle_url('/mod/quiz/review.php', ['attempt' => $this->objectid]);
+        return new \moodle_url('/mod/hippotrack/review.php', ['attempt' => $this->objectid]);
     }
 
     protected function validate_data() {
@@ -62,7 +62,7 @@ class attempt_manual_grading_completed extends \core\event\base {
 
     public static function get_other_mapping() {
         $othermapped = [];
-        $othermapped['quizid'] = ['db' => 'quiz', 'restore' => 'quiz'];
+        $othermapped['quizid'] = ['db' => 'hippotrack', 'restore' => 'hippotrack'];
 
         return $othermapped;
     }

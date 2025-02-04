@@ -42,8 +42,8 @@
 
 
 require_once(__DIR__ . '/../../config.php');
-require_once($CFG->dirroot . '/mod/quiz/locallib.php');
-require_once($CFG->dirroot . '/mod/quiz/addrandomform.php');
+require_once($CFG->dirroot . '/mod/hippotrack/locallib.php');
+require_once($CFG->dirroot . '/mod/hippotrack/addrandomform.php');
 require_once($CFG->dirroot . '/question/editlib.php');
 
 // These params are only passed from page request to request while we stay on
@@ -51,7 +51,7 @@ require_once($CFG->dirroot . '/question/editlib.php');
 $scrollpos = optional_param('scrollpos', '', PARAM_INT);
 
 list($thispageurl, $contexts, $cmid, $cm, $quiz, $pagevars) =
-        question_edit_setup('editq', '/mod/quiz/edit.php', true);
+        question_edit_setup('editq', '/mod/hippotrack/edit.php', true);
 
 $defaultcategoryobj = question_make_default_categories($contexts->all());
 $defaultcategory = $defaultcategoryobj->id . ',' . $defaultcategoryobj->contextid;
@@ -66,8 +66,8 @@ $course = $DB->get_record('course', array('id' => $quiz->course), '*', MUST_EXIS
 $quizobj = new quiz($quiz, $cm, $course);
 $structure = $quizobj->get_structure();
 
-// You need mod/quiz:manage in addition to question capabilities to access this page.
-require_capability('mod/quiz:manage', $contexts->lowest());
+// You need mod/hippotrack:manage in addition to question capabilities to access this page.
+require_capability('mod/hippotrack:manage', $contexts->lowest());
 
 // Process commands ============================================================.
 
@@ -179,7 +179,7 @@ $PAGE->set_pagetype('mod-quiz-edit');
 
 $output = $PAGE->get_renderer('mod_hippotrack', 'edit');
 
-$PAGE->set_title(get_string('editingquizx', 'quiz', format_string($quiz->name)));
+$PAGE->set_title(get_string('editingquizx', 'hippotrack', format_string($quiz->name)));
 $PAGE->set_heading($course->fullname);
 $PAGE->activityheader->disable();
 $node = $PAGE->settingsnav->find('mod_hippotrack_edit', navigation_node::TYPE_SETTING);

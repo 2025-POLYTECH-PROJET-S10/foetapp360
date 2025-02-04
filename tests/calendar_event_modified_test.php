@@ -19,7 +19,7 @@ namespace mod_hippotrack;
 defined('MOODLE_INTERNAL') || die();
 
 global $CFG;
-require_once($CFG->dirroot . '/mod/quiz/lib.php');
+require_once($CFG->dirroot . '/mod/hippotrack/lib.php');
 
 /**
  * Unit tests for the calendar event modification callbacks used
@@ -59,7 +59,7 @@ class calendar_event_modified_test extends \advanced_testcase {
             // the current time even if a value is provided so we need to
             // make sure it's set back to the requested value.
             $quiz->timemodified = $properties['timemodified'];
-            $DB->update_record('quiz', $quiz);
+            $DB->update_record('hippotrack', $quiz);
         }
 
         return $quiz;
@@ -80,7 +80,7 @@ class calendar_event_modified_test extends \advanced_testcase {
             'courseid' => $quiz->course,
             'groupid' => 0,
             'userid' => 2,
-            'modulename' => 'quiz',
+            'modulename' => 'hippotrack',
             'instance' => $quiz->id,
             'eventtype' => QUIZ_EVENT_TYPE_OPEN,
             'timestart' => time(),
@@ -109,7 +109,7 @@ class calendar_event_modified_test extends \advanced_testcase {
 
         mod_hippotrack_core_calendar_event_timestart_updated($event, $quiz);
 
-        $quiz = $DB->get_record('quiz', ['id' => $quiz->id]);
+        $quiz = $DB->get_record('hippotrack', ['id' => $quiz->id]);
         $this->assertEquals($timeopen, $quiz->timeopen);
         $this->assertEquals($timeclose, $quiz->timeclose);
     }
@@ -139,7 +139,7 @@ class calendar_event_modified_test extends \advanced_testcase {
 
         mod_hippotrack_core_calendar_event_timestart_updated($event, $quiz);
 
-        $quiz = $DB->get_record('quiz', ['id' => $quiz->id]);
+        $quiz = $DB->get_record('hippotrack', ['id' => $quiz->id]);
         // Ensure the timeopen property matches the event timestart.
         $this->assertEquals($newtimeopen, $quiz->timeopen);
         // Ensure the timeclose isn't changed.
@@ -173,7 +173,7 @@ class calendar_event_modified_test extends \advanced_testcase {
 
         mod_hippotrack_core_calendar_event_timestart_updated($event, $quiz);
 
-        $quiz = $DB->get_record('quiz', ['id' => $quiz->id]);
+        $quiz = $DB->get_record('hippotrack', ['id' => $quiz->id]);
         // Ensure the timeclose property matches the event timestart.
         $this->assertEquals($newtimeclose, $quiz->timeclose);
         // Ensure the timeopen isn't changed.
@@ -207,7 +207,7 @@ class calendar_event_modified_test extends \advanced_testcase {
             'timestart' => $newtimeopen
         ]);
         $record = (object) [
-            'quiz' => $quiz->id,
+            'hippotrack' => $quiz->id,
             'userid' => $user->id
         ];
 
@@ -215,7 +215,7 @@ class calendar_event_modified_test extends \advanced_testcase {
 
         mod_hippotrack_core_calendar_event_timestart_updated($event, $quiz);
 
-        $quiz = $DB->get_record('quiz', ['id' => $quiz->id]);
+        $quiz = $DB->get_record('hippotrack', ['id' => $quiz->id]);
         // Ensure the timeopen property doesn't change.
         $this->assertEquals($timeopen, $quiz->timeopen);
         // Ensure the timeclose isn't changed.
@@ -262,7 +262,7 @@ class calendar_event_modified_test extends \advanced_testcase {
 
         mod_hippotrack_core_calendar_event_timestart_updated($event, $quiz);
 
-        $newquiz = $DB->get_record('quiz', ['id' => $quiz->id]);
+        $newquiz = $DB->get_record('hippotrack', ['id' => $quiz->id]);
         // The time open shouldn't have changed even though we updated the calendar
         // event.
         $this->assertEquals($timeopen->getTimestamp(), $newquiz->timeopen);
@@ -314,7 +314,7 @@ class calendar_event_modified_test extends \advanced_testcase {
             return is_a($e, 'core\event\course_module_updated');
         });
 
-        $newquiz = $DB->get_record('quiz', ['id' => $quiz->id]);
+        $newquiz = $DB->get_record('hippotrack', ['id' => $quiz->id]);
         // The should be updated along with the event because the user has sufficient
         // capabilities.
         $this->assertEquals($newtimeopen->getTimestamp(), $newquiz->timeopen);
@@ -405,7 +405,7 @@ class calendar_event_modified_test extends \advanced_testcase {
             'timestart' => 1
         ]);
         $record = (object) [
-            'quiz' => $quiz->id,
+            'hippotrack' => $quiz->id,
             'userid' => $user->id
         ];
 
@@ -494,7 +494,7 @@ class calendar_event_modified_test extends \advanced_testcase {
         $attemptid = $DB->insert_record(
             'quiz_attempts',
             [
-                'quiz' => $quiz->id,
+                'hippotrack' => $quiz->id,
                 'userid' => $student->id,
                 'state' => 'inprogress',
                 'timestart' => $timeopen->getTimestamp(),
@@ -508,7 +508,7 @@ class calendar_event_modified_test extends \advanced_testcase {
 
         mod_hippotrack_core_calendar_event_timestart_updated($event, $quiz);
 
-        $quiz = $DB->get_record('quiz', ['id' => $quiz->id]);
+        $quiz = $DB->get_record('hippotrack', ['id' => $quiz->id]);
         $attempt = $DB->get_record('quiz_attempts', ['id' => $attemptid]);
         // When the close date is changed so that it's earlier than the time open
         // plus the time limit of the quiz then the attempt's timecheckstate should

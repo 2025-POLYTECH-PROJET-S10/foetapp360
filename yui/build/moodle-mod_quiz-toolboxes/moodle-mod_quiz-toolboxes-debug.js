@@ -146,7 +146,7 @@ YUI.add('moodle-mod_hippotrack-toolboxes', function (Y, NAME) {
                         }
                         if (responsetext.hasOwnProperty('newnumquestions')) {
                             Y.one(SELECTOR.NUMQUESTIONS).setHTML(
-                                M.util.get_string('numquestionsx', 'quiz', responsetext.newnumquestions)
+                                M.util.get_string('numquestionsx', 'hippotrack', responsetext.newnumquestions)
                             );
                         }
                         if (success_callback) {
@@ -412,7 +412,7 @@ YUI.add('moodle-mod_hippotrack-toolboxes', function (Y, NAME) {
                 confirmstring = '',
                 qtypename = M.util.get_string('pluginname',
                     'qtype_' + element.getAttribute('class').match(/qtype_([^\s]*)/)[1]);
-            confirmstring = M.util.get_string('confirmremovequestion', 'quiz', qtypename);
+            confirmstring = M.util.get_string('confirmremovequestion', 'hippotrack', qtypename);
 
             // Create the confirmation dialogue.
             var confirm = new M.core.confirm({
@@ -482,8 +482,8 @@ YUI.add('moodle-mod_hippotrack-toolboxes', function (Y, NAME) {
 
             if (typeof problemsection !== 'undefined') {
                 var alert = new M.core.alert({
-                    title: M.util.get_string('cannotremoveslots', 'quiz'),
-                    message: M.util.get_string('cannotremoveallsectionslots', 'quiz', problemsection)
+                    title: M.util.get_string('cannotremoveslots', 'hippotrack'),
+                    message: M.util.get_string('cannotremoveallsectionslots', 'hippotrack', problemsection)
                 });
 
                 alert.show();
@@ -519,7 +519,7 @@ YUI.add('moodle-mod_hippotrack-toolboxes', function (Y, NAME) {
 
             // Create the confirmation dialogue.
             var confirm = new M.core.confirm({
-                question: M.util.get_string('areyousureremoveselected', 'quiz'),
+                question: M.util.get_string('areyousureremoveselected', 'hippotrack'),
                 modal: true
             });
 
@@ -929,7 +929,7 @@ YUI.add('moodle-mod_hippotrack-toolboxes', function (Y, NAME) {
 
             // Create the confirmation dialogue.
             var confirm = new M.core.confirm({
-                question: M.util.get_string('confirmremovesectionheading', 'quiz', activity.getData('sectionname')),
+                question: M.util.get_string('confirmremovesectionheading', 'hippotrack', activity.getData('sectionname')),
                 modal: true
             });
 
@@ -1031,7 +1031,7 @@ YUI.add('moodle-mod_hippotrack-toolboxes', function (Y, NAME) {
                 var instancesectiontext = newtext;
                 if (newtext.trim() === '') {
                     // Add a sr-only default section heading text to make sure we don't end up with an empty section heading.
-                    instancesectiontext = M.util.get_string('sectionnoname', 'quiz');
+                    instancesectiontext = M.util.get_string('sectionnoname', 'hippotrack');
                     instancesection.addClass('sr-only');
                 } else {
                     // Show the section heading when a non-empty value is set.
@@ -1052,7 +1052,7 @@ YUI.add('moodle-mod_hippotrack-toolboxes', function (Y, NAME) {
                         if (newtext !== response.instancesection) {
                             if (response.instancesection.trim() === '') {
                                 // Add a sr-only default section heading text.
-                                instancesectiontext = M.util.get_string('sectionnoname', 'quiz');
+                                instancesectiontext = M.util.get_string('sectionnoname', 'hippotrack');
                                 instancesection.addClass('sr-only');
                             } else {
                                 instancesectiontext = response.instancesection;
@@ -1063,13 +1063,13 @@ YUI.add('moodle-mod_hippotrack-toolboxes', function (Y, NAME) {
                         }
 
                         activity.one(SELECTOR.EDITSECTIONICON).set('title',
-                            M.util.get_string('sectionheadingedit', 'quiz', response.instancesection));
+                            M.util.get_string('sectionheadingedit', 'hippotrack', response.instancesection));
                         activity.one(SELECTOR.EDITSECTIONICON).set('alt',
-                            M.util.get_string('sectionheadingedit', 'quiz', response.instancesection));
+                            M.util.get_string('sectionheadingedit', 'hippotrack', response.instancesection));
                         var deleteicon = activity.one(SELECTOR.DELETESECTIONICON);
                         if (deleteicon) {
-                            deleteicon.set('title', M.util.get_string('sectionheadingremove', 'quiz', response.instancesection));
-                            deleteicon.set('alt', M.util.get_string('sectionheadingremove', 'quiz', response.instancesection));
+                            deleteicon.set('title', M.util.get_string('sectionheadingremove', 'hippotrack', response.instancesection));
+                            deleteicon.set('alt', M.util.get_string('sectionheadingremove', 'hippotrack', response.instancesection));
                         }
                     }
                 });

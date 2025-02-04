@@ -48,7 +48,7 @@ class quiz_statistics_settings_form extends moodleform {
 
         $mform->addElement('select', 'whichattempts', get_string('calculatefrom', 'quiz_statistics'), $options);
 
-        if (quiz_allows_multiple_tries($this->_customdata['quiz'])) {
+        if (quiz_allows_multiple_tries($this->_customdata['hippotrack'])) {
             $mform->addElement('select', 'whichtries', get_string('whichtries', 'quiz_statistics'), array(
                                            question_attempt::FIRST_TRY    => get_string('firsttry', 'question'),
                                            question_attempt::LAST_TRY     => get_string('lasttry', 'question'),

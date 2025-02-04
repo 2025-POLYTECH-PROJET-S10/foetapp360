@@ -115,7 +115,7 @@ class helper {
      */
     public static function get_seb_config_content(string $cmid) : string {
         // Try and get the course module.
-        $cm = get_coursemodule_from_id('quiz', $cmid, 0, false, MUST_EXIST);
+        $cm = get_coursemodule_from_id('hippotrack', $cmid, 0, false, MUST_EXIST);
 
         // Make sure the user is logged in and has access to the module.
         require_login($cm->course, false, $cm);

@@ -27,7 +27,7 @@ namespace mod_hippotrack\question;
 
 defined('MOODLE_INTERNAL') || die();
 
-require_once($CFG->dirroot.'/mod/quiz/attemptlib.php');
+require_once($CFG->dirroot.'/mod/hippotrack/attemptlib.php');
 
 /**
  * A {@link qubaid_condition} representing all the attempts by one user at a given quiz.

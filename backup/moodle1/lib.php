@@ -43,7 +43,7 @@ class moodle1_mod_hippotrack_handler extends moodle1_mod_handler {
      * For each path returned, the corresponding conversion method must be
      * defined.
      *
-     * Note that the path /MOODLE_BACKUP/COURSE/MODULES/MOD/QUIZ does not
+     * Note that the path /MOODLE_BACKUP/COURSE/MODULES/mod/hippotrack does not
      * actually exist in the file. The last element with the module name was
      * appended by the moodle1_converter class.
      *
@@ -52,7 +52,7 @@ class moodle1_mod_hippotrack_handler extends moodle1_mod_handler {
     public function get_paths() {
         return array(
             new convert_path(
-                'quiz', '/MOODLE_BACKUP/COURSE/MODULES/MOD/QUIZ',
+                'hippotrack', '/MOODLE_BACKUP/COURSE/MODULES/mod/hippotrack',
                 array(
                     'newfields' => array(
                         'showuserpicture'       => 0,
@@ -63,9 +63,9 @@ class moodle1_mod_hippotrack_handler extends moodle1_mod_handler {
                 )
             ),
             new convert_path('quiz_question_instances',
-                    '/MOODLE_BACKUP/COURSE/MODULES/MOD/QUIZ/QUESTION_INSTANCES'),
+                    '/MOODLE_BACKUP/COURSE/MODULES/mod/hippotrack/QUESTION_INSTANCES'),
             new convert_path('quiz_question_instance',
-                    '/MOODLE_BACKUP/COURSE/MODULES/MOD/QUIZ/QUESTION_INSTANCES/QUESTION_INSTANCE',
+                    '/MOODLE_BACKUP/COURSE/MODULES/mod/hippotrack/QUESTION_INSTANCES/QUESTION_INSTANCE',
                 array(
                     'renamefields' => array(
                         'question' => 'questionid',
@@ -74,9 +74,9 @@ class moodle1_mod_hippotrack_handler extends moodle1_mod_handler {
                 )
             ),
             new convert_path('quiz_feedbacks',
-                    '/MOODLE_BACKUP/COURSE/MODULES/MOD/QUIZ/FEEDBACKS'),
+                    '/MOODLE_BACKUP/COURSE/MODULES/mod/hippotrack/FEEDBACKS'),
             new convert_path('quiz_feedback',
-                    '/MOODLE_BACKUP/COURSE/MODULES/MOD/QUIZ/FEEDBACKS/FEEDBACK',
+                    '/MOODLE_BACKUP/COURSE/MODULES/mod/hippotrack/FEEDBACKS/FEEDBACK',
                 array(
                     'newfields' => array(
                         'feedbacktextformat' => FORMAT_HTML,
@@ -87,7 +87,7 @@ class moodle1_mod_hippotrack_handler extends moodle1_mod_handler {
     }
 
     /**
-     * This is executed every time we have one /MOODLE_BACKUP/COURSE/MODULES/MOD/QUIZ
+     * This is executed every time we have one /MOODLE_BACKUP/COURSE/MODULES/mod/hippotrack
      * data available
      */
     public function process_quiz($data) {
@@ -127,9 +127,9 @@ class moodle1_mod_hippotrack_handler extends moodle1_mod_handler {
         // Start writing quiz.xml.
         $this->open_xml_writer("activities/quiz_{$this->moduleid}/quiz.xml");
         $this->xmlwriter->begin_tag('activity', array('id' => $instanceid,
-                'moduleid' => $this->moduleid, 'modulename' => 'quiz',
+                'moduleid' => $this->moduleid, 'modulename' => 'hippotrack',
                 'contextid' => $contextid));
-        $this->xmlwriter->begin_tag('quiz', array('id' => $instanceid));
+        $this->xmlwriter->begin_tag('hippotrack', array('id' => $instanceid));
 
         foreach ($data as $field => $value) {
             if ($field <> 'id') {
@@ -173,7 +173,7 @@ class moodle1_mod_hippotrack_handler extends moodle1_mod_handler {
     }
 
     /**
-     * This is executed when we reach the closing </MOD> tag of our 'quiz' path
+     * This is executed when we reach the closing </MOD> tag of our 'hippotrack' path
      */
     public function on_quiz_end() {
 
@@ -181,7 +181,7 @@ class moodle1_mod_hippotrack_handler extends moodle1_mod_handler {
         $this->write_xml('overrides', array());
 
         // Finish writing quiz.xml.
-        $this->xmlwriter->end_tag('quiz');
+        $this->xmlwriter->end_tag('hippotrack');
         $this->xmlwriter->end_tag('activity');
         $this->close_xml_writer();
 

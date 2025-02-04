@@ -47,12 +47,12 @@ class quiz_settings_test extends \advanced_testcase {
 
         $this->setAdminUser();
         $this->course = $this->getDataGenerator()->create_course();
-        $this->quiz = $this->getDataGenerator()->create_module('quiz', [
+        $this->quiz = $this->getDataGenerator()->create_module('hippotrack', [
             'course' => $this->course->id,
             'seb_requiresafeexambrowser' => settings_provider::USE_SEB_CONFIG_MANUALLY,
         ]);
         $this->context = \context_module::instance($this->quiz->cmid);
-        $this->url = new \moodle_url("/mod/quiz/view.php", ['id' => $this->quiz->cmid]);
+        $this->url = new \moodle_url("/mod/hippotrack/view.php", ['id' => $this->quiz->cmid]);
     }
 
     /**
@@ -213,7 +213,7 @@ class quiz_settings_test extends \advanced_testcase {
      * Test that uploaded seb file gets converted to config string.
      */
     public function test_config_file_uploaded_converted_to_config() {
-        $url = new \moodle_url("/mod/quiz/view.php", ['id' => $this->quiz->cmid]);
+        $url = new \moodle_url("/mod/hippotrack/view.php", ['id' => $this->quiz->cmid]);
         $xml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
                 . "<!DOCTYPE plist PUBLIC \"-//Apple//DTD PLIST 1.0//EN\" \"http://www.apple.com/DTDs/PropertyList-1.0.dtd\">\n"
                 . "<plist version=\"1.0\"><dict><key>hashedQuitPassword</key><string>hashedpassword</string>"
@@ -286,7 +286,7 @@ class quiz_settings_test extends \advanced_testcase {
         $quizsettings->save();
 
         $this->assertStringContainsString(
-            "<key>startURL</key><string>https://www.example.com/moodle/mod/quiz/view.php?id={$this->quiz->cmid}</string>",
+            "<key>startURL</key><string>https://www.example.com/moodle/mod/hippotrack/view.php?id={$this->quiz->cmid}</string>",
             $quizsettings->get_config()
         );
 
@@ -354,7 +354,7 @@ class quiz_settings_test extends \advanced_testcase {
         $quizsettings->save();
 
         $this->assertStringContainsString(
-            "<key>startURL</key><string>https://www.example.com/moodle/mod/quiz/view.php?id={$this->quiz->cmid}</string>",
+            "<key>startURL</key><string>https://www.example.com/moodle/mod/hippotrack/view.php?id={$this->quiz->cmid}</string>",
             $quizsettings->get_config()
         );
 
@@ -391,7 +391,7 @@ class quiz_settings_test extends \advanced_testcase {
         $quizsettings->save();
 
         $this->assertStringContainsString(
-            "<key>startURL</key><string>https://www.example.com/moodle/mod/quiz/view.php?id={$this->quiz->cmid}</string>",
+            "<key>startURL</key><string>https://www.example.com/moodle/mod/hippotrack/view.php?id={$this->quiz->cmid}</string>",
             $quizsettings->get_config()
         );
 
@@ -569,7 +569,7 @@ class quiz_settings_test extends \advanced_testcase {
                 . "<key>regex</key><false/></dict><dict><key>action</key><integer>1</integer>"
                 . "<key>active</key><true/><key>expression</key>"
                 . "<string>second.hello</string><key>regex</key><false/></dict></array>"
-                . "<key>startURL</key><string>https://www.example.com/moodle/mod/quiz/view.php?id=1</string>"
+                . "<key>startURL</key><string>https://www.example.com/moodle/mod/hippotrack/view.php?id=1</string>"
                 . "<key>sendBrowserExamKey</key><true/><key>browserWindowWebView</key><integer>3</integer>"
                 . "<key>examSessionClearCookiesOnStart</key><false/>"
                 . "<key>allowPreferencesWindow</key><false/></dict></plist>\n",
@@ -597,7 +597,7 @@ class quiz_settings_test extends \advanced_testcase {
                 . "<key>regex</key><false/></dict><dict><key>action</key><integer>0</integer>"
                 . "<key>active</key><true/><key>expression</key>"
                 . "<string>second.hello</string><key>regex</key><false/></dict></array>"
-                . "<key>startURL</key><string>https://www.example.com/moodle/mod/quiz/view.php?id=1</string>"
+                . "<key>startURL</key><string>https://www.example.com/moodle/mod/hippotrack/view.php?id=1</string>"
                 . "<key>sendBrowserExamKey</key><true/><key>browserWindowWebView</key><integer>3</integer>"
                 . "<key>examSessionClearCookiesOnStart</key><false/>"
                 . "<key>allowPreferencesWindow</key><false/></dict></plist>\n",
@@ -625,7 +625,7 @@ class quiz_settings_test extends \advanced_testcase {
                 . "<key>regex</key><true/></dict><dict><key>action</key><integer>1</integer>"
                 . "<key>active</key><true/><key>expression</key>"
                 . "<string>second.hello</string><key>regex</key><true/></dict></array>"
-                . "<key>startURL</key><string>https://www.example.com/moodle/mod/quiz/view.php?id=1</string>"
+                . "<key>startURL</key><string>https://www.example.com/moodle/mod/hippotrack/view.php?id=1</string>"
                 . "<key>sendBrowserExamKey</key><true/><key>browserWindowWebView</key><integer>3</integer>"
                 . "<key>examSessionClearCookiesOnStart</key><false/>"
                 . "<key>allowPreferencesWindow</key><false/></dict></plist>\n",
@@ -653,7 +653,7 @@ class quiz_settings_test extends \advanced_testcase {
                 . "<key>regex</key><true/></dict><dict><key>action</key><integer>0</integer>"
                 . "<key>active</key><true/><key>expression</key>"
                 . "<string>second.hello</string><key>regex</key><true/></dict></array>"
-                . "<key>startURL</key><string>https://www.example.com/moodle/mod/quiz/view.php?id=1</string>"
+                . "<key>startURL</key><string>https://www.example.com/moodle/mod/hippotrack/view.php?id=1</string>"
                 . "<key>sendBrowserExamKey</key><true/><key>browserWindowWebView</key><integer>3</integer>"
                 . "<key>examSessionClearCookiesOnStart</key><false/>"
                 . "<key>allowPreferencesWindow</key><false/></dict></plist>\n",
@@ -683,7 +683,7 @@ class quiz_settings_test extends \advanced_testcase {
                 . "<key>regex</key><true/></dict><dict><key>action</key><integer>0</integer>"
                 . "<key>active</key><true/><key>expression</key>"
                 . "<string>second.hello</string><key>regex</key><true/></dict></array>"
-                . "<key>startURL</key><string>https://www.example.com/moodle/mod/quiz/view.php?id=1</string>"
+                . "<key>startURL</key><string>https://www.example.com/moodle/mod/hippotrack/view.php?id=1</string>"
                 . "<key>sendBrowserExamKey</key><true/><key>browserWindowWebView</key><integer>3</integer>"
                 . "<key>examSessionClearCookiesOnStart</key><false/>"
                 . "<key>allowPreferencesWindow</key><false/></dict></plist>\n",

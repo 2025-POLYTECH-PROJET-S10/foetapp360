@@ -84,7 +84,7 @@ class attempt_abandoned extends \core\event\base {
      * @return \moodle_url
      */
     public function get_url() {
-        return new \moodle_url('/mod/quiz/review.php', array('attempt' => $this->objectid));
+        return new \moodle_url('/mod/hippotrack/review.php', array('attempt' => $this->objectid));
     }
 
     /**
@@ -134,7 +134,7 @@ class attempt_abandoned extends \core\event\base {
     public static function get_other_mapping() {
         $othermapped = array();
         $othermapped['submitterid'] = array('db' => 'user', 'restore' => 'user');
-        $othermapped['quizid'] = array('db' => 'quiz', 'restore' => 'quiz');
+        $othermapped['quizid'] = array('db' => 'hippotrack', 'restore' => 'hippotrack');
 
         return $othermapped;
     }

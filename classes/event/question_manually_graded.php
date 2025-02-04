@@ -77,7 +77,7 @@ class question_manually_graded extends \core\event\base {
      * @return \moodle_url
      */
     public function get_url() {
-        return new \moodle_url('/mod/quiz/comment.php', array('attempt' => $this->other['attemptid'],
+        return new \moodle_url('/mod/hippotrack/comment.php', array('attempt' => $this->other['attemptid'],
             'slot' => $this->other['slot']));
     }
 
@@ -87,7 +87,7 @@ class question_manually_graded extends \core\event\base {
      * @return array
      */
     protected function get_legacy_logdata() {
-        return array($this->courseid, 'quiz', 'manualgrade', 'comment.php?attempt=' . $this->other['attemptid'] .
+        return array($this->courseid, 'hippotrack', 'manualgrade', 'comment.php?attempt=' . $this->other['attemptid'] .
             '&slot=' . $this->other['slot'], $this->other['quizid'], $this->contextinstanceid);
     }
 
@@ -119,7 +119,7 @@ class question_manually_graded extends \core\event\base {
 
     public static function get_other_mapping() {
         $othermapped = array();
-        $othermapped['quizid'] = array('db' => 'quiz', 'restore' => 'quiz');
+        $othermapped['quizid'] = array('db' => 'hippotrack', 'restore' => 'hippotrack');
         $othermapped['attemptid'] = array('db' => 'quiz_attempts', 'restore' => 'quiz_attempt');
 
         return $othermapped;

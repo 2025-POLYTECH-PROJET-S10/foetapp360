@@ -25,28 +25,28 @@
 define('NO_OUTPUT_BUFFERING', true);
 
 require_once(__DIR__ . '/../../config.php');
-require_once($CFG->dirroot . '/mod/quiz/locallib.php');
-require_once($CFG->dirroot . '/mod/quiz/report/reportlib.php');
-require_once($CFG->dirroot . '/mod/quiz/report/default.php');
+require_once($CFG->dirroot . '/mod/hippotrack/locallib.php');
+require_once($CFG->dirroot . '/mod/hippotrack/report/reportlib.php');
+require_once($CFG->dirroot . '/mod/hippotrack/report/default.php');
 
 $id = optional_param('id', 0, PARAM_INT);
 $q = optional_param('q', 0, PARAM_INT);
 $mode = optional_param('mode', '', PARAM_ALPHA);
 
 if ($id) {
-    if (!$cm = get_coursemodule_from_id('quiz', $id)) {
+    if (!$cm = get_coursemodule_from_id('hippotrack', $id)) {
         throw new \moodle_exception('invalidcoursemodule');
     }
     if (!$course = $DB->get_record('course', array('id' => $cm->course))) {
         throw new \moodle_exception('coursemisconf');
     }
-    if (!$quiz = $DB->get_record('quiz', array('id' => $cm->instance))) {
+    if (!$quiz = $DB->get_record('hippotrack', array('id' => $cm->instance))) {
         throw new \moodle_exception('invalidcoursemodule');
     }
 
 } else {
-    if (!$quiz = $DB->get_record('quiz', array('id' => $q))) {
-        throw new \moodle_exception('invalidquizid', 'quiz');
+    if (!$quiz = $DB->get_record('hippotrack', array('id' => $q))) {
+        throw new \moodle_exception('invalidquizid', 'hippotrack');
     }
     if (!$course = $DB->get_record('course', array('id' => $quiz->course))) {
         throw new \moodle_exception('invalidcourseid');
@@ -56,7 +56,7 @@ if ($id) {
     }
 }
 
-$url = new moodle_url('/mod/quiz/report.php', array('id' => $cm->id));
+$url = new moodle_url('/mod/hippotrack/report.php', array('id' => $cm->id));
 if ($mode !== '') {
     $url->param('mode', $mode);
 }
@@ -68,7 +68,7 @@ $PAGE->set_pagelayout('report');
 $PAGE->activityheader->disable();
 $reportlist = quiz_report_list($context);
 if (empty($reportlist)) {
-    throw new \moodle_exception('erroraccessingreport', 'quiz');
+    throw new \moodle_exception('erroraccessingreport', 'hippotrack');
 }
 
 // Validate the requested report name.
@@ -77,20 +77,20 @@ if ($mode == '') {
     $url->param('mode', reset($reportlist));
     redirect($url);
 } else if (!in_array($mode, $reportlist)) {
-    throw new \moodle_exception('erroraccessingreport', 'quiz');
+    throw new \moodle_exception('erroraccessingreport', 'hippotrack');
 }
 if (!is_readable("report/$mode/report.php")) {
-    throw new \moodle_exception('reportnotfound', 'quiz', '', $mode);
+    throw new \moodle_exception('reportnotfound', 'hippotrack', '', $mode);
 }
 
 // Open the selected quiz report and display it.
-$file = $CFG->dirroot . '/mod/quiz/report/' . $mode . '/report.php';
+$file = $CFG->dirroot . '/mod/hippotrack/report/' . $mode . '/report.php';
 if (is_readable($file)) {
     include_once($file);
 }
 $reportclassname = 'quiz_' . $mode . '_report';
 if (!class_exists($reportclassname)) {
-    throw new \moodle_exception('preprocesserror', 'quiz');
+    throw new \moodle_exception('preprocesserror', 'hippotrack');
 }
 
 $report = new $reportclassname();
@@ -109,5 +109,5 @@ $params = array(
 );
 $event = \mod_hippotrack\event\report_viewed::create($params);
 $event->add_record_snapshot('course', $course);
-$event->add_record_snapshot('quiz', $quiz);
+$event->add_record_snapshot('hippotrack', $quiz);
 $event->trigger();

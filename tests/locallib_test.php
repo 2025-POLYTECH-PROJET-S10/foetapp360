@@ -15,7 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Unit tests for (some of) mod/quiz/locallib.php.
+ * Unit tests for (some of) mod/hippotrack/locallib.php.
  *
  * @package    mod_hippotrack
  * @category   test
@@ -30,11 +30,11 @@ use mod_hippotrack_display_options;
 defined('MOODLE_INTERNAL') || die();
 
 global $CFG;
-require_once($CFG->dirroot . '/mod/quiz/locallib.php');
+require_once($CFG->dirroot . '/mod/hippotrack/locallib.php');
 
 
 /**
- * Unit tests for (some of) mod/quiz/locallib.php.
+ * Unit tests for (some of) mod/hippotrack/locallib.php.
  *
  * @copyright  2008 Tim Hunt
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
@@ -146,10 +146,10 @@ class locallib_test extends \advanced_testcase {
         $this->setAdminUser();
         // Setup test data.
         $course = $this->getDataGenerator()->create_course(array('enablecompletion' => 1));
-        $quiz = $this->getDataGenerator()->create_module('quiz', array('course' => $course->id),
+        $quiz = $this->getDataGenerator()->create_module('hippotrack', array('course' => $course->id),
                                                             array('completion' => 2, 'completionview' => 1));
         $context = \context_module::instance($quiz->cmid);
-        $cm = get_coursemodule_from_instance('quiz', $quiz->id);
+        $cm = get_coursemodule_from_instance('hippotrack', $quiz->id);
 
         // Trigger and capture the event.
         $sink = $this->redirectEvents();
@@ -164,7 +164,7 @@ class locallib_test extends \advanced_testcase {
         // Checking that the event contains the expected values.
         $this->assertInstanceOf('\mod_hippotrack\event\course_module_viewed', $event);
         $this->assertEquals($context, $event->get_context());
-        $moodleurl = new \moodle_url('/mod/quiz/view.php', array('id' => $cm->id));
+        $moodleurl = new \moodle_url('/mod/hippotrack/view.php', array('id' => $cm->id));
         $this->assertEquals($moodleurl, $event->get_url());
         $this->assertEventContextNotUsed($event);
         $this->assertNotEmpty($event->get_name());
@@ -190,7 +190,7 @@ class locallib_test extends \advanced_testcase {
         $quiz = $quizgenerator->create_instance(['course' => $course->id]);
 
         $event = new \calendar_event((object)[
-            'modulename' => 'quiz',
+            'modulename' => 'hippotrack',
             'instance' => $quiz->id,
             'userid' => $user->id
         ]);
@@ -238,13 +238,13 @@ class locallib_test extends \advanced_testcase {
         $quiz2 = $quizgenerator->create_instance(['course' => $course->id]);
 
         $event = new \calendar_event((object) [
-            'modulename' => 'quiz',
+            'modulename' => 'hippotrack',
             'instance' => $quiz->id,
             'userid' => $user->id
         ]);
 
         $record = (object) [
-            'quiz' => $quiz2->id,
+            'hippotrack' => $quiz2->id,
             'userid' => $user->id
         ];
 
@@ -269,13 +269,13 @@ class locallib_test extends \advanced_testcase {
         $quiz = $quizgenerator->create_instance(['course' => $course->id]);
 
         $event = new \calendar_event((object) [
-            'modulename' => 'quiz',
+            'modulename' => 'hippotrack',
             'instance' => $quiz->id,
             'userid' => $user->id
         ]);
 
         $record = (object) [
-            'quiz' => $quiz->id,
+            'hippotrack' => $quiz->id,
             'userid' => $user->id
         ];
 
@@ -303,13 +303,13 @@ class locallib_test extends \advanced_testcase {
         $userid = $user->id;
 
         $event = new \calendar_event((object) [
-            'modulename' => 'quiz',
+            'modulename' => 'hippotrack',
             'instance' => $quiz->id,
             'groupid' => $groupid
         ]);
 
         $record = (object) [
-            'quiz' => $quiz->id,
+            'hippotrack' => $quiz->id,
             'groupid' => $groupid
         ];
 
@@ -366,7 +366,7 @@ class locallib_test extends \advanced_testcase {
 
         // Group 1 gets an group override for quiz 1 to close in three hours.
         $record1 = (object) [
-            'quiz' => $quiz1->id,
+            'hippotrack' => $quiz1->id,
             'groupid' => $group1id,
             'timeclose' => $basetimestamp + 10800 // In three hours.
         ];
@@ -413,7 +413,7 @@ class locallib_test extends \advanced_testcase {
 
         // User 2 gets an user override for quiz 1 to close in four hours.
         $record2 = (object) [
-            'quiz' => $quiz1->id,
+            'hippotrack' => $quiz1->id,
             'userid' => $student2id,
             'timeclose' => $basetimestamp + 14400 // In four hours.
         ];
@@ -540,7 +540,7 @@ class locallib_test extends \advanced_testcase {
         // Course with quiz and a group - plus some others, to verify they don't get counted.
         $course = $generator->create_course();
         $quiz = $quizgenerator->create_instance(['course' => $course->id, 'groupmode' => SEPARATEGROUPS]);
-        $cm = get_coursemodule_from_id('quiz', $quiz->cmid, $course->id);
+        $cm = get_coursemodule_from_id('hippotrack', $quiz->cmid, $course->id);
         $group = $generator->create_group(['courseid' => $course->id]);
         $othergroup = $generator->create_group(['courseid' => $course->id]);
         $otherquiz = $quizgenerator->create_instance(['course' => $course->id]);
@@ -590,11 +590,11 @@ class locallib_test extends \advanced_testcase {
         $this->assertEquals('', $renderer->quiz_override_summary_links($quiz, $cm));
 
         // Quiz setting overrides for students 1 and 3.
-        $quizgenerator->create_override(['quiz' => $quiz->id, 'userid' => $student1->id, 'attempts' => 2]);
-        $quizgenerator->create_override(['quiz' => $quiz->id, 'userid' => $student3->id, 'attempts' => 2]);
-        $quizgenerator->create_override(['quiz' => $quiz->id, 'groupid' => $group->id, 'attempts' => 3]);
-        $quizgenerator->create_override(['quiz' => $quiz->id, 'groupid' => $othergroup->id, 'attempts' => 3]);
-        $quizgenerator->create_override(['quiz' => $otherquiz->id, 'userid' => $student2->id, 'attempts' => 2]);
+        $quizgenerator->create_override(['hippotrack' => $quiz->id, 'userid' => $student1->id, 'attempts' => 2]);
+        $quizgenerator->create_override(['hippotrack' => $quiz->id, 'userid' => $student3->id, 'attempts' => 2]);
+        $quizgenerator->create_override(['hippotrack' => $quiz->id, 'groupid' => $group->id, 'attempts' => 3]);
+        $quizgenerator->create_override(['hippotrack' => $quiz->id, 'groupid' => $othergroup->id, 'attempts' => 3]);
+        $quizgenerator->create_override(['hippotrack' => $otherquiz->id, 'userid' => $student2->id, 'attempts' => 2]);
 
         // Test as teacher.
         $this->setUser($teacher);
@@ -622,7 +622,7 @@ class locallib_test extends \advanced_testcase {
         // Now set the quiz to be group mode: no groups, and re-test as tutor.
         // In this case, the tutor should see all groups.
         $DB->set_field('course_modules', 'groupmode', NOGROUPS, ['id' => $cm->id]);
-        $cm = get_coursemodule_from_id('quiz', $quiz->cmid, $course->id);
+        $cm = get_coursemodule_from_id('hippotrack', $quiz->cmid, $course->id);
 
         $this->assertEquals(['group' => 2, 'user' => 2, 'mode' => 'allgroups'],
                 quiz_override_summary($quiz, $cm));
@@ -643,13 +643,13 @@ class locallib_test extends \advanced_testcase {
         $course = $this->getDataGenerator()->create_course();
         $quizgenerator = $this->getDataGenerator()->get_plugin_generator('mod_hippotrack');
         $quiz = $quizgenerator->create_instance(['course' => $course->id]);
-        $cm = get_coursemodule_from_instance('quiz', $quiz->id);
+        $cm = get_coursemodule_from_instance('hippotrack', $quiz->id);
 
         $recipient = $this->getDataGenerator()->create_user(['email' => 'student@example.com']);
 
         // Allow recipent to receive email confirm submission.
         $studentrole = $DB->get_record('role', array('shortname' => 'student'));
-        assign_capability('mod/quiz:emailconfirmsubmission', CAP_ALLOW, $studentrole->id,
+        assign_capability('mod/hippotrack:emailconfirmsubmission', CAP_ALLOW, $studentrole->id,
             \context_course::instance($course->id), true);
         $this->getDataGenerator()->enrol_user($recipient->id, $course->id, $studentrole->id, 'manual');
 
@@ -660,7 +660,7 @@ class locallib_test extends \advanced_testcase {
         $data->coursename      = $course->fullname;
         // Quiz info.
         $data->quizname        = $quiz->name;
-        $data->quizurl         = $CFG->wwwroot . '/mod/quiz/view.php?id=' . $cm->id;
+        $data->quizurl         = $CFG->wwwroot . '/mod/hippotrack/view.php?id=' . $cm->id;
         $data->quizid          = $quiz->id;
         $data->quizcmid        = $quiz->cmid;
         $data->attemptid       = 1;

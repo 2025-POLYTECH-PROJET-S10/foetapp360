@@ -28,7 +28,7 @@ use quizaccess_seb\quiz_settings;
 
 defined('MOODLE_INTERNAL') || die();
 
-require_once($CFG->dirroot . '/mod/quiz/backup/moodle2/restore_mod_hippotrack_access_subplugin.class.php');
+require_once($CFG->dirroot . '/mod/hippotrack/backup/moodle2/restore_mod_hippotrack_access_subplugin.class.php');
 
 /**
  * Restore instructions for the seb (Safe Exam Browser) quiz access subplugin.
@@ -67,7 +67,7 @@ class restore_quizaccess_seb_subplugin extends restore_mod_hippotrack_access_sub
 
         // Process quizsettings.
         $data = (object) $data;
-        $data->quizid = $this->get_new_parentid('quiz'); // Update quizid with new reference.
+        $data->quizid = $this->get_new_parentid('hippotrack'); // Update quizid with new reference.
         $data->cmid = $this->task->get_moduleid();
 
         unset($data->id);
@@ -89,7 +89,7 @@ class restore_quizaccess_seb_subplugin extends restore_mod_hippotrack_access_sub
 
         $data = (object) $data;
 
-        $quizid = $this->get_new_parentid('quiz');
+        $quizid = $this->get_new_parentid('hippotrack');
 
         $template = null;
         if ($this->task->is_samesite()) {

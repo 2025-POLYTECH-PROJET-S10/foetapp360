@@ -27,7 +27,7 @@ namespace mod_hippotrack\task;
 
 defined('MOODLE_INTERNAL') || die();
 
-require_once($CFG->dirroot . '/mod/quiz/locallib.php');
+require_once($CFG->dirroot . '/mod/hippotrack/locallib.php');
 
 /**
  * Legacy Cron Quiz Reports Task
@@ -48,6 +48,6 @@ class legacy_quiz_reports_cron extends \core\task\scheduled_task {
      * Execute all quizreport sub-plugins cron tasks.
      */
     public function execute() {
-        cron_execute_plugin_type('quiz', 'quiz reports');
+        cron_execute_plugin_type('hippotrack', 'quiz reports');
     }
 }

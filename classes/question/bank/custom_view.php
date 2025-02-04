@@ -171,7 +171,7 @@ class custom_view extends \core_question\local\bank\view {
         $params = $this->baseurl->params();
         $params['addquestion'] = $questionid;
         $params['sesskey'] = sesskey();
-        return new \moodle_url('/mod/quiz/edit.php', $params);
+        return new \moodle_url('/mod/hippotrack/edit.php', $params);
     }
 
     /**
@@ -205,7 +205,7 @@ class custom_view extends \core_question\local\bank\view {
                 'type' => 'submit',
                 'name' => 'add',
                 'class' => 'btn btn-primary',
-                'value' => get_string('addselectedquestionstoquiz', 'quiz'),
+                'value' => get_string('addselectedquestionstoquiz', 'hippotrack'),
                 'data-action' => 'toggle',
                 'data-togglegroup' => 'qbank',
                 'data-toggle' => 'action',

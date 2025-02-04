@@ -74,7 +74,7 @@ class restore_attempt_test extends \advanced_testcase {
         // Grade restore also generates some debugging.
         $this->assertDebuggingCalledCount(2);
 
-        $restoredquiz = $DB->get_record('quiz', []);
+        $restoredquiz = $DB->get_record('hippotrack', []);
 
         // Assert logs were added for User 02 and User 03, due to missing mapping lookup.
         $loginfomessages = $DB->get_fieldset_select('backup_logs', 'message', 'backupid = ? AND loglevel = ?', [
@@ -89,7 +89,7 @@ class restore_attempt_test extends \advanced_testcase {
 
         // User 01 has supplied the wrong answer, assert dates match the backup file too.
         $user01attempt = $DB->get_record('quiz_attempts', [
-            'quiz' => $restoredquiz->id,
+            'hippotrack' => $restoredquiz->id,
             'userid' => core_user::get_user_by_username('user01')->id,
         ]);
 
@@ -99,7 +99,7 @@ class restore_attempt_test extends \advanced_testcase {
 
         // User 04 has supplied the correct answer, assert dates match the backup file too.
         $user04attempt = $DB->get_record('quiz_attempts', [
-            'quiz' => $restoredquiz->id,
+            'hippotrack' => $restoredquiz->id,
             'userid' => core_user::get_user_by_username('user04')->id,
         ]);
 

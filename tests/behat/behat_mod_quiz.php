@@ -83,35 +83,35 @@ class behat_mod_hippotrack extends behat_question_base {
 
         switch (strtolower($type)) {
             case 'view':
-                return new moodle_url('/mod/quiz/view.php',
+                return new moodle_url('/mod/hippotrack/view.php',
                         ['id' => $this->get_cm_by_quiz_name($identifier)->id]);
 
             case 'edit':
-                return new moodle_url('/mod/quiz/edit.php',
+                return new moodle_url('/mod/hippotrack/edit.php',
                         ['cmid' => $this->get_cm_by_quiz_name($identifier)->id]);
 
             case 'group overrides':
-                return new moodle_url('/mod/quiz/overrides.php',
+                return new moodle_url('/mod/hippotrack/overrides.php',
                     ['cmid' => $this->get_cm_by_quiz_name($identifier)->id, 'mode' => 'group']);
 
             case 'user overrides':
-                return new moodle_url('/mod/quiz/overrides.php',
+                return new moodle_url('/mod/hippotrack/overrides.php',
                     ['cmid' => $this->get_cm_by_quiz_name($identifier)->id, 'mode' => 'user']);
 
             case 'grades report':
-                return new moodle_url('/mod/quiz/report.php',
+                return new moodle_url('/mod/hippotrack/report.php',
                     ['id' => $this->get_cm_by_quiz_name($identifier)->id, 'mode' => 'overview']);
 
             case 'responses report':
-                return new moodle_url('/mod/quiz/report.php',
+                return new moodle_url('/mod/hippotrack/report.php',
                     ['id' => $this->get_cm_by_quiz_name($identifier)->id, 'mode' => 'responses']);
 
             case 'statistics report':
-                return new moodle_url('/mod/quiz/report.php',
+                return new moodle_url('/mod/hippotrack/report.php',
                     ['id' => $this->get_cm_by_quiz_name($identifier)->id, 'mode' => 'statistics']);
 
             case 'manual grading report':
-                return new moodle_url('/mod/quiz/report.php',
+                return new moodle_url('/mod/hippotrack/report.php',
                         ['id' => $this->get_cm_by_quiz_name($identifier)->id, 'mode' => 'grading']);
             case 'attempt view':
                 list($quizname, $username, $attemptno, $pageno) = explode(' > ', $identifier);
@@ -119,11 +119,11 @@ class behat_mod_hippotrack extends behat_question_base {
                 $pageno = $pageno > 0 ? $pageno - 1 : 0;
                 $attemptno = (int) trim(str_replace ('Attempt', '', $attemptno));
                 $quiz = $this->get_quiz_by_name($quizname);
-                $quizcm = get_coursemodule_from_instance('quiz', $quiz->id, $quiz->course);
+                $quizcm = get_coursemodule_from_instance('hippotrack', $quiz->id, $quiz->course);
                 $user = $DB->get_record('user', ['username' => $username], '*', MUST_EXIST);
                 $attempt = $DB->get_record('quiz_attempts',
-                    ['quiz' => $quiz->id, 'userid' => $user->id, 'attempt' => $attemptno], '*', MUST_EXIST);
-                return new moodle_url('/mod/quiz/attempt.php', [
+                    ['hippotrack' => $quiz->id, 'userid' => $user->id, 'attempt' => $attemptno], '*', MUST_EXIST);
+                return new moodle_url('/mod/hippotrack/attempt.php', [
                     'attempt' => $attempt->id,
                     'cmid' => $quizcm->id,
                     'page' => $pageno
@@ -139,8 +139,8 @@ class behat_mod_hippotrack extends behat_question_base {
                 $quiz = $this->get_quiz_by_name($quizname);
                 $user = $DB->get_record('user', ['username' => $username], '*', MUST_EXIST);
                 $attempt = $DB->get_record('quiz_attempts',
-                        ['quiz' => $quiz->id, 'userid' => $user->id, 'attempt' => $attemptno], '*', MUST_EXIST);
-                return new moodle_url('/mod/quiz/review.php', ['attempt' => $attempt->id]);
+                        ['hippotrack' => $quiz->id, 'userid' => $user->id, 'attempt' => $attemptno], '*', MUST_EXIST);
+                return new moodle_url('/mod/hippotrack/review.php', ['attempt' => $attempt->id]);
 
             case 'question bank':
                 // The question bank does not handle fields at the edge of the viewport well.
@@ -164,7 +164,7 @@ class behat_mod_hippotrack extends behat_question_base {
      */
     protected function get_quiz_by_name(string $name): stdClass {
         global $DB;
-        return $DB->get_record('quiz', array('name' => $name), '*', MUST_EXIST);
+        return $DB->get_record('hippotrack', array('name' => $name), '*', MUST_EXIST);
     }
 
     /**
@@ -175,7 +175,7 @@ class behat_mod_hippotrack extends behat_question_base {
      */
     protected function get_cm_by_quiz_name(string $name): stdClass {
         $quiz = $this->get_quiz_by_name($name);
-        return get_coursemodule_from_instance('quiz', $quiz->id, $quiz->course);
+        return get_coursemodule_from_instance('hippotrack', $quiz->id, $quiz->course);
     }
 
     /**
@@ -320,7 +320,7 @@ class behat_mod_hippotrack extends behat_question_base {
     public function quiz_contains_the_following_sections($quizname, TableNode $data) {
         global $DB;
 
-        $quiz = $DB->get_record('quiz', array('name' => $quizname), '*', MUST_EXIST);
+        $quiz = $DB->get_record('hippotrack', array('name' => $quizname), '*', MUST_EXIST);
 
         // Add the sections.
         $previousfirstslot = 0;
@@ -394,7 +394,7 @@ class behat_mod_hippotrack extends behat_question_base {
      */
     public function i_add_question_to_the_quiz_with($questiontype, $quizname, TableNode $questiondata) {
         $quizname = $this->escape($quizname);
-        $addaquestion = $this->escape(get_string('addaquestion', 'quiz'));
+        $addaquestion = $this->escape(get_string('addaquestion', 'hippotrack'));
 
         $this->execute('behat_navigation::i_am_on_page_instance', [
             $quizname,
@@ -419,7 +419,7 @@ class behat_mod_hippotrack extends behat_question_base {
      * @param string $newmark the mark to set
      */
     public function i_set_the_max_mark_for_quiz_question($questionname, $newmark) {
-        $this->execute('behat_general::click_link', $this->escape(get_string('editmaxmark', 'quiz')));
+        $this->execute('behat_general::click_link', $this->escape(get_string('editmaxmark', 'hippotrack')));
 
         $this->execute('behat_general::wait_until_exists', array("li input[name=maxmark]", "css_element"));
 
@@ -682,7 +682,7 @@ class behat_mod_hippotrack extends behat_question_base {
     public function i_set_the_section_heading_for($sectionname, $sectionheading) {
         // Empty section headings will have a default names of "Untitled heading".
         if (empty($sectionname)) {
-            $sectionname = get_string('sectionnoname', 'quiz');
+            $sectionname = get_string('sectionnoname', 'hippotrack');
         }
         $this->execute('behat_general::click_link', $this->escape("Edit heading '{$sectionname}'"));
 
@@ -808,7 +808,7 @@ class behat_mod_hippotrack extends behat_question_base {
         /** @var mod_hippotrack_generator $quizgenerator */
         $quizgenerator = behat_util::get_data_generator()->get_plugin_generator('mod_hippotrack');
 
-        $quizid = $DB->get_field('quiz', 'id', ['name' => $quizname], MUST_EXIST);
+        $quizid = $DB->get_field('hippotrack', 'id', ['name' => $quizname], MUST_EXIST);
         $user = $DB->get_record('user', ['username' => $username], '*', MUST_EXIST);
 
         list($forcedrandomquestions, $forcedvariants) =
@@ -842,7 +842,7 @@ class behat_mod_hippotrack extends behat_question_base {
         /** @var mod_hippotrack_generator $quizgenerator */
         $quizgenerator = behat_util::get_data_generator()->get_plugin_generator('mod_hippotrack');
 
-        $quizid = $DB->get_field('quiz', 'id', ['name' => $quizname], MUST_EXIST);
+        $quizid = $DB->get_field('hippotrack', 'id', ['name' => $quizname], MUST_EXIST);
         $user = $DB->get_record('user', ['username' => $username], '*', MUST_EXIST);
         $this->set_user($user);
         $quizgenerator->create_attempt($quizid, $user->id);
@@ -867,7 +867,7 @@ class behat_mod_hippotrack extends behat_question_base {
         /** @var mod_hippotrack_generator $quizgenerator */
         $quizgenerator = behat_util::get_data_generator()->get_plugin_generator('mod_hippotrack');
 
-        $quizid = $DB->get_field('quiz', 'id', ['name' => $quizname], MUST_EXIST);
+        $quizid = $DB->get_field('hippotrack', 'id', ['name' => $quizname], MUST_EXIST);
         $user = $DB->get_record('user', ['username' => $username], '*', MUST_EXIST);
 
         list($forcedrandomquestions, $forcedvariants) =
@@ -902,7 +902,7 @@ class behat_mod_hippotrack extends behat_question_base {
         /** @var mod_hippotrack_generator $quizgenerator */
         $quizgenerator = behat_util::get_data_generator()->get_plugin_generator('mod_hippotrack');
 
-        $quizid = $DB->get_field('quiz', 'id', ['name' => $quizname], MUST_EXIST);
+        $quizid = $DB->get_field('hippotrack', 'id', ['name' => $quizname], MUST_EXIST);
         $user = $DB->get_record('user', ['username' => $username], '*', MUST_EXIST);
 
         $responses = $this->extract_responses_from_attempt_info($attemptinfo);
@@ -939,7 +939,7 @@ class behat_mod_hippotrack extends behat_question_base {
         /** @var mod_hippotrack_generator $quizgenerator */
         $quizgenerator = behat_util::get_data_generator()->get_plugin_generator('mod_hippotrack');
 
-        $quizid = $DB->get_field('quiz', 'id', ['name' => $quizname], MUST_EXIST);
+        $quizid = $DB->get_field('hippotrack', 'id', ['name' => $quizname], MUST_EXIST);
         $user = $DB->get_record('user', ['username' => $username], '*', MUST_EXIST);
 
         $responses = $this->extract_responses_from_attempt_info($attemptinfo);
@@ -962,7 +962,7 @@ class behat_mod_hippotrack extends behat_question_base {
     public function user_has_finished_an_attempt_at_quiz($username, $quizname) {
         global $DB;
 
-        $quizid = $DB->get_field('quiz', 'id', ['name' => $quizname], MUST_EXIST);
+        $quizid = $DB->get_field('hippotrack', 'id', ['name' => $quizname], MUST_EXIST);
         $user = $DB->get_record('user', ['username' => $username], '*', MUST_EXIST);
 
         $this->set_user($user);

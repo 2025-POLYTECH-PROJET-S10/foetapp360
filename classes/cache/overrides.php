@@ -72,7 +72,7 @@ class overrides implements \cache_data_source {
                 $userid = (int) $ugid;
                 $override = $DB->get_record(
                     'quiz_overrides',
-                    ['quiz' => $quizid, 'userid' => $userid],
+                    ['hippotrack' => $quizid, 'userid' => $userid],
                     'timeopen, timeclose, timelimit, attempts, password'
                 );
                 break;
@@ -80,7 +80,7 @@ class overrides implements \cache_data_source {
                 $groupid = (int) $ugid;
                 $override = $DB->get_record(
                     'quiz_overrides',
-                    ['quiz' => $quizid, 'groupid' => $groupid],
+                    ['hippotrack' => $quizid, 'groupid' => $groupid],
                     'timeopen, timeclose, timelimit, attempts, password'
                 );
                 break;

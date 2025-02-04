@@ -74,7 +74,7 @@ class access_prevented extends base {
      * Initialize the event data.
      */
     protected function init() {
-        $this->data['objecttable'] = 'quiz';
+        $this->data['objecttable'] = 'hippotrack';
         $this->data['crud'] = 'r';
         $this->data['edulevel'] = self::LEVEL_PARTICIPATING;
     }
@@ -110,7 +110,7 @@ class access_prevented extends base {
      * @return array Mapping of object id.
      */
     public static function get_objectid_mapping() : array {
-        return array('db' => 'quiz', 'restore' => 'quiz');
+        return array('db' => 'hippotrack', 'restore' => 'hippotrack');
     }
 
     /**

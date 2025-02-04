@@ -96,7 +96,7 @@ const isKeyEmpty = (key) => {
  */
 const reconfigureSafeExamBrowser = (cmid) => {
     const domain = Config.wwwroot.replace(/^http/i, 'seb');
-    const redirecturl = domain + '/mod/quiz/accessrule/seb/config.php?cmid=' + cmid;
+    const redirecturl = domain + '/mod/hippotrack/accessrule/seb/config.php?cmid=' + cmid;
     document.location.replace(redirecturl);
 };
 

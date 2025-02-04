@@ -27,14 +27,14 @@
  */
 
 require_once(__DIR__ . '/../../config.php');
-require_once($CFG->dirroot . '/mod/quiz/locallib.php');
+require_once($CFG->dirroot . '/mod/hippotrack/locallib.php');
 
 // Get submitted parameters.
 $id = required_param('cmid', PARAM_INT); // Course module id
 $forcenew = optional_param('forcenew', false, PARAM_BOOL); // Used to force a new preview
 $page = optional_param('page', -1, PARAM_INT); // Page to jump to in the attempt.
 
-if (!$cm = get_coursemodule_from_id('quiz', $id)) {
+if (!$cm = get_coursemodule_from_id('hippotrack', $id)) {
     throw new \moodle_exception('invalidcoursemodule');
 }
 if (!$course = $DB->get_record('course', array('id' => $cm->course))) {
@@ -54,10 +54,10 @@ $PAGE->set_heading($quizobj->get_course()->fullname);
 
 // If no questions have been set up yet redirect to edit.php or display an error.
 if (!$quizobj->has_questions()) {
-    if ($quizobj->has_capability('mod/quiz:manage')) {
+    if ($quizobj->has_capability('mod/hippotrack:manage')) {
         redirect($quizobj->edit_url());
     } else {
-        throw new \moodle_exception('cannotstartnoquestions', 'quiz', $quizobj->view_url());
+        throw new \moodle_exception('cannotstartnoquestions', 'hippotrack', $quizobj->view_url());
     }
 }
 
@@ -72,7 +72,7 @@ list($currentattemptid, $attemptnumber, $lastattempt, $messages, $page) =
 // Check access.
 if (!$quizobj->is_preview_user() && $messages) {
     $output = $PAGE->get_renderer('mod_hippotrack');
-    throw new \moodle_exception('attempterror', 'quiz', $quizobj->view_url(),
+    throw new \moodle_exception('attempterror', 'hippotrack', $quizobj->view_url(),
             $output->access_messages($messages));
 }
 

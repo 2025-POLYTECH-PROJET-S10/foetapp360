@@ -38,7 +38,7 @@ final class attempt_walkthrough_test extends \advanced_testcase {
 
         parent::setUpBeforeClass();
 
-        require_once($CFG->dirroot . '/mod/quiz/locallib.php');
+        require_once($CFG->dirroot . '/mod/hippotrack/locallib.php');
     }
 
     /**
@@ -147,7 +147,7 @@ final class attempt_walkthrough_test extends \advanced_testcase {
         $this->assertEquals(100.0, $grade->rawgrade);
 
         // Check grade book.
-        $gradebookgrades = grade_get_grades($SITE->id, 'mod', 'quiz', $quiz->id, $user1->id);
+        $gradebookgrades = grade_get_grades($SITE->id, 'mod', 'hippotrack', $quiz->id, $user1->id);
         $gradebookitem = array_shift($gradebookgrades->items);
         $gradebookgrade = array_shift($gradebookitem->grades);
         $this->assertEquals(100, $gradebookgrade->grade);
@@ -206,7 +206,7 @@ final class attempt_walkthrough_test extends \advanced_testcase {
 
         // Attempt goes overdue (e.g. if cron ran).
         $attemptobj = quiz_attempt::create($attempt->id);
-        $attemptobj->process_going_overdue($quiz->timeclose + 2 * get_config('quiz', 'graceperiodmin'), false);
+        $attemptobj->process_going_overdue($quiz->timeclose + 2 * get_config('hippotrack', 'graceperiodmin'), false);
 
         // Verify the attempt state.
         $attemptobj = quiz_attempt::create($attempt->id);
@@ -250,7 +250,7 @@ final class attempt_walkthrough_test extends \advanced_testcase {
         $attemptobj->process_submitted_actions($originaltimeclose - 30 * MINSECS, false, [1 => ['answer' => 'frog']]);
 
         // Teacher edits the quiz to extend the time-limit by one minute.
-        $DB->set_field('quiz', 'timeclose', $originaltimeclose + MINSECS, ['id' => $quiz->id]);
+        $DB->set_field('hippotrack', 'timeclose', $originaltimeclose + MINSECS, ['id' => $quiz->id]);
         \course_modinfo::clear_instance_cache($quiz->course);
 
         // Timer expires in the student browser and thinks it is time to submit the quiz.
@@ -368,7 +368,7 @@ final class attempt_walkthrough_test extends \advanced_testcase {
             $this->assertEquals(100.0, $grade->rawgrade);
 
             // Check grade book.
-            $gradebookgrades = grade_get_grades($SITE->id, 'mod', 'quiz', $quiz->id, $user1->id);
+            $gradebookgrades = grade_get_grades($SITE->id, 'mod', 'hippotrack', $quiz->id, $user1->id);
             $gradebookitem = array_shift($gradebookgrades->items);
             $gradebookgrade = array_shift($gradebookitem->grades);
             $this->assertEquals(100, $gradebookgrade->grade);
@@ -460,7 +460,7 @@ final class attempt_walkthrough_test extends \advanced_testcase {
         $this->assertEquals(100.0, $grade->rawgrade);
 
         // Check grade book.
-        $gradebookgrades = grade_get_grades($SITE->id, 'mod', 'quiz', $this->quizwithvariants->id, $user1->id);
+        $gradebookgrades = grade_get_grades($SITE->id, 'mod', 'hippotrack', $this->quizwithvariants->id, $user1->id);
         $gradebookitem = array_shift($gradebookgrades->items);
         $gradebookgrade = array_shift($gradebookitem->grades);
         $this->assertEquals(100, $gradebookgrade->grade);

@@ -15,7 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Unit tests for (some of) mod/quiz/locallib.php.
+ * Unit tests for (some of) mod/hippotrack/locallib.php.
  *
  * @package    mod_hippotrack
  * @category   test
@@ -30,7 +30,7 @@ use quiz_attempt;
 defined('MOODLE_INTERNAL') || die();
 
 global $CFG;
-require_once($CFG->dirroot . '/mod/quiz/lib.php');
+require_once($CFG->dirroot . '/mod/hippotrack/lib.php');
 
 /**
  * @copyright  2008 The Open University
@@ -95,7 +95,7 @@ class lib_test extends \advanced_testcase {
     /**
      * Test deleting a quiz instance.
      */
-    public function test_quiz_delete_instance() {
+    public function test_quizz_delete_instance() {
         global $SITE, $DB;
         $this->resetAfterTest(true);
         $this->setAdminUser();
@@ -114,7 +114,7 @@ class lib_test extends \advanced_testcase {
         // Get the random question.
         $randomq = $DB->get_record('question', array('qtype' => 'random'));
 
-        quiz_delete_instance($quiz->id);
+        quizz_delete_instance($quiz->id);
 
         // Check that the random question was deleted.
         if ($randomq) {
@@ -130,7 +130,7 @@ class lib_test extends \advanced_testcase {
         $this->assertEquals(0, $count);
 
         // Check that the quiz was removed.
-        $count = $DB->count_records('quiz', array('id' => $quiz->id));
+        $count = $DB->count_records('hippotrack', array('id' => $quiz->id));
         $this->assertEquals(0, $count);
     }
 
@@ -168,7 +168,7 @@ class lib_test extends \advanced_testcase {
             'completion' => COMPLETION_TRACKING_AUTOMATIC
         ], $completionoptions['quizoptions']);
         $quiz = $quizgenerator->create_instance($data);
-        $cm = get_coursemodule_from_id('quiz', $quiz->cmid);
+        $cm = get_coursemodule_from_id('hippotrack', $quiz->cmid);
 
         // Create a question.
         $questiongenerator = $this->getDataGenerator()->get_plugin_generator('core_question');
@@ -178,7 +178,7 @@ class lib_test extends \advanced_testcase {
         quiz_add_quiz_question($question->id, $quiz);
 
         // Set grade to pass.
-        $item = \grade_item::fetch(['courseid' => $course->id, 'itemtype' => 'mod', 'itemmodule' => 'quiz',
+        $item = \grade_item::fetch(['courseid' => $course->id, 'itemtype' => 'mod', 'itemmodule' => 'hippotrack',
             'iteminstance' => $quiz->id, 'outcomeid' => null]);
         $item->gradepass = 80;
         $item->update();
@@ -195,10 +195,10 @@ class lib_test extends \advanced_testcase {
      * Helper function for all test_quiz_get_completion_state_* tests.
      * Starts an attempt, processes responses and finishes the attempt.
      *
-     * @param $attemptoptions ['quiz'] => object, ['student'] => object, ['tosubmit'] => array, ['attemptnumber'] => int
+     * @param $attemptoptions ['hippotrack'] => object, ['student'] => object, ['tosubmit'] => array, ['attemptnumber'] => int
      */
     private function do_attempt_quiz($attemptoptions) {
-        $quizobj = quiz::create($attemptoptions['quiz']->id);
+        $quizobj = quiz::create($attemptoptions['hippotrack']->id);
 
         // Start the passing attempt.
         $quba = \question_engine::make_questions_usage_by_activity('mod_hippotrack', $quizobj->get_context());
@@ -239,7 +239,7 @@ class lib_test extends \advanced_testcase {
 
         // Do a passing attempt.
         $this->do_attempt_quiz([
-           'quiz' => $quiz,
+           'hippotrack' => $quiz,
            'student' => $passstudent,
            'attemptnumber' => 1,
            'tosubmit' => [1 => ['answer' => '3.14']]
@@ -250,7 +250,7 @@ class lib_test extends \advanced_testcase {
 
         // Do a failing attempt.
         $this->do_attempt_quiz([
-            'quiz' => $quiz,
+            'hippotrack' => $quiz,
             'student' => $failstudent,
             'attemptnumber' => 1,
             'tosubmit' => [1 => ['answer' => '0']]
@@ -287,7 +287,7 @@ class lib_test extends \advanced_testcase {
 
         // Start a passing attempt.
         $this->do_attempt_quiz([
-            'quiz' => $quiz,
+            'hippotrack' => $quiz,
             'student' => $passstudent,
             'attemptnumber' => 1,
             'tosubmit' => [1 => ['answer' => '3.14']]
@@ -298,7 +298,7 @@ class lib_test extends \advanced_testcase {
 
         // Do a failing attempt.
         $this->do_attempt_quiz([
-            'quiz' => $quiz,
+            'hippotrack' => $quiz,
             'student' => $exhauststudent,
             'attemptnumber' => 1,
             'tosubmit' => [1 => ['answer' => '0']]
@@ -309,7 +309,7 @@ class lib_test extends \advanced_testcase {
 
         // Do a second failing attempt.
         $this->do_attempt_quiz([
-            'quiz' => $quiz,
+            'hippotrack' => $quiz,
             'student' => $exhauststudent,
             'attemptnumber' => 2,
             'tosubmit' => [1 => ['answer' => '0']]
@@ -346,7 +346,7 @@ class lib_test extends \advanced_testcase {
 
         // Do a first attempt.
         $this->do_attempt_quiz([
-            'quiz' => $quiz,
+            'hippotrack' => $quiz,
             'student' => $student,
             'attemptnumber' => 1,
             'tosubmit' => [1 => ['answer' => 'Lorem ipsum.', 'answerformat' => '1']]
@@ -357,7 +357,7 @@ class lib_test extends \advanced_testcase {
 
         // Do a second attempt.
         $this->do_attempt_quiz([
-            'quiz' => $quiz,
+            'hippotrack' => $quiz,
             'student' => $student,
             'attemptnumber' => 2,
             'tosubmit' => [1 => ['answer' => 'Lorem ipsum.', 'answerformat' => '1']]
@@ -398,7 +398,7 @@ class lib_test extends \advanced_testcase {
 
         // Start a first attempt.
         $this->do_attempt_quiz([
-            'quiz' => $quiz,
+            'hippotrack' => $quiz,
             'student' => $student,
             'attemptnumber' => 1,
             'tosubmit' => [1 => ['answer' => '3.14']]
@@ -410,7 +410,7 @@ class lib_test extends \advanced_testcase {
 
         // Start a second attempt.
         $this->do_attempt_quiz([
-            'quiz' => $quiz,
+            'hippotrack' => $quiz,
             'student' => $student,
             'attemptnumber' => 2,
             'tosubmit' => [1 => ['answer' => '42']]
@@ -668,7 +668,7 @@ class lib_test extends \advanced_testcase {
 
         $now = 100;
         $override1 = (object)[
-            'quiz' => $quiz->id,
+            'hippotrack' => $quiz->id,
             'groupid' => $group1->id,
             'timeopen' => $now,
             'timeclose' => $now + 20
@@ -676,7 +676,7 @@ class lib_test extends \advanced_testcase {
         $DB->insert_record('quiz_overrides', $override1);
 
         $override2 = (object)[
-            'quiz' => $quiz->id,
+            'hippotrack' => $quiz->id,
             'groupid' => $group2->id,
             'timeopen' => $now - 10,
             'timeclose' => $now + 10
@@ -707,7 +707,7 @@ class lib_test extends \advanced_testcase {
         // Create a student and enrol into the course.
         $student = $this->getDataGenerator()->create_and_enrol($course, 'student');
         // Create a quiz.
-        $quiz = $this->getDataGenerator()->create_module('quiz', array('course' => $course->id,
+        $quiz = $this->getDataGenerator()->create_module('hippotrack', array('course' => $course->id,
             'timeopen' => time() - DAYSECS, 'timeclose' => time() + DAYSECS));
 
         // Create a calendar event.
@@ -722,7 +722,7 @@ class lib_test extends \advanced_testcase {
 
         // Confirm the event was decorated.
         $this->assertInstanceOf('\core_calendar\local\event\value_objects\action', $actionevent);
-        $this->assertEquals(get_string('attemptquiznow', 'quiz'), $actionevent->get_name());
+        $this->assertEquals(get_string('attemptquiznow', 'hippotrack'), $actionevent->get_name());
         $this->assertInstanceOf('moodle_url', $actionevent->get_url());
         $this->assertEquals(1, $actionevent->get_item_count());
         $this->assertTrue($actionevent->is_actionable());
@@ -738,7 +738,7 @@ class lib_test extends \advanced_testcase {
         // Create a student and enrol into the course.
         $student = $this->getDataGenerator()->create_and_enrol($course, 'student');
         // Create a quiz.
-        $quiz = $this->getDataGenerator()->create_module('quiz', array('course' => $course->id,
+        $quiz = $this->getDataGenerator()->create_module('hippotrack', array('course' => $course->id,
             'timeopen' => time() - DAYSECS, 'timeclose' => time() + DAYSECS));
 
         // Create a calendar event.
@@ -752,7 +752,7 @@ class lib_test extends \advanced_testcase {
 
         // Confirm the event was decorated.
         $this->assertInstanceOf('\core_calendar\local\event\value_objects\action', $actionevent);
-        $this->assertEquals(get_string('attemptquiznow', 'quiz'), $actionevent->get_name());
+        $this->assertEquals(get_string('attemptquiznow', 'hippotrack'), $actionevent->get_name());
         $this->assertInstanceOf('moodle_url', $actionevent->get_url());
         $this->assertEquals(1, $actionevent->get_item_count());
         $this->assertTrue($actionevent->is_actionable());
@@ -767,7 +767,7 @@ class lib_test extends \advanced_testcase {
         $course = $this->getDataGenerator()->create_course();
 
         // Create a quiz.
-        $quiz = $this->getDataGenerator()->create_module('quiz', array('course' => $course->id,
+        $quiz = $this->getDataGenerator()->create_module('hippotrack', array('course' => $course->id,
             'timeclose' => time() - DAYSECS));
 
         // Create a calendar event.
@@ -792,7 +792,7 @@ class lib_test extends \advanced_testcase {
         $student = $this->getDataGenerator()->create_and_enrol($course, 'student');
 
         // Create a quiz.
-        $quiz = $this->getDataGenerator()->create_module('quiz', array('course' => $course->id,
+        $quiz = $this->getDataGenerator()->create_module('hippotrack', array('course' => $course->id,
             'timeclose' => time() - DAYSECS));
 
         // Create a calendar event.
@@ -815,7 +815,7 @@ class lib_test extends \advanced_testcase {
         // Create a student and enrol into the course.
         $student = $this->getDataGenerator()->create_and_enrol($course, 'student');
         // Create a quiz.
-        $quiz = $this->getDataGenerator()->create_module('quiz', array('course' => $course->id,
+        $quiz = $this->getDataGenerator()->create_module('hippotrack', array('course' => $course->id,
             'timeopen' => time() + DAYSECS));
 
         // Create a calendar event.
@@ -830,7 +830,7 @@ class lib_test extends \advanced_testcase {
 
         // Confirm the event was decorated.
         $this->assertInstanceOf('\core_calendar\local\event\value_objects\action', $actionevent);
-        $this->assertEquals(get_string('attemptquiznow', 'quiz'), $actionevent->get_name());
+        $this->assertEquals(get_string('attemptquiznow', 'hippotrack'), $actionevent->get_name());
         $this->assertInstanceOf('moodle_url', $actionevent->get_url());
         $this->assertEquals(1, $actionevent->get_item_count());
         $this->assertFalse($actionevent->is_actionable());
@@ -846,7 +846,7 @@ class lib_test extends \advanced_testcase {
         // Create a student and enrol into the course.
         $student = $this->getDataGenerator()->create_and_enrol($course, 'student');
         // Create a quiz.
-        $quiz = $this->getDataGenerator()->create_module('quiz', array('course' => $course->id,
+        $quiz = $this->getDataGenerator()->create_module('hippotrack', array('course' => $course->id,
             'timeopen' => time() + DAYSECS));
 
         // Create a calendar event.
@@ -860,7 +860,7 @@ class lib_test extends \advanced_testcase {
 
         // Confirm the event was decorated.
         $this->assertInstanceOf('\core_calendar\local\event\value_objects\action', $actionevent);
-        $this->assertEquals(get_string('attemptquiznow', 'quiz'), $actionevent->get_name());
+        $this->assertEquals(get_string('attemptquiznow', 'hippotrack'), $actionevent->get_name());
         $this->assertInstanceOf('moodle_url', $actionevent->get_url());
         $this->assertEquals(1, $actionevent->get_item_count());
         $this->assertFalse($actionevent->is_actionable());
@@ -883,12 +883,12 @@ class lib_test extends \advanced_testcase {
         $this->assertTrue($this->getDataGenerator()->enrol_user($student->id, $course->id, $studentrole->id));
 
         // Create a quiz.
-        $quiz = $this->getDataGenerator()->create_module('quiz', array('course' => $course->id));
+        $quiz = $this->getDataGenerator()->create_module('hippotrack', array('course' => $course->id));
 
         // Remove the permission to attempt or review the quiz for the student role.
         $coursecontext = \context_course::instance($course->id);
-        assign_capability('mod/quiz:reviewmyattempts', CAP_PROHIBIT, $studentrole->id, $coursecontext);
-        assign_capability('mod/quiz:attempt', CAP_PROHIBIT, $studentrole->id, $coursecontext);
+        assign_capability('mod/hippotrack:reviewmyattempts', CAP_PROHIBIT, $studentrole->id, $coursecontext);
+        assign_capability('mod/hippotrack:attempt', CAP_PROHIBIT, $studentrole->id, $coursecontext);
 
         // Create a calendar event.
         $event = $this->create_action_event($course->id, $quiz->id, QUIZ_EVENT_TYPE_OPEN);
@@ -920,12 +920,12 @@ class lib_test extends \advanced_testcase {
         $this->assertTrue($this->getDataGenerator()->enrol_user($student->id, $course->id, $studentrole->id));
 
         // Create a quiz.
-        $quiz = $this->getDataGenerator()->create_module('quiz', array('course' => $course->id));
+        $quiz = $this->getDataGenerator()->create_module('hippotrack', array('course' => $course->id));
 
         // Remove the permission to attempt or review the quiz for the student role.
         $coursecontext = \context_course::instance($course->id);
-        assign_capability('mod/quiz:reviewmyattempts', CAP_PROHIBIT, $studentrole->id, $coursecontext);
-        assign_capability('mod/quiz:attempt', CAP_PROHIBIT, $studentrole->id, $coursecontext);
+        assign_capability('mod/hippotrack:reviewmyattempts', CAP_PROHIBIT, $studentrole->id, $coursecontext);
+        assign_capability('mod/hippotrack:attempt', CAP_PROHIBIT, $studentrole->id, $coursecontext);
 
         // Create a calendar event.
         $event = $this->create_action_event($course->id, $quiz->id, QUIZ_EVENT_TYPE_OPEN);
@@ -955,7 +955,7 @@ class lib_test extends \advanced_testcase {
         $this->assertTrue($this->getDataGenerator()->enrol_user($student->id, $course->id, $studentrole->id));
 
         // Create a quiz.
-        $quiz = $this->getDataGenerator()->create_module('quiz', array('course' => $course->id,
+        $quiz = $this->getDataGenerator()->create_module('hippotrack', array('course' => $course->id,
             'sumgrades' => 1));
 
         // Add a question to the quiz.
@@ -1010,7 +1010,7 @@ class lib_test extends \advanced_testcase {
         $this->assertTrue($this->getDataGenerator()->enrol_user($student->id, $course->id, $studentrole->id));
 
         // Create a quiz.
-        $quiz = $this->getDataGenerator()->create_module('quiz', array('course' => $course->id,
+        $quiz = $this->getDataGenerator()->create_module('hippotrack', array('course' => $course->id,
             'sumgrades' => 1));
 
         // Add a question to the quiz.
@@ -1051,11 +1051,11 @@ class lib_test extends \advanced_testcase {
 
         // Create the activity.
         $course = $this->getDataGenerator()->create_course(array('enablecompletion' => 1));
-        $quiz = $this->getDataGenerator()->create_module('quiz', array('course' => $course->id),
+        $quiz = $this->getDataGenerator()->create_module('hippotrack', array('course' => $course->id),
             array('completion' => 2, 'completionview' => 1, 'completionexpected' => time() + DAYSECS));
 
         // Get some additional data.
-        $cm = get_coursemodule_from_instance('quiz', $quiz->id);
+        $cm = get_coursemodule_from_instance('hippotrack', $quiz->id);
 
         // Create a calendar event.
         $event = $this->create_action_event($course->id, $quiz->id,
@@ -1082,14 +1082,14 @@ class lib_test extends \advanced_testcase {
 
         // Create the activity.
         $course = $this->getDataGenerator()->create_course(array('enablecompletion' => 1));
-        $quiz = $this->getDataGenerator()->create_module('quiz', array('course' => $course->id),
+        $quiz = $this->getDataGenerator()->create_module('hippotrack', array('course' => $course->id),
             array('completion' => 2, 'completionview' => 1, 'completionexpected' => time() + DAYSECS));
 
         // Enrol a student in the course.
         $student = $this->getDataGenerator()->create_and_enrol($course, 'student');
 
         // Get some additional data.
-        $cm = get_coursemodule_from_instance('quiz', $quiz->id);
+        $cm = get_coursemodule_from_instance('hippotrack', $quiz->id);
 
         // Create a calendar event.
         $event = $this->create_action_event($course->id, $quiz->id,
@@ -1120,7 +1120,7 @@ class lib_test extends \advanced_testcase {
     private function create_action_event($courseid, $instanceid, $eventtype) {
         $event = new \stdClass();
         $event->name = 'Calendar event';
-        $event->modulename  = 'quiz';
+        $event->modulename  = 'hippotrack';
         $event->courseid = $courseid;
         $event->instance = $instanceid;
         $event->type = CALENDAR_EVENT_TYPE_ACTION;
@@ -1141,20 +1141,20 @@ class lib_test extends \advanced_testcase {
 
         // Two activities, both with automatic completion. One has the 'completionsubmit' rule, one doesn't.
         $course = $this->getDataGenerator()->create_course(['enablecompletion' => 2]);
-        $quiz1 = $this->getDataGenerator()->create_module('quiz', [
+        $quiz1 = $this->getDataGenerator()->create_module('hippotrack', [
             'course' => $course->id,
             'completion' => 2,
             'completionusegrade' => 1,
             'completionpassgrade' => 1,
             'completionattemptsexhausted' => 1,
         ]);
-        $quiz2 = $this->getDataGenerator()->create_module('quiz', [
+        $quiz2 = $this->getDataGenerator()->create_module('hippotrack', [
             'course' => $course->id,
             'completion' => 2,
             'completionusegrade' => 0
         ]);
-        $cm1 = \cm_info::create(get_coursemodule_from_instance('quiz', $quiz1->id));
-        $cm2 = \cm_info::create(get_coursemodule_from_instance('quiz', $quiz2->id));
+        $cm1 = \cm_info::create(get_coursemodule_from_instance('hippotrack', $quiz1->id));
+        $cm2 = \cm_info::create(get_coursemodule_from_instance('hippotrack', $quiz2->id));
 
         // Data for the stdClass input type.
         // This type of input would occur when checking the default completion rules for an activity type, where we don't have
@@ -1166,7 +1166,7 @@ class lib_test extends \advanced_testcase {
         $moddefaults->completion = 2;
 
         $activeruledescriptions = [
-            get_string('completionpassorattemptsexhausteddesc', 'quiz'),
+            get_string('completionpassorattemptsexhausteddesc', 'hippotrack'),
         ];
         $this->assertEquals(mod_hippotrack_get_completion_active_rule_descriptions($cm1), $activeruledescriptions);
         $this->assertEquals(mod_hippotrack_get_completion_active_rule_descriptions($cm2), []);

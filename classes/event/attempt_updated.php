@@ -77,7 +77,7 @@ class attempt_updated extends \core\event\base {
      * @return \moodle_url
      */
     public function get_url() {
-        return new \moodle_url('/mod/quiz/review.php', [
+        return new \moodle_url('/mod/hippotrack/review.php', [
             'attempt' => $this->objectid,
             'page' => $this->other['page']
         ]);
@@ -123,7 +123,7 @@ class attempt_updated extends \core\event\base {
      */
     public static function get_other_mapping() {
         $othermapped = [];
-        $othermapped['quizid'] = ['db' => 'quiz', 'restore' => 'quiz'];
+        $othermapped['quizid'] = ['db' => 'hippotrack', 'restore' => 'hippotrack'];
 
         return $othermapped;
     }

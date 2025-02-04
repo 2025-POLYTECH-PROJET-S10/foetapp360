@@ -1,4 +1,4 @@
-This files describes API changes in /mod/quiz/report/statistics/*,
+This files describes API changes in /mod/hippotrack/report/statistics/*,
 information provided here is intended especially for developers.
 
 === 4.1.4 ===

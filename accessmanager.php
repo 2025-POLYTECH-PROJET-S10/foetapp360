@@ -48,7 +48,7 @@ class quiz_access_manager {
      *      The quiz we will be controlling access to.
      * @param int $timenow The time to use as 'now'.
      * @param bool $canignoretimelimits Whether this user is exempt from time
-     *      limits (has_capability('mod/quiz:ignoretimelimits', ...)).
+     *      limits (has_capability('mod/hippotrack:ignoretimelimits', ...)).
      */
     public function __construct($quizobj, $timenow, $canignoretimelimits) {
         $this->quizobj = $quizobj;
@@ -61,7 +61,7 @@ class quiz_access_manager {
      * @param quiz $quizobj information about the quiz in question.
      * @param int $timenow the time that should be considered as 'now'.
      * @param bool $canignoretimelimits whether the current user is exempt from
-     *      time limits by the mod/quiz:ignoretimelimits capability.
+     *      time limits by the mod/hippotrack:ignoretimelimits capability.
      * @return array of {@link quiz_access_rule_base}s.
      */
     protected function make_rules($quizobj, $timenow, $canignoretimelimits) {

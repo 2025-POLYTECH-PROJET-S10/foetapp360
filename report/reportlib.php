@@ -25,10 +25,10 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-require_once($CFG->dirroot . '/mod/quiz/lib.php');
-require_once($CFG->dirroot . '/mod/quiz/attemptlib.php');
+require_once($CFG->dirroot . '/mod/hippotrack/lib.php');
+require_once($CFG->dirroot . '/mod/hippotrack/attemptlib.php');
 require_once($CFG->libdir . '/filelib.php');
-require_once($CFG->dirroot . '/mod/quiz/accessmanager.php');
+require_once($CFG->dirroot . '/mod/hippotrack/accessmanager.php');
 
 /**
  * Takes an array of objects and constructs a multidimensional array keyed by
@@ -354,7 +354,7 @@ function quiz_report_list($context) {
     }
 
     $reports = $DB->get_records('quiz_reports', null, 'displayorder DESC', 'name, capability');
-    $reportdirs = core_component::get_plugin_list('quiz');
+    $reportdirs = core_component::get_plugin_list('hippotrack');
 
     // Order the reports tab in descending order of displayorder.
     $reportcaps = array();
@@ -373,7 +373,7 @@ function quiz_report_list($context) {
     $reportlist = array();
     foreach ($reportcaps as $name => $capability) {
         if (empty($capability)) {
-            $capability = 'mod/quiz:viewreports';
+            $capability = 'mod/hippotrack:viewreports';
         }
         if (has_capability($capability, $context)) {
             $reportlist[] = $name;
@@ -416,10 +416,10 @@ function quiz_no_questions_message($quiz, $cm, $context) {
     global $OUTPUT;
 
     $output = '';
-    $output .= $OUTPUT->notification(get_string('noquestions', 'quiz'));
-    if (has_capability('mod/quiz:manage', $context)) {
-        $output .= $OUTPUT->single_button(new moodle_url('/mod/quiz/edit.php',
-        array('cmid' => $cm->id)), get_string('editquiz', 'quiz'), 'get');
+    $output .= $OUTPUT->notification(get_string('noquestions', 'hippotrack'));
+    if (has_capability('mod/hippotrack:manage', $context)) {
+        $output .= $OUTPUT->single_button(new moodle_url('/mod/hippotrack/edit.php',
+        array('cmid' => $cm->id)), get_string('editquiz', 'hippotrack'), 'get');
     }
 
     return $output;

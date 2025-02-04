@@ -54,7 +54,7 @@ class events_test extends \advanced_testcase {
         $this->setAdminUser();
         $quiz = $this->create_test_quiz($this->course, \quizaccess_seb\settings_provider::USE_SEB_CONFIG_MANUALLY);
         $accessmanager = new \quizaccess_seb\access_manager(new quiz($quiz,
-            get_coursemodule_from_id('quiz', $quiz->cmid), $this->course));
+            get_coursemodule_from_id('hippotrack', $quiz->cmid), $this->course));
 
         // Set up event with data.
         $user = $this->getDataGenerator()->create_user();
@@ -104,7 +104,7 @@ class events_test extends \advanced_testcase {
         $this->setAdminUser();
         $quiz = $this->create_test_quiz($this->course, \quizaccess_seb\settings_provider::USE_SEB_CONFIG_MANUALLY);
         $accessmanager = new \quizaccess_seb\access_manager(new quiz($quiz,
-            get_coursemodule_from_id('quiz', $quiz->cmid), $this->course));
+            get_coursemodule_from_id('hippotrack', $quiz->cmid), $this->course));
 
         // Set up event with data.
         $user = $this->getDataGenerator()->create_user();

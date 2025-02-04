@@ -75,7 +75,7 @@ class custom_completion extends activity_custom_completion {
         $accessmanager = new quiz_access_manager(
             $quizobj,
             time(),
-            has_capability('mod/quiz:ignoretimelimits', $context, $this->userid, false)
+            has_capability('mod/hippotrack:ignoretimelimits', $context, $this->userid, false)
         );
 
         return $accessmanager->is_finished(count($attempts), $lastfinishedattempt);

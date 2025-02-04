@@ -144,7 +144,7 @@ Y.extend(TOOLBOX, Y.Base, {
                     }
                     if (responsetext.hasOwnProperty('newnumquestions')) {
                         Y.one(SELECTOR.NUMQUESTIONS).setHTML(
-                            M.util.get_string('numquestionsx', 'quiz', responsetext.newnumquestions)
+                            M.util.get_string('numquestionsx', 'hippotrack', responsetext.newnumquestions)
                         );
                     }
                     if (success_callback) {

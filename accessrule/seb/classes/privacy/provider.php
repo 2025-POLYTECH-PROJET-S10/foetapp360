@@ -100,7 +100,7 @@ class provider implements
 
         $params = [
             'context' => CONTEXT_MODULE,
-            'modulename' => 'quiz',
+            'modulename' => 'hippotrack',
             'userid' => $userid
         ];
 
@@ -142,7 +142,7 @@ class provider implements
         }
 
         list($insql, $params) = $DB->get_in_or_equal($cmids, SQL_PARAMS_NAMED);
-        $params['modulename'] = 'quiz';
+        $params['modulename'] = 'hippotrack';
 
         // SEB quiz settings.
         $sql = "SELECT qs.id as id,
@@ -270,7 +270,7 @@ class provider implements
                   JOIN {course_modules} cm ON cm.instance = qs.quizid
                   JOIN {modules} m ON cm.module = m.id AND m.name = ?
                  WHERE cm.id = ?";
-        $params = ['quiz', $context->instanceid];
+        $params = ['hippotrack', $context->instanceid];
         $userlist->add_from_sql('userid', $sql, $params);
     }
 

@@ -31,7 +31,7 @@ defined('MOODLE_INTERNAL') || die();
  *
  * Doesn't do anything on it's own -- it needs to be extended.
  * This class displays quiz reports.  Because it is called from
- * within /mod/quiz/report.php you can assume that the page header
+ * within /mod/hippotrack/report.php you can assume that the page header
  * and footer are taken care of.
  *
  * This file can refer to itself as report.php to pass variables

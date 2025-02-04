@@ -75,10 +75,10 @@ class submit_question_version extends external_api {
         $slotdata = $DB->get_record('quiz_slots', ['id' => $slotid]);
 
         // Capability check.
-        list($course, $cm) = get_course_and_cm_from_instance($slotdata->quizid, 'quiz');
+        list($course, $cm) = get_course_and_cm_from_instance($slotdata->quizid, 'hippotrack');
         $context = \context_module::instance($cm->id);
         self::validate_context($context);
-        require_capability('mod/quiz:manage', $context);
+        require_capability('mod/hippotrack:manage', $context);
 
         $reference = new stdClass();
         $reference->id = $referencedata->id;

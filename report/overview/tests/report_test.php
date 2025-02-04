@@ -29,13 +29,13 @@ use quiz_overview_table;
 defined('MOODLE_INTERNAL') || die();
 
 global $CFG;
-require_once($CFG->dirroot . '/mod/quiz/locallib.php');
-require_once($CFG->dirroot . '/mod/quiz/report/reportlib.php');
-require_once($CFG->dirroot . '/mod/quiz/report/default.php');
-require_once($CFG->dirroot . '/mod/quiz/report/overview/report.php');
-require_once($CFG->dirroot . '/mod/quiz/report/overview/overview_form.php');
-require_once($CFG->dirroot . '/mod/quiz/report/overview/tests/helpers.php');
-require_once($CFG->dirroot . '/mod/quiz/tests/quiz_question_helper_test_trait.php');
+require_once($CFG->dirroot . '/mod/hippotrack/locallib.php');
+require_once($CFG->dirroot . '/mod/hippotrack/report/reportlib.php');
+require_once($CFG->dirroot . '/mod/hippotrack/report/default.php');
+require_once($CFG->dirroot . '/mod/hippotrack/report/overview/report.php');
+require_once($CFG->dirroot . '/mod/hippotrack/report/overview/overview_form.php');
+require_once($CFG->dirroot . '/mod/hippotrack/report/overview/tests/helpers.php');
+require_once($CFG->dirroot . '/mod/hippotrack/tests/quiz_question_helper_test_trait.php');
 
 
 /**
@@ -98,8 +98,8 @@ class report_test extends \advanced_testcase {
         $generator->enrol_user($student2->id, $course->id, null, 'self');
 
         // Also create a user who should not appear in the reports,
-        // because they have a role with neither 'mod/quiz:attempt'
-        // nor 'mod/quiz:reviewmyattempts'.
+        // because they have a role with neither 'mod/hippotrack:attempt'
+        // nor 'mod/hippotrack:reviewmyattempts'.
         $tutor = $generator->create_user();
         $generator->enrol_user($tutor->id, $course->id, 'teacher');
 
@@ -168,10 +168,10 @@ class report_test extends \advanced_testcase {
         // Actually getting the SQL to run is quite hard. Do a minimal set up of
         // some objects.
         $context = \context_module::instance($quiz->cmid);
-        $cm = get_coursemodule_from_id('quiz', $quiz->cmid);
+        $cm = get_coursemodule_from_id('hippotrack', $quiz->cmid);
         $qmsubselect = quiz_report_qm_filter_select($quiz);
         $studentsjoins = get_enrolled_with_capabilities_join($context, '',
-                array('mod/quiz:attempt', 'mod/quiz:reviewmyattempts'));
+                array('mod/hippotrack:attempt', 'mod/hippotrack:reviewmyattempts'));
         $empty = new \core\dml\sql_join();
 
         // Set the options.
@@ -188,7 +188,7 @@ class report_test extends \advanced_testcase {
         $table->download = $isdownloading; // Cannot call the is_downloading API, because it gives errors.
         $table->define_columns(array('fullname'));
         $table->sortable(true, 'uniqueid');
-        $table->define_baseurl(new \moodle_url('/mod/quiz/report.php'));
+        $table->define_baseurl(new \moodle_url('/mod/hippotrack/report.php'));
         $table->setup();
 
         // Run the query.
@@ -308,8 +308,8 @@ class report_test extends \advanced_testcase {
         $generator->enrol_user($student->id, $course->id, null, 'self');
 
         $context = \context_module::instance($quiz->cmid);
-        $cm = get_coursemodule_from_id('quiz', $quiz->cmid);
-        $allowedjoins = get_enrolled_with_capabilities_join($context, '', ['mod/quiz:attempt', 'mod/quiz:reviewmyattempts']);
+        $cm = get_coursemodule_from_id('hippotrack', $quiz->cmid);
+        $allowedjoins = get_enrolled_with_capabilities_join($context, '', ['mod/hippotrack:attempt', 'mod/hippotrack:reviewmyattempts']);
         $quizattemptsreport = new \testable_quiz_attempts_report();
 
         // Create the new attempt and initialize the question sessions.

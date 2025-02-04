@@ -28,7 +28,7 @@ class mod_hippotrack_generator extends testing_module_generator {
     public function create_instance($record = null, array $options = null) {
         global $CFG;
 
-        require_once($CFG->dirroot.'/mod/quiz/locallib.php');
+        require_once($CFG->dirroot.'/mod/hippotrack/locallib.php');
         $record = (object)(array)$record;
 
         $defaultquizsettings = array(
@@ -187,7 +187,7 @@ class mod_hippotrack_generator extends testing_module_generator {
         global $DB;
 
         // Validate.
-        if (!isset($data['quiz'])) {
+        if (!isset($data['hippotrack'])) {
             throw new coding_exception('Must specify quiz (id) when creating a quiz override.');
         }
 
@@ -203,6 +203,6 @@ class mod_hippotrack_generator extends testing_module_generator {
         $DB->insert_record('quiz_overrides', (object) $data);
 
         // Update any associated calendar events, if necessary.
-        quiz_update_events($DB->get_record('quiz', ['id' => $data['quiz']], '*', MUST_EXIST));
+        quiz_update_events($DB->get_record('hippotrack', ['id' => $data['hippotrack']], '*', MUST_EXIST));
     }
 }

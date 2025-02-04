@@ -39,14 +39,14 @@ class behat_mod_hippotrack_generator extends behat_generator_base {
             'group overrides' => [
                 'singular' => 'group override',
                 'datagenerator' => 'override',
-                'required' => ['quiz', 'group'],
-                'switchids' => ['quiz' => 'quiz', 'group' => 'groupid'],
+                'required' => ['hippotrack', 'group'],
+                'switchids' => ['hippotrack' => 'hippotrack', 'group' => 'groupid'],
             ],
             'user overrides' => [
                 'singular' => 'user override',
                 'datagenerator' => 'override',
-                'required' => ['quiz', 'user'],
-                'switchids' => ['quiz' => 'quiz', 'user' => 'userid'],
+                'required' => ['hippotrack', 'user'],
+                'switchids' => ['hippotrack' => 'hippotrack', 'user' => 'userid'],
             ],
         ];
     }
@@ -60,7 +60,7 @@ class behat_mod_hippotrack_generator extends behat_generator_base {
     protected function get_quiz_id(string $quizname): int {
         global $DB;
 
-        if (!$id = $DB->get_field('quiz', 'id', ['name' => $quizname])) {
+        if (!$id = $DB->get_field('hippotrack', 'id', ['name' => $quizname])) {
             throw new Exception('There is no quiz with name "' . $quizname . '" does not exist');
         }
         return $id;

@@ -22,7 +22,7 @@ use quiz;
 defined('MOODLE_INTERNAL') || die();
 
 global $CFG;
-require_once($CFG->dirroot . '/mod/quiz/attemptlib.php');
+require_once($CFG->dirroot . '/mod/hippotrack/attemptlib.php');
 
 /**
  * Unit tests for quiz events.
@@ -51,7 +51,7 @@ class structure_test extends \advanced_testcase {
         $quiz = $quizgenerator->create_instance(array('course' => $course->id, 'questionsperpage' => 0,
             'grade' => 100.0, 'sumgrades' => 2, 'preferredbehaviour' => 'immediatefeedback'));
 
-        $cm = get_coursemodule_from_instance('quiz', $quiz->id, $course->id);
+        $cm = get_coursemodule_from_instance('hippotrack', $quiz->id, $course->id);
 
         return array($quiz, $cm, $course);
     }

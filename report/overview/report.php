@@ -26,10 +26,10 @@ use mod_hippotrack\question\bank\qbank_helper;
 
 defined('MOODLE_INTERNAL') || die();
 
-require_once($CFG->dirroot . '/mod/quiz/report/attemptsreport.php');
-require_once($CFG->dirroot . '/mod/quiz/report/overview/overview_options.php');
-require_once($CFG->dirroot . '/mod/quiz/report/overview/overview_form.php');
-require_once($CFG->dirroot . '/mod/quiz/report/overview/overview_table.php');
+require_once($CFG->dirroot . '/mod/hippotrack/report/attemptsreport.php');
+require_once($CFG->dirroot . '/mod/hippotrack/report/overview/overview_options.php');
+require_once($CFG->dirroot . '/mod/hippotrack/report/overview/overview_form.php');
+require_once($CFG->dirroot . '/mod/hippotrack/report/overview/overview_table.php');
 
 
 /**
@@ -134,7 +134,7 @@ class quiz_overview_report extends quiz_attempts_report {
 
             if (!$table->is_downloading()) {
                 // Output the regrade buttons.
-                if (has_capability('mod/quiz:regrade', $this->context)) {
+                if (has_capability('mod/hippotrack:regrade', $this->context)) {
                     $regradesneeded = $this->count_question_attempts_needing_regrade(
                             $quiz, $groupstudentsjoins);
                     if ($currentgroup) {
@@ -197,7 +197,7 @@ class quiz_overview_report extends quiz_attempts_report {
 
             $this->add_grade_columns($quiz, $options->usercanseegrades, $columns, $headers, false);
 
-            if (!$table->is_downloading() && has_capability('mod/quiz:regrade', $this->context) &&
+            if (!$table->is_downloading() && has_capability('mod/hippotrack:regrade', $this->context) &&
                     $this->has_regraded_questions($table->sql->from, $table->sql->where, $table->sql->params)) {
                 $columns[] = 'regraded';
                 $headers[] = get_string('regrade', 'quiz_overview');
@@ -206,7 +206,7 @@ class quiz_overview_report extends quiz_attempts_report {
             if ($options->slotmarks) {
                 foreach ($questions as $slot => $question) {
                     $columns[] = 'qsgrade' . $slot;
-                    $header = get_string('qbrief', 'quiz', $question->number);
+                    $header = get_string('qbrief', 'hippotrack', $question->number);
                     if (!$table->is_downloading()) {
                         $header .= '<br />';
                     } else {
@@ -246,7 +246,7 @@ class quiz_overview_report extends quiz_attempts_report {
                 }
             }
 
-            if ($DB->record_exists('quiz_grades', array('quiz'=> $quiz->id))) {
+            if ($DB->record_exists('quiz_grades', array('hippotrack'=> $quiz->id))) {
                 $data = quiz_report_grade_bands($bandwidth, $bands, $quiz->id, new \core\dml\sql_join());
                 $chart = self::get_chart($labels, $data);
                 $graphname = get_string('overviewreportgraph', 'quiz_overview');
@@ -304,7 +304,7 @@ class quiz_overview_report extends quiz_attempts_report {
      * @param object $cm the cm object for the quiz.
      */
     protected function start_regrade($quiz, $cm) {
-        require_capability('mod/quiz:regrade', $this->context);
+        require_capability('mod/hippotrack:regrade', $this->context);
         $this->print_header_and_tabs($cm, $this->course, $quiz, $this->mode);
     }
 

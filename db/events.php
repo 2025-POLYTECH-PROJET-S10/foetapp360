@@ -54,7 +54,7 @@ $observers = array(
     // send confirmation messages asynchronously.
     array(
         'eventname' => '\mod_hippotrack\event\attempt_submitted',
-        'includefile'     => '/mod/quiz/locallib.php',
+        'includefile'     => '/mod/hippotrack/locallib.php',
         'callback' => 'quiz_attempt_submitted_handler',
         'internal' => false
     ),

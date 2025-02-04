@@ -113,7 +113,7 @@ Y.extend(SECTIONTOOLBOX, TOOLBOX, {
 
         // Create the confirmation dialogue.
         var confirm = new M.core.confirm({
-            question: M.util.get_string('confirmremovesectionheading', 'quiz', activity.getData('sectionname')),
+            question: M.util.get_string('confirmremovesectionheading', 'hippotrack', activity.getData('sectionname')),
             modal: true
         });
 
@@ -215,7 +215,7 @@ Y.extend(SECTIONTOOLBOX, TOOLBOX, {
             var instancesectiontext = newtext;
             if (newtext.trim() === '') {
                 // Add a sr-only default section heading text to make sure we don't end up with an empty section heading.
-                instancesectiontext = M.util.get_string('sectionnoname', 'quiz');
+                instancesectiontext = M.util.get_string('sectionnoname', 'hippotrack');
                 instancesection.addClass('sr-only');
             } else {
                 // Show the section heading when a non-empty value is set.
@@ -236,7 +236,7 @@ Y.extend(SECTIONTOOLBOX, TOOLBOX, {
                     if (newtext !== response.instancesection) {
                         if (response.instancesection.trim() === '') {
                             // Add a sr-only default section heading text.
-                            instancesectiontext = M.util.get_string('sectionnoname', 'quiz');
+                            instancesectiontext = M.util.get_string('sectionnoname', 'hippotrack');
                             instancesection.addClass('sr-only');
                         } else {
                             instancesectiontext = response.instancesection;
@@ -247,13 +247,13 @@ Y.extend(SECTIONTOOLBOX, TOOLBOX, {
                     }
 
                     activity.one(SELECTOR.EDITSECTIONICON).set('title',
-                        M.util.get_string('sectionheadingedit', 'quiz', response.instancesection));
+                        M.util.get_string('sectionheadingedit', 'hippotrack', response.instancesection));
                     activity.one(SELECTOR.EDITSECTIONICON).set('alt',
-                        M.util.get_string('sectionheadingedit', 'quiz', response.instancesection));
+                        M.util.get_string('sectionheadingedit', 'hippotrack', response.instancesection));
                     var deleteicon = activity.one(SELECTOR.DELETESECTIONICON);
                     if (deleteicon) {
-                        deleteicon.set('title', M.util.get_string('sectionheadingremove', 'quiz', response.instancesection));
-                        deleteicon.set('alt', M.util.get_string('sectionheadingremove', 'quiz', response.instancesection));
+                        deleteicon.set('title', M.util.get_string('sectionheadingremove', 'hippotrack', response.instancesection));
+                        deleteicon.set('alt', M.util.get_string('sectionheadingremove', 'hippotrack', response.instancesection));
                     }
                 }
             });

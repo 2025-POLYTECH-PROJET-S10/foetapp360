@@ -29,8 +29,8 @@ use quiz;
 use quizaccess_seb\event\access_prevented;
 use quizaccess_seb\access_manager;
 
-require_once($CFG->dirroot . '/mod/quiz/accessmanager.php');
-require_once($CFG->dirroot . '/mod/quiz/attemptlib.php');
+require_once($CFG->dirroot . '/mod/hippotrack/accessmanager.php');
+require_once($CFG->dirroot . '/mod/hippotrack/attemptlib.php');
 require_once($CFG->libdir . '/externallib.php');
 
 /**
@@ -144,7 +144,7 @@ class validate_quiz_keys extends external_api {
     private static function get_quiz_id(string $cmid): int {
         $quizid = 0;
 
-        $coursemodule = get_coursemodule_from_id('quiz', $cmid);
+        $coursemodule = get_coursemodule_from_id('hippotrack', $cmid);
         if (!empty($coursemodule)) {
             $quizid = $coursemodule->instance;
         }

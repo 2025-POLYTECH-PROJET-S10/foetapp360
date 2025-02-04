@@ -25,7 +25,7 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-require_once($CFG->dirroot . '/mod/quiz/report/attemptsreport_form.php');
+require_once($CFG->dirroot . '/mod/hippotrack/report/attemptsreport_form.php');
 
 
 /**
@@ -55,7 +55,7 @@ class quiz_responses_settings_form extends mod_hippotrack_attempts_report_form {
 
         if ($data['attempts'] != quiz_attempts_report::ENROLLED_WITHOUT && !(
                 $data['qtext'] || $data['resp'] || $data['right'])) {
-            $errors['coloptions'] = get_string('reportmustselectstate', 'quiz');
+            $errors['coloptions'] = get_string('reportmustselectstate', 'hippotrack');
         }
 
         return $errors;
@@ -63,7 +63,7 @@ class quiz_responses_settings_form extends mod_hippotrack_attempts_report_form {
 
     protected function other_attempt_fields(MoodleQuickForm $mform) {
         parent::other_attempt_fields($mform);
-        if (quiz_allows_multiple_tries($this->_customdata['quiz'])) {
+        if (quiz_allows_multiple_tries($this->_customdata['hippotrack'])) {
             $mform->addElement('select', 'whichtries', get_string('whichtries', 'question'), array(
                                            question_attempt::FIRST_TRY    => get_string('firsttry', 'question'),
                                            question_attempt::LAST_TRY     => get_string('lasttry', 'question'),

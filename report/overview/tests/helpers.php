@@ -25,7 +25,7 @@
 defined('MOODLE_INTERNAL') || die();
 
 global $CFG;
-require_once($CFG->dirroot . '/mod/quiz/report/attemptsreport.php');
+require_once($CFG->dirroot . '/mod/hippotrack/report/attemptsreport.php');
 
 /**
  * Makes some protected methods of quiz_attempts_report public to facilitate testing.

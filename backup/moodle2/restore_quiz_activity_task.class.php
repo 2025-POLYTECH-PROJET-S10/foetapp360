@@ -24,7 +24,7 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-require_once($CFG->dirroot . '/mod/quiz/backup/moodle2/restore_quiz_stepslib.php');
+require_once($CFG->dirroot . '/mod/hippotrack/backup/moodle2/restore_quiz_stepslib.php');
 
 
 /**
@@ -58,7 +58,7 @@ class restore_quiz_activity_task extends restore_activity_task {
     public static function define_decode_contents() {
         $contents = array();
 
-        $contents[] = new restore_decode_content('quiz', array('intro'), 'quiz');
+        $contents[] = new restore_decode_content('hippotrack', array('intro'), 'hippotrack');
         $contents[] = new restore_decode_content('quiz_feedback',
                 array('feedbacktext'), 'quiz_feedback');
 
@@ -73,11 +73,11 @@ class restore_quiz_activity_task extends restore_activity_task {
         $rules = array();
 
         $rules[] = new restore_decode_rule('QUIZVIEWBYID',
-                '/mod/quiz/view.php?id=$1', 'course_module');
+                '/mod/hippotrack/view.php?id=$1', 'course_module');
         $rules[] = new restore_decode_rule('QUIZVIEWBYQ',
-                '/mod/quiz/view.php?q=$1', 'quiz');
+                '/mod/hippotrack/view.php?q=$1', 'hippotrack');
         $rules[] = new restore_decode_rule('QUIZINDEX',
-                '/mod/quiz/index.php?id=$1', 'course');
+                '/mod/hippotrack/index.php?id=$1', 'course');
 
         return $rules;
 
@@ -92,78 +92,78 @@ class restore_quiz_activity_task extends restore_activity_task {
     public static function define_restore_log_rules() {
         $rules = array();
 
-        $rules[] = new restore_log_rule('quiz', 'add',
+        $rules[] = new restore_log_rule('hippotrack', 'add',
                 'view.php?id={course_module}', '{quiz}');
-        $rules[] = new restore_log_rule('quiz', 'update',
+        $rules[] = new restore_log_rule('hippotrack', 'update',
                 'view.php?id={course_module}', '{quiz}');
-        $rules[] = new restore_log_rule('quiz', 'view',
+        $rules[] = new restore_log_rule('hippotrack', 'view',
                 'view.php?id={course_module}', '{quiz}');
-        $rules[] = new restore_log_rule('quiz', 'preview',
+        $rules[] = new restore_log_rule('hippotrack', 'preview',
                 'view.php?id={course_module}', '{quiz}');
-        $rules[] = new restore_log_rule('quiz', 'report',
+        $rules[] = new restore_log_rule('hippotrack', 'report',
                 'report.php?id={course_module}', '{quiz}');
-        $rules[] = new restore_log_rule('quiz', 'editquestions',
+        $rules[] = new restore_log_rule('hippotrack', 'editquestions',
                 'view.php?id={course_module}', '{quiz}');
-        $rules[] = new restore_log_rule('quiz', 'delete attempt',
+        $rules[] = new restore_log_rule('hippotrack', 'delete attempt',
                 'report.php?id={course_module}', '[oldattempt]');
-        $rules[] = new restore_log_rule('quiz', 'edit override',
+        $rules[] = new restore_log_rule('hippotrack', 'edit override',
                 'overrideedit.php?id={quiz_override}', '{quiz}');
-        $rules[] = new restore_log_rule('quiz', 'delete override',
+        $rules[] = new restore_log_rule('hippotrack', 'delete override',
                 'overrides.php.php?cmid={course_module}', '{quiz}');
-        $rules[] = new restore_log_rule('quiz', 'addcategory',
+        $rules[] = new restore_log_rule('hippotrack', 'addcategory',
                 'view.php?id={course_module}', '{question_category}');
-        $rules[] = new restore_log_rule('quiz', 'view summary',
+        $rules[] = new restore_log_rule('hippotrack', 'view summary',
                 'summary.php?attempt={quiz_attempt}', '{quiz}');
-        $rules[] = new restore_log_rule('quiz', 'manualgrade',
+        $rules[] = new restore_log_rule('hippotrack', 'manualgrade',
                 'comment.php?attempt={quiz_attempt}&question={question}', '{quiz}');
-        $rules[] = new restore_log_rule('quiz', 'manualgrading',
+        $rules[] = new restore_log_rule('hippotrack', 'manualgrading',
                 'report.php?mode=grading&q={quiz}', '{quiz}');
         // All the ones calling to review.php have two rules to handle both old and new urls
         // in any case they are always converted to new urls on restore.
         // TODO: In Moodle 2.x (x >= 5) kill the old rules.
         // Note we are using the 'quiz_attempt' mapping because that is the
         // one containing the quiz_attempt->ids old an new for quiz-attempt.
-        $rules[] = new restore_log_rule('quiz', 'attempt',
+        $rules[] = new restore_log_rule('hippotrack', 'attempt',
                 'review.php?id={course_module}&attempt={quiz_attempt}', '{quiz}',
                 null, null, 'review.php?attempt={quiz_attempt}');
-        $rules[] = new restore_log_rule('quiz', 'attempt',
+        $rules[] = new restore_log_rule('hippotrack', 'attempt',
                 'review.php?attempt={quiz_attempt}', '{quiz}',
                 null, null, 'review.php?attempt={quiz_attempt}');
         // Old an new for quiz-submit.
-        $rules[] = new restore_log_rule('quiz', 'submit',
+        $rules[] = new restore_log_rule('hippotrack', 'submit',
                 'review.php?id={course_module}&attempt={quiz_attempt}', '{quiz}',
                 null, null, 'review.php?attempt={quiz_attempt}');
-        $rules[] = new restore_log_rule('quiz', 'submit',
+        $rules[] = new restore_log_rule('hippotrack', 'submit',
                 'review.php?attempt={quiz_attempt}', '{quiz}');
         // Old an new for quiz-review.
-        $rules[] = new restore_log_rule('quiz', 'review',
+        $rules[] = new restore_log_rule('hippotrack', 'review',
                 'review.php?id={course_module}&attempt={quiz_attempt}', '{quiz}',
                 null, null, 'review.php?attempt={quiz_attempt}');
-        $rules[] = new restore_log_rule('quiz', 'review',
+        $rules[] = new restore_log_rule('hippotrack', 'review',
                 'review.php?attempt={quiz_attempt}', '{quiz}');
         // Old an new for quiz-start attemp.
-        $rules[] = new restore_log_rule('quiz', 'start attempt',
+        $rules[] = new restore_log_rule('hippotrack', 'start attempt',
                 'review.php?id={course_module}&attempt={quiz_attempt}', '{quiz}',
                 null, null, 'review.php?attempt={quiz_attempt}');
-        $rules[] = new restore_log_rule('quiz', 'start attempt',
+        $rules[] = new restore_log_rule('hippotrack', 'start attempt',
                 'review.php?attempt={quiz_attempt}', '{quiz}');
         // Old an new for quiz-close attemp.
-        $rules[] = new restore_log_rule('quiz', 'close attempt',
+        $rules[] = new restore_log_rule('hippotrack', 'close attempt',
                 'review.php?id={course_module}&attempt={quiz_attempt}', '{quiz}',
                 null, null, 'review.php?attempt={quiz_attempt}');
-        $rules[] = new restore_log_rule('quiz', 'close attempt',
+        $rules[] = new restore_log_rule('hippotrack', 'close attempt',
                 'review.php?attempt={quiz_attempt}', '{quiz}');
         // Old an new for quiz-continue attempt.
-        $rules[] = new restore_log_rule('quiz', 'continue attempt',
+        $rules[] = new restore_log_rule('hippotrack', 'continue attempt',
                 'review.php?id={course_module}&attempt={quiz_attempt}', '{quiz}',
                 null, null, 'review.php?attempt={quiz_attempt}');
-        $rules[] = new restore_log_rule('quiz', 'continue attempt',
+        $rules[] = new restore_log_rule('hippotrack', 'continue attempt',
                 'review.php?attempt={quiz_attempt}', '{quiz}');
         // Old an new for quiz-continue attemp.
-        $rules[] = new restore_log_rule('quiz', 'continue attemp',
+        $rules[] = new restore_log_rule('hippotrack', 'continue attemp',
                 'review.php?id={course_module}&attempt={quiz_attempt}', '{quiz}',
                 null, 'continue attempt', 'review.php?attempt={quiz_attempt}');
-        $rules[] = new restore_log_rule('quiz', 'continue attemp',
+        $rules[] = new restore_log_rule('hippotrack', 'continue attemp',
                 'review.php?attempt={quiz_attempt}', '{quiz}',
                 null, 'continue attempt');
 
@@ -183,7 +183,7 @@ class restore_quiz_activity_task extends restore_activity_task {
     public static function define_restore_log_rules_for_course() {
         $rules = array();
 
-        $rules[] = new restore_log_rule('quiz', 'view all', 'index.php?id={course}', null);
+        $rules[] = new restore_log_rule('hippotrack', 'view all', 'index.php?id={course}', null);
 
         return $rules;
     }

@@ -323,8 +323,8 @@ class structure {
         if (!$this->can_be_edited()) {
             $reportlink = quiz_attempt_summary_link_to_reports($this->get_quiz(),
                     $this->quizobj->get_cm(), $this->quizobj->get_context());
-            throw new \moodle_exception('cannoteditafterattempts', 'quiz',
-                    new \moodle_url('/mod/quiz/edit.php', array('cmid' => $this->get_cmid())), $reportlink);
+            throw new \moodle_exception('cannoteditafterattempts', 'hippotrack',
+                    new \moodle_url('/mod/hippotrack/edit.php', array('cmid' => $this->get_cmid())), $reportlink);
         }
     }
 
@@ -577,7 +577,7 @@ class structure {
         if (quiz_has_attempts($this->quizobj->get_quizid())) {
             $reviewlink = quiz_attempt_summary_link_to_reports($this->quizobj->get_quiz(),
                     $this->quizobj->get_cm(), $this->quizobj->get_context());
-            $warnings[] = get_string('cannoteditafterattempts', 'quiz', $reviewlink);
+            $warnings[] = get_string('cannoteditafterattempts', 'hippotrack', $reviewlink);
         }
 
         return $warnings;
@@ -596,34 +596,34 @@ class structure {
         $dates = array();
         if ($quiz->timeopen > 0) {
             if ($timenow > $quiz->timeopen) {
-                $dates[] = get_string('quizopenedon', 'quiz', userdate($quiz->timeopen));
+                $dates[] = get_string('quizopenedon', 'hippotrack', userdate($quiz->timeopen));
             } else {
-                $dates[] = get_string('quizwillopen', 'quiz', userdate($quiz->timeopen));
+                $dates[] = get_string('quizwillopen', 'hippotrack', userdate($quiz->timeopen));
             }
         }
         if ($quiz->timeclose > 0) {
             if ($timenow > $quiz->timeclose) {
-                $dates[] = get_string('quizclosed', 'quiz', userdate($quiz->timeclose));
+                $dates[] = get_string('quizclosed', 'hippotrack', userdate($quiz->timeclose));
             } else {
-                $dates[] = get_string('quizcloseson', 'quiz', userdate($quiz->timeclose));
+                $dates[] = get_string('quizcloseson', 'hippotrack', userdate($quiz->timeclose));
             }
         }
         if (empty($dates)) {
-            $dates[] = get_string('alwaysavailable', 'quiz');
+            $dates[] = get_string('alwaysavailable', 'hippotrack');
         }
         $explanation = implode(', ', $dates);
 
         // Brief summary on the page.
         if ($timenow < $quiz->timeopen) {
-            $currentstatus = get_string('quizisclosedwillopen', 'quiz',
+            $currentstatus = get_string('quizisclosedwillopen', 'hippotrack',
                     userdate($quiz->timeopen, get_string('strftimedatetimeshort', 'langconfig')));
         } else if ($quiz->timeclose && $timenow <= $quiz->timeclose) {
-            $currentstatus = get_string('quizisopenwillclose', 'quiz',
+            $currentstatus = get_string('quizisopenwillclose', 'hippotrack',
                     userdate($quiz->timeclose, get_string('strftimedatetimeshort', 'langconfig')));
         } else if ($quiz->timeclose && $timenow > $quiz->timeclose) {
-            $currentstatus = get_string('quizisclosed', 'quiz');
+            $currentstatus = get_string('quizisclosed', 'hippotrack');
         } else {
-            $currentstatus = get_string('quizisopen', 'quiz');
+            $currentstatus = get_string('quizisopen', 'hippotrack');
         }
 
         return array($currentstatus, $explanation);
@@ -677,7 +677,7 @@ class structure {
         $number = 1;
         foreach ($this->slotsinorder as $slot) {
             if ($this->questions[$slot->questionid]->length == 0) {
-                $slot->displayednumber = get_string('infoshort', 'quiz');
+                $slot->displayednumber = get_string('infoshort', 'hippotrack');
             } else {
                 $slot->displayednumber = $number;
                 $number += 1;
@@ -705,9 +705,9 @@ class structure {
             $version->selected = $version->version === $slot->requestedversion;
 
             if ($version->version === $latestversion->version) {
-                $version->versionvalue = get_string('questionversionlatest', 'quiz', $version->version);
+                $version->versionvalue = get_string('questionversionlatest', 'hippotrack', $version->version);
             } else {
-                $version->versionvalue = get_string('questionversion', 'quiz', $version->version);
+                $version->versionvalue = get_string('questionversion', 'hippotrack', $version->version);
             }
 
             $versionoptions[] = $version;
@@ -717,7 +717,7 @@ class structure {
         $alwaysuselatest = new \stdClass();
         $alwaysuselatest->versionid = 0;
         $alwaysuselatest->version = 0;
-        $alwaysuselatest->versionvalue = get_string('alwayslatest', 'quiz');
+        $alwaysuselatest->versionvalue = get_string('alwayslatest', 'hippotrack');
         $alwaysuselatest->selected = $slot->requestedversion === null;
         array_unshift($versionoptions, $alwaysuselatest);
 
@@ -1142,7 +1142,7 @@ class structure {
         if ($heading !== null) {
             $section->heading = $heading;
         } else {
-            $section->heading = get_string('newsectionheading', 'quiz');
+            $section->heading = get_string('newsectionheading', 'hippotrack');
         }
         $section->quizid = $this->get_quizid();
         $slotsonpage = $DB->get_records('quiz_slots', array('quizid' => $this->get_quizid(), 'page' => $pagenumber), 'slot DESC');

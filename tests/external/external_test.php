@@ -93,9 +93,9 @@ class external_test extends externallib_advanced_testcase {
 
         // Setup test data.
         $this->course = $this->getDataGenerator()->create_course();
-        $this->quiz = $this->getDataGenerator()->create_module('quiz', array('course' => $this->course->id));
+        $this->quiz = $this->getDataGenerator()->create_module('hippotrack', array('course' => $this->course->id));
         $this->context = \context_module::instance($this->quiz->cmid);
-        $this->cm = get_coursemodule_from_instance('quiz', $this->quiz->id);
+        $this->cm = get_coursemodule_from_instance('hippotrack', $this->quiz->id);
 
         // Create users.
         $this->student = self::getDataGenerator()->create_user();
@@ -106,7 +106,7 @@ class external_test extends externallib_advanced_testcase {
         $this->teacherrole = $DB->get_record('role', array('shortname' => 'editingteacher'));
         // Allow student to receive messages.
         $coursecontext = \context_course::instance($this->course->id);
-        assign_capability('mod/quiz:emailnotifysubmission', CAP_ALLOW, $this->teacherrole->id, $coursecontext, true);
+        assign_capability('mod/hippotrack:emailnotifysubmission', CAP_ALLOW, $this->teacherrole->id, $coursecontext, true);
 
         $this->getDataGenerator()->enrol_user($this->student->id, $this->course->id, $this->studentrole->id, 'manual');
         $this->getDataGenerator()->enrol_user($this->teacher->id, $this->course->id, $this->teacherrole->id, 'manual');
@@ -153,7 +153,7 @@ class external_test extends externallib_advanced_testcase {
 
         // Set grade to pass.
         $item = \grade_item::fetch(array('courseid' => $this->course->id, 'itemtype' => 'mod',
-                                        'itemmodule' => 'quiz', 'iteminstance' => $quiz->id, 'outcomeid' => null));
+                                        'itemmodule' => 'hippotrack', 'iteminstance' => $quiz->id, 'outcomeid' => null));
         $item->gradepass = 80;
         $item->update();
 
@@ -196,7 +196,7 @@ class external_test extends externallib_advanced_testcase {
         $record = new \stdClass();
         $record->course = $course2->id;
         $record->intro = '<button>Test with HTML allowed.</button>';
-        $quiz2 = self::getDataGenerator()->create_module('quiz', $record);
+        $quiz2 = self::getDataGenerator()->create_module('hippotrack', $record);
 
         // Execute real Moodle enrolment as we'll call unenrol() method on the instance later.
         $enrol = enrol_get_plugin('manual');
@@ -238,7 +238,7 @@ class external_test extends externallib_advanced_testcase {
         $quiz1->hasquestions = 0;
         $quiz1->hasfeedback = 0;
         $quiz1->completionpass = 0;
-        $quiz1->autosaveperiod = get_config('quiz', 'autosaveperiod');
+        $quiz1->autosaveperiod = get_config('hippotrack', 'autosaveperiod');
         $quiz1->introfiles = [];
         $quiz1->lang = '';
 
@@ -251,7 +251,7 @@ class external_test extends externallib_advanced_testcase {
         $quiz2->hasquestions = 0;
         $quiz2->hasfeedback = 0;
         $quiz2->completionpass = 0;
-        $quiz2->autosaveperiod = get_config('quiz', 'autosaveperiod');
+        $quiz2->autosaveperiod = get_config('hippotrack', 'autosaveperiod');
         $quiz2->introfiles = [];
         $quiz2->lang = '';
 
@@ -314,7 +314,7 @@ class external_test extends externallib_advanced_testcase {
         self::setUser($this->student);
 
         $quiz2->timeclose = time() - DAYSECS;
-        $DB->update_record('quiz', $quiz2);
+        $DB->update_record('hippotrack', $quiz2);
 
         $result = mod_hippotrack_external::get_quizzes_by_courses();
         $result = \external_api::clean_returnvalue($returndescription, $result);
@@ -372,14 +372,14 @@ class external_test extends externallib_advanced_testcase {
         // Checking that the event contains the expected values.
         $this->assertInstanceOf('\mod_hippotrack\event\course_module_viewed', $event);
         $this->assertEquals($this->context, $event->get_context());
-        $moodlequiz = new \moodle_url('/mod/quiz/view.php', array('id' => $this->cm->id));
+        $moodlequiz = new \moodle_url('/mod/hippotrack/view.php', array('id' => $this->cm->id));
         $this->assertEquals($moodlequiz, $event->get_url());
         $this->assertEventContextNotUsed($event);
         $this->assertNotEmpty($event->get_name());
 
         // Test user with no capabilities.
         // We need a explicit prohibit since this capability is only defined in authenticated user and guest roles.
-        assign_capability('mod/quiz:view', CAP_PROHIBIT, $this->studentrole->id, $this->context->id);
+        assign_capability('mod/hippotrack:view', CAP_PROHIBIT, $this->studentrole->id, $this->context->id);
         // Empty all the caches that may be affected  by this change.
         accesslib_clear_all_caches_for_unit_testing();
         \course_modinfo::clear_instance_cache();
@@ -407,7 +407,7 @@ class external_test extends externallib_advanced_testcase {
 
         $this->assertCount(1, $result['attempts']);
         $this->assertEquals($attempt->id, $result['attempts'][0]['id']);
-        $this->assertEquals($quiz->id, $result['attempts'][0]['quiz']);
+        $this->assertEquals($quiz->id, $result['attempts'][0]['hippotrack']);
         $this->assertEquals($this->student->id, $result['attempts'][0]['userid']);
         $this->assertEquals(1, $result['attempts'][0]['attempt']);
         $this->assertArrayHasKey('sumgrades', $result['attempts'][0]);
@@ -493,7 +493,7 @@ class external_test extends externallib_advanced_testcase {
 
         $this->assertCount(1, $result['attempts']);
         $this->assertEquals($attempt->id, $result['attempts'][0]['id']);
-        $this->assertEquals($quiz->id, $result['attempts'][0]['quiz']);
+        $this->assertEquals($quiz->id, $result['attempts'][0]['hippotrack']);
         $this->assertEquals($this->student->id, $result['attempts'][0]['userid']);
         $this->assertEquals(1, $result['attempts'][0]['attempt']);
         $this->assertArrayHasKey('sumgrades', $result['attempts'][0]);
@@ -506,7 +506,7 @@ class external_test extends externallib_advanced_testcase {
 
         $this->assertCount(1, $result['attempts']);
         $this->assertEquals($attempt->id, $result['attempts'][0]['id']);
-        $this->assertEquals($quiz->id, $result['attempts'][0]['quiz']);
+        $this->assertEquals($quiz->id, $result['attempts'][0]['hippotrack']);
         $this->assertEquals($this->student->id, $result['attempts'][0]['userid']);
         $this->assertEquals(1, $result['attempts'][0]['attempt']);
         $this->assertArrayHasKey('sumgrades', $result['attempts'][0]);
@@ -552,7 +552,7 @@ class external_test extends externallib_advanced_testcase {
         $item = \grade_item::fetch([
                 'courseid' => $this->course->id,
                 'itemtype' => 'mod',
-                'itemmodule' => 'quiz',
+                'itemmodule' => 'hippotrack',
                 'iteminstance' => $quizapi1->id,
                 'outcomeid' => null
         ]);
@@ -562,7 +562,7 @@ class external_test extends externallib_advanced_testcase {
         $item = \grade_item::fetch([
                 'courseid' => $this->course->id,
                 'itemtype' => 'mod',
-                'itemmodule' => 'quiz',
+                'itemmodule' => 'hippotrack',
                 'iteminstance' => $quizapi2->id,
                 'outcomeid' => null
         ]);
@@ -704,7 +704,7 @@ class external_test extends externallib_advanced_testcase {
 
         // Set grade to pass.
         $item = \grade_item::fetch(array('courseid' => $this->course->id, 'itemtype' => 'mod',
-                                        'itemmodule' => 'quiz', 'iteminstance' => $quiz->id, 'outcomeid' => null));
+                                        'itemmodule' => 'hippotrack', 'iteminstance' => $quiz->id, 'outcomeid' => null));
         $item->gradepass = 80;
         $item->update();
 
@@ -831,7 +831,7 @@ class external_test extends externallib_advanced_testcase {
         // Try to open attempt in closed quiz.
         $quiz->timeopen = time() - WEEKSECS;
         $quiz->timeclose = time() - DAYSECS;
-        $DB->update_record('quiz', $quiz);
+        $DB->update_record('hippotrack', $quiz);
         $result = mod_hippotrack_external::start_attempt($quiz->id);
         $result = \external_api::clean_returnvalue(mod_hippotrack_external::start_attempt_returns(), $result);
 
@@ -842,7 +842,7 @@ class external_test extends externallib_advanced_testcase {
         $quiz->timeopen = 0;
         $quiz->timeclose = 0;
         $quiz->password = 'abc';
-        $DB->update_record('quiz', $quiz);
+        $DB->update_record('hippotrack', $quiz);
 
         try {
             mod_hippotrack_external::start_attempt($quiz->id, array(array("name" => "quizpassword", "value" => 'bad')));
@@ -857,7 +857,7 @@ class external_test extends externallib_advanced_testcase {
 
         $this->assertEquals(1, $result['attempt']['attempt']);
         $this->assertEquals($this->student->id, $result['attempt']['userid']);
-        $this->assertEquals($quiz->id, $result['attempt']['quiz']);
+        $this->assertEquals($quiz->id, $result['attempt']['hippotrack']);
         $this->assertCount(0, $result['warnings']);
         $attemptid = $result['attempt']['id'];
 
@@ -889,12 +889,12 @@ class external_test extends externallib_advanced_testcase {
 
         $this->assertEquals(2, $result['attempt']['attempt']);
         $this->assertEquals($this->student->id, $result['attempt']['userid']);
-        $this->assertEquals($quiz->id, $result['attempt']['quiz']);
+        $this->assertEquals($quiz->id, $result['attempt']['hippotrack']);
         $this->assertCount(0, $result['warnings']);
 
         // Test user with no capabilities.
         // We need a explicit prohibit since this capability is only defined in authenticated user and guest roles.
-        assign_capability('mod/quiz:attempt', CAP_PROHIBIT, $this->studentrole->id, $context->id);
+        assign_capability('mod/hippotrack:attempt', CAP_PROHIBIT, $this->studentrole->id, $context->id);
         // Empty all the caches that may be affected  by this change.
         accesslib_clear_all_caches_for_unit_testing();
         \course_modinfo::clear_instance_cache();
@@ -936,7 +936,7 @@ class external_test extends externallib_advanced_testcase {
 
         // Test with preflight data.
         $quiz->password = 'abc';
-        $DB->update_record('quiz', $quiz);
+        $DB->update_record('hippotrack', $quiz);
 
         try {
             $params = array('attemptid' => $attempt->id, 'page' => 0,
@@ -954,7 +954,7 @@ class external_test extends externallib_advanced_testcase {
         $this->assertEquals([], $result[1]);
 
         // Page out of range.
-        $DB->update_record('quiz', $quiz);
+        $DB->update_record('hippotrack', $quiz);
         $params['page'] = 4;
         try {
             testable_mod_hippotrack_external::validate_attempt($params);
@@ -967,7 +967,7 @@ class external_test extends externallib_advanced_testcase {
         // Try to open attempt in closed quiz.
         $quiz->timeopen = time() - WEEKSECS;
         $quiz->timeclose = time() - DAYSECS;
-        $DB->update_record('quiz', $quiz);
+        $DB->update_record('hippotrack', $quiz);
 
         // This should work, ommit access rules.
         testable_mod_hippotrack_external::validate_attempt($params, false);
@@ -993,7 +993,7 @@ class external_test extends externallib_advanced_testcase {
 
         // Test user with no capabilities.
         // We need a explicit prohibit since this capability is only defined in authenticated user and guest roles.
-        assign_capability('mod/quiz:attempt', CAP_PROHIBIT, $this->studentrole->id, $context->id);
+        assign_capability('mod/hippotrack:attempt', CAP_PROHIBIT, $this->studentrole->id, $context->id);
         // Empty all the caches that may be affected  by this change.
         accesslib_clear_all_caches_for_unit_testing();
         \course_modinfo::clear_instance_cache();
@@ -1028,7 +1028,7 @@ class external_test extends externallib_advanced_testcase {
         list($quiz, $context, $quizobj, $attempt, $attemptobj) = $this->create_quiz_with_questions(true);
 
         // Set correctness mask so questions state can be fetched only after finishing the attempt.
-        $DB->set_field('quiz', 'reviewcorrectness', mod_hippotrack_display_options::IMMEDIATELY_AFTER, array('id' => $quiz->id));
+        $DB->set_field('hippotrack', 'reviewcorrectness', mod_hippotrack_display_options::IMMEDIATELY_AFTER, array('id' => $quiz->id));
 
         $quizobj = $attemptobj->get_quizobj();
         $quizobj->preload_questions();
@@ -1087,7 +1087,7 @@ class external_test extends externallib_advanced_testcase {
 
         // Change setting and expect two pages.
         $quiz->questionsperpage = 4;
-        $DB->update_record('quiz', $quiz);
+        $DB->update_record('hippotrack', $quiz);
         quiz_repaginate_questions($quiz->id, $quiz->questionsperpage);
 
         // Start with new attempt with the new layout.
@@ -1438,7 +1438,7 @@ class external_test extends externallib_advanced_testcase {
         $quiz->timeclose = $timenow - 10;
         $quiz->graceperiod = 60;
         $quiz->overduehandling = 'graceperiod';
-        $DB->update_record('quiz', $quiz);
+        $DB->update_record('hippotrack', $quiz);
 
         $result = mod_hippotrack_external::process_attempt($attempt->id, array());
         $result = \external_api::clean_returnvalue(mod_hippotrack_external::process_attempt_returns(), $result);
@@ -1449,7 +1449,7 @@ class external_test extends externallib_advanced_testcase {
         $quiz->timelimit = 1;
         $quiz->graceperiod = 60;
         $quiz->overduehandling = 'graceperiod';
-        $DB->update_record('quiz', $quiz);
+        $DB->update_record('hippotrack', $quiz);
 
         $timenow = time();
         $quba = \question_engine::make_questions_usage_by_activity('mod_hippotrack', $quizobj->get_context());
@@ -1472,7 +1472,7 @@ class external_test extends externallib_advanced_testcase {
 
         // Force abandon.
         $quiz->timeclose = $timenow - HOURSECS;
-        $DB->update_record('quiz', $quiz);
+        $DB->update_record('hippotrack', $quiz);
 
         $result = mod_hippotrack_external::process_attempt($attempt->id, array());
         $result = \external_api::clean_returnvalue(mod_hippotrack_external::process_attempt_returns(), $result);
@@ -1626,9 +1626,9 @@ class external_test extends externallib_advanced_testcase {
         $this->assertNotEmpty($event->get_name());
 
         // Now, force the quiz with QUIZ_NAVMETHOD_SEQ (sequential) navigation method.
-        $DB->set_field('quiz', 'navmethod', QUIZ_NAVMETHOD_SEQ, array('id' => $quiz->id));
+        $DB->set_field('hippotrack', 'navmethod', QUIZ_NAVMETHOD_SEQ, array('id' => $quiz->id));
         // Quiz requiring preflightdata.
-        $DB->set_field('quiz', 'password', 'abcdef', array('id' => $quiz->id));
+        $DB->set_field('hippotrack', 'password', 'abcdef', array('id' => $quiz->id));
         $preflightdata = array(array("name" => "quizpassword", "value" => 'abcdef'));
 
         // See next page.
@@ -1675,13 +1675,13 @@ class external_test extends externallib_advanced_testcase {
         // Checking that the event contains the expected values.
         $this->assertInstanceOf('\mod_hippotrack\event\attempt_summary_viewed', $event);
         $this->assertEquals($context, $event->get_context());
-        $moodlequiz = new \moodle_url('/mod/quiz/summary.php', array('attempt' => $attempt->id));
+        $moodlequiz = new \moodle_url('/mod/hippotrack/summary.php', array('attempt' => $attempt->id));
         $this->assertEquals($moodlequiz, $event->get_url());
         $this->assertEventContextNotUsed($event);
         $this->assertNotEmpty($event->get_name());
 
         // Quiz requiring preflightdata.
-        $DB->set_field('quiz', 'password', 'abcdef', array('id' => $quiz->id));
+        $DB->set_field('hippotrack', 'password', 'abcdef', array('id' => $quiz->id));
         $preflightdata = array(array("name" => "quizpassword", "value" => 'abcdef'));
 
         $result = mod_hippotrack_external::view_attempt_summary($attempt->id, $preflightdata);
@@ -1716,7 +1716,7 @@ class external_test extends externallib_advanced_testcase {
         // Checking that the event contains the expected values.
         $this->assertInstanceOf('\mod_hippotrack\event\attempt_reviewed', $event);
         $this->assertEquals($context, $event->get_context());
-        $moodlequiz = new \moodle_url('/mod/quiz/review.php', array('attempt' => $attempt->id));
+        $moodlequiz = new \moodle_url('/mod/hippotrack/review.php', array('attempt' => $attempt->id));
         $this->assertEquals($moodlequiz, $event->get_url());
         $this->assertEventContextNotUsed($event);
         $this->assertNotEmpty($event->get_name());
@@ -1823,7 +1823,7 @@ class external_test extends externallib_advanced_testcase {
         $quiz->timeopen = time() + DAYSECS;
         $quiz->timeclose = time() + WEEKSECS;
         $quiz->password = '123456';
-        $DB->update_record('quiz', $quiz);
+        $DB->update_record('hippotrack', $quiz);
 
         $result = mod_hippotrack_external::get_quiz_access_information($quiz->id);
         $result = \external_api::clean_returnvalue(mod_hippotrack_external::get_quiz_access_information_returns(), $result);
@@ -1870,7 +1870,7 @@ class external_test extends externallib_advanced_testcase {
 
         // Set grade to pass.
         $item = \grade_item::fetch(array('courseid' => $this->course->id, 'itemtype' => 'mod',
-                                        'itemmodule' => 'quiz', 'iteminstance' => $quiz->id, 'outcomeid' => null));
+                                        'itemmodule' => 'hippotrack', 'iteminstance' => $quiz->id, 'outcomeid' => null));
         $item->gradepass = 80;
         $item->update();
 
@@ -1890,7 +1890,7 @@ class external_test extends externallib_advanced_testcase {
 
         // Limited attempts.
         $quiz->attempts = 1;
-        $DB->update_record('quiz', $quiz);
+        $DB->update_record('hippotrack', $quiz);
 
         // Now, do one attempt.
         $quba = \question_engine::make_questions_usage_by_activity('mod_hippotrack', $quizobj->get_context());
@@ -1918,7 +1918,7 @@ class external_test extends externallib_advanced_testcase {
         // Now new attemps allowed.
         $this->assertCount(1, $result['preventnewattemptreasons']);
         $this->assertFalse($result['ispreflightcheckrequired']);
-        $this->assertEquals(get_string('nomoreattempts', 'quiz'), $result['preventnewattemptreasons'][0]);
+        $this->assertEquals(get_string('nomoreattempts', 'hippotrack'), $result['preventnewattemptreasons'][0]);
 
     }
 
@@ -2119,7 +2119,7 @@ class external_test extends externallib_advanced_testcase {
         $quizobj = quiz::create($quiz->id, $this->student->id);
         // Set grade to pass.
         $item = \grade_item::fetch(array('courseid' => $this->course->id, 'itemtype' => 'mod',
-            'itemmodule' => 'quiz', 'iteminstance' => $quiz->id, 'outcomeid' => null));
+            'itemmodule' => 'hippotrack', 'iteminstance' => $quiz->id, 'outcomeid' => null));
         $item->gradepass = 80;
         $item->update();
         return $quizobj;

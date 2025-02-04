@@ -75,7 +75,7 @@ class attempt_reviewed extends \core\event\base {
      * @return \moodle_url
      */
     public function get_url() {
-        return new \moodle_url('/mod/quiz/review.php', array('attempt' => $this->objectid));
+        return new \moodle_url('/mod/hippotrack/review.php', array('attempt' => $this->objectid));
     }
 
     /**
@@ -84,7 +84,7 @@ class attempt_reviewed extends \core\event\base {
      * @return array
      */
     protected function get_legacy_logdata() {
-        return array($this->courseid, 'quiz', 'review', 'review.php?attempt=' . $this->objectid,
+        return array($this->courseid, 'hippotrack', 'review', 'review.php?attempt=' . $this->objectid,
             $this->other['quizid'], $this->contextinstanceid);
     }
 
@@ -112,7 +112,7 @@ class attempt_reviewed extends \core\event\base {
 
     public static function get_other_mapping() {
         $othermapped = array();
-        $othermapped['quizid'] = array('db' => 'quiz', 'restore' => 'quiz');
+        $othermapped['quizid'] = array('db' => 'hippotrack', 'restore' => 'hippotrack');
 
         return $othermapped;
     }

@@ -373,7 +373,7 @@ abstract class attempt_walkthrough_testcase extends \advanced_testcase {
                 case 'gradebookgrade' :
                     // Check grade book.
                     $gradebookgrades = grade_get_grades($attemptobj->get_courseid(),
-                                                        'mod', 'quiz',
+                                                        'mod', 'hippotrack',
                                                         $attemptobj->get_quizid(),
                                                         $attemptobj->get_userid());
                     $gradebookitem = array_shift($gradebookgrades->items);

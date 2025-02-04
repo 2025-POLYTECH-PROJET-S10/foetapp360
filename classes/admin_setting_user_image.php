@@ -42,7 +42,7 @@ class mod_hippotrack_admin_setting_user_image extends admin_setting_configselect
             return true;
         }
 
-        require_once($CFG->dirroot . '/mod/quiz/locallib.php');
+        require_once($CFG->dirroot . '/mod/hippotrack/locallib.php');
         $this->choices = quiz_get_user_image_options();
 
         return true;

@@ -15,7 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Strings for component 'quiz', language 'en', branch 'MOODLE_20_STABLE'
+ * Strings for component 'hippotrack', language 'en', branch 'MOODLE_20_STABLE'
  *
  * @package   mod_hippotrack
  * @copyright 1999 onwards Martin Dougiamas  {@link http://moodle.com}
@@ -294,7 +294,7 @@ $string['editingquiz_help'] = 'When creating a quiz, the main concepts are:
 * The quiz, containing questions over one or more pages
 * The question bank, which stores copies of all questions organised into categories
 * Random questions -  A student gets different questions each time they attempt the quiz and different students can get different questions';
-$string['editingquiz_link'] = 'mod/quiz/edit';
+$string['editingquiz_link'] = 'mod/hippotrack/edit';
 $string['editingquizx'] = 'Editing quiz: {$a}';
 $string['editmaxmark'] = 'Edit maximum mark';
 $string['editoverride'] = 'Edit override';
@@ -533,7 +533,7 @@ $string['minutes'] = 'Minutes';
 $string['missingcorrectanswer'] = 'Correct answer must be specified';
 $string['missingitemtypename'] = 'Missing name';
 $string['missingquestion'] = 'This question no longer seems to exist';
-$string['modulename'] = 'Quiz';
+$string['modulename'] = 'hippotrack';
 $string['modulename_help'] = 'The quiz activity enables a teacher to create quizzes comprising questions of various types, including multiple choice, matching, short-answer and numerical.
 
 The teacher can allow the quiz to be attempted multiple times, with the questions shuffled or randomly selected from the question bank. A time limit may be set.
@@ -549,7 +549,7 @@ Quizzes may be used
 * As exam practice using questions from past exams
 * To deliver immediate feedback about performance
 * For self-assessment';
-$string['modulename_link'] = 'mod/quiz/view';
+$string['modulename_link'] = 'mod/hippotrack/view';
 $string['modulenameplural'] = 'Quizzes';
 $string['moveselectedonpage'] = 'Move selected questions to page: {$a}';
 $string['multichoice'] = 'Multiple choice';
@@ -639,7 +639,7 @@ $string['overdue'] = 'Overdue';
 $string['overduehandling'] = 'When time expires';
 $string['overduehandling_desc'] = 'What should happen by default if a student does not submit the quiz before time expires.';
 $string['overduehandling_help'] = 'This setting controls what happens if a student fails to submit their quiz attempt before the time expires. If the student is actively working on the quiz at the time, then the countdown timer will always automatically submit the attempt for them, but if they have logged out, then this setting controls what happens.';
-$string['overduehandling_link'] = 'mod/quiz/timing';
+$string['overduehandling_link'] = 'mod/hippotrack/timing';
 $string['overduehandlingautosubmit'] = 'Open attempts are submitted automatically';
 $string['overduehandlinggraceperiod'] = 'There is a grace period when open attempts can be submitted, but no more questions answered';
 $string['overduehandlingautoabandon'] = 'Attempts must be submitted before time expires, or they are not counted';
@@ -679,7 +679,7 @@ $string['penaltyscheme_help'] = 'If enabled, a penalty is subtracted from the fi
 $string['percentcorrect'] = 'Percent correct';
 $string['pleaseclose'] = 'Your request has been processed. You can now close this window';
 $string['pluginadministration'] = 'Quiz administration';
-$string['pluginname'] = 'Quiz';
+$string['pluginname'] = 'hippotrack';
 $string['popup'] = 'Show quiz in a \'secure\' window';
 $string['popupblockerwarning'] = 'This section of the test is in secure mode, this means that you need to take the quiz in a secure window. Please turn off your popup blocker. Thank you.';
 $string['popupnotice'] = 'Students will see this quiz in a secure window';
@@ -781,7 +781,7 @@ $string['quizopen'] = 'Open the quiz';
 $string['quizeventopens'] = '{$a} opens';
 $string['quizopenclose'] = 'Open and close dates';
 $string['quizopenclose_help'] = 'Students can only start their attempt(s) after the open time and they must complete their attempts before the close time.';
-$string['quizopenclose_link'] = 'mod/quiz/timing';
+$string['quizopenclose_link'] = 'mod/hippotrack/timing';
 $string['quizopened'] = 'This quiz is open.';
 $string['quizopenedon'] = 'This quiz opened on {$a}';
 $string['quizopens'] = 'Quiz opens';
@@ -1011,7 +1011,7 @@ $string['timedelay'] = 'You are not allowed to do the quiz since you have not pa
 $string['timeleft'] = 'Time left';
 $string['timelimit'] = 'Time limit';
 $string['timelimit_help'] = 'If enabled, the time limit is stated on the initial quiz page and a countdown timer is displayed in the quiz navigation block.';
-$string['timelimit_link'] = 'mod/quiz/timing';
+$string['timelimit_link'] = 'mod/hippotrack/timing';
 $string['timelimitexeeded'] = 'Sorry! Quiz time limit exceeded!';
 $string['timestr'] = '%H:%M:%S on %d/%m/%y';
 $string['timesup'] = 'Time is up!';

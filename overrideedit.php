@@ -24,9 +24,9 @@
 
 
 require_once(__DIR__ . '/../../config.php');
-require_once($CFG->dirroot.'/mod/quiz/lib.php');
-require_once($CFG->dirroot.'/mod/quiz/locallib.php');
-require_once($CFG->dirroot.'/mod/quiz/override_form.php');
+require_once($CFG->dirroot.'/mod/hippotrack/lib.php');
+require_once($CFG->dirroot.'/mod/hippotrack/locallib.php');
+require_once($CFG->dirroot.'/mod/hippotrack/override_form.php');
 
 
 $cmid = optional_param('cmid', 0, PARAM_INT);
@@ -38,23 +38,23 @@ $override = null;
 if ($overrideid) {
 
     if (! $override = $DB->get_record('quiz_overrides', array('id' => $overrideid))) {
-        throw new \moodle_exception('invalidoverrideid', 'quiz');
+        throw new \moodle_exception('invalidoverrideid', 'hippotrack');
     }
-    if (! $quiz = $DB->get_record('quiz', array('id' => $override->quiz))) {
+    if (! $quiz = $DB->get_record('hippotrack', array('id' => $override->quiz))) {
         throw new \moodle_exception('invalidcoursemodule');
     }
-    list($course, $cm) = get_course_and_cm_from_instance($quiz, 'quiz');
+    list($course, $cm) = get_course_and_cm_from_instance($quiz, 'hippotrack');
 
 } else if ($cmid) {
-    list($course, $cm) = get_course_and_cm_from_cmid($cmid, 'quiz');
-    $quiz = $DB->get_record('quiz', array('id' => $cm->instance), '*', MUST_EXIST);
+    list($course, $cm) = get_course_and_cm_from_cmid($cmid, 'hippotrack');
+    $quiz = $DB->get_record('hippotrack', array('id' => $cm->instance), '*', MUST_EXIST);
 
 } else {
     throw new \moodle_exception('invalidcoursemodule');
 }
 $course = $DB->get_record('course', array('id'=>$cm->course), '*', MUST_EXIST);
 
-$url = new moodle_url('/mod/quiz/overrideedit.php');
+$url = new moodle_url('/mod/hippotrack/overrideedit.php');
 if ($action) {
     $url->param('action', $action);
 }
@@ -74,7 +74,7 @@ require_login($course, false, $cm);
 $context = context_module::instance($cm->id);
 
 // Add or edit an override.
-require_capability('mod/quiz:manageoverrides', $context);
+require_capability('mod/hippotrack:manageoverrides', $context);
 
 if ($overrideid) {
     // Editing an override.
@@ -82,11 +82,11 @@ if ($overrideid) {
 
     if ($override->groupid) {
         if (!groups_group_visible($override->groupid, $course, $cm)) {
-            throw new \moodle_exception('invalidoverrideid', 'quiz');
+            throw new \moodle_exception('invalidoverrideid', 'hippotrack');
         }
     } else {
         if (!groups_user_groups_visible($course, $override->userid, $cm)) {
-            throw new \moodle_exception('invalidoverrideid', 'quiz');
+            throw new \moodle_exception('invalidoverrideid', 'hippotrack');
         }
     }
 } else {
@@ -113,7 +113,7 @@ if ($action === 'duplicate') {
 // True if group-based override.
 $groupmode = !empty($data->groupid) || ($action === 'addgroup' && empty($overrideid));
 
-$overridelisturl = new moodle_url('/mod/quiz/overrides.php', array('cmid'=>$cm->id));
+$overridelisturl = new moodle_url('/mod/hippotrack/overrides.php', array('cmid'=>$cm->id));
 if (!$groupmode) {
     $overridelisturl->param('mode', 'user');
 }
@@ -152,7 +152,7 @@ if ($mform->is_cancelled()) {
 
     if ($userorgroupchanged) {
         $conditions = array(
-                'quiz' => $quiz->id,
+                'hippotrack' => $quiz->id,
                 'userid' => empty($fromform->userid)? null : $fromform->userid,
                 'groupid' => empty($fromform->groupid)? null : $fromform->groupid);
         if ($oldoverride = $DB->get_record('quiz_overrides', $conditions)) {
@@ -163,9 +163,9 @@ if ($mform->is_cancelled()) {
                     $fromform->{$key} = $oldoverride->{$key};
                 }
             }
-            // Set the course module id before calling quiz_delete_override().
+            // Set the course module id before calling quizz_delete_override().
             $quiz->cmid = $cm->id;
-            quiz_delete_override($quiz, $oldoverride->id);
+            quizz_delete_override($quiz, $oldoverride->id);
         }
     }
 
@@ -236,7 +236,7 @@ if ($mform->is_cancelled()) {
 }
 
 // Print the form.
-$pagetitle = get_string('editoverride', 'quiz');
+$pagetitle = get_string('editoverride', 'hippotrack');
 $PAGE->navbar->add($pagetitle);
 $PAGE->set_pagelayout('admin');
 $PAGE->add_body_class('limitedwidth');

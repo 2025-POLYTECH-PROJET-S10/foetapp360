@@ -39,10 +39,10 @@ class link_generator_test extends \advanced_testcase {
      */
     public function test_http_link_generated() {
         $course = $this->getDataGenerator()->create_course();
-        $quiz = $this->getDataGenerator()->create_module('quiz', ['course' => $course->id]);
+        $quiz = $this->getDataGenerator()->create_module('hippotrack', ['course' => $course->id]);
 
         $this->assertEquals(
-            "http://www.example.com/moodle/mod/quiz/accessrule/seb/config.php?cmid=$quiz->cmid",
+            "http://www.example.com/moodle/mod/hippotrack/accessrule/seb/config.php?cmid=$quiz->cmid",
             link_generator::get_link($quiz->cmid, false, false));
     }
 
@@ -51,10 +51,10 @@ class link_generator_test extends \advanced_testcase {
      */
     public function test_https_link_generated() {
         $course = $this->getDataGenerator()->create_course();
-        $quiz = $this->getDataGenerator()->create_module('quiz', ['course' => $course->id]);
+        $quiz = $this->getDataGenerator()->create_module('hippotrack', ['course' => $course->id]);
 
         $this->assertEquals(
-            "https://www.example.com/moodle/mod/quiz/accessrule/seb/config.php?cmid=$quiz->cmid",
+            "https://www.example.com/moodle/mod/hippotrack/accessrule/seb/config.php?cmid=$quiz->cmid",
             link_generator::get_link($quiz->cmid, false));
     }
 
@@ -63,10 +63,10 @@ class link_generator_test extends \advanced_testcase {
      */
     public function test_seb_link_generated() {
         $course = $this->getDataGenerator()->create_course();
-        $quiz = $this->getDataGenerator()->create_module('quiz', ['course' => $course->id]);
+        $quiz = $this->getDataGenerator()->create_module('hippotrack', ['course' => $course->id]);
 
         $this->assertEquals(
-            "seb://www.example.com/moodle/mod/quiz/accessrule/seb/config.php?cmid=$quiz->cmid",
+            "seb://www.example.com/moodle/mod/hippotrack/accessrule/seb/config.php?cmid=$quiz->cmid",
             link_generator::get_link($quiz->cmid, true, false));
     }
 
@@ -75,10 +75,10 @@ class link_generator_test extends \advanced_testcase {
      */
     public function test_sebs_link_generated() {
         $course = $this->getDataGenerator()->create_course();
-        $quiz = $this->getDataGenerator()->create_module('quiz', ['course' => $course->id]);
+        $quiz = $this->getDataGenerator()->create_module('hippotrack', ['course' => $course->id]);
 
         $this->assertEquals(
-            "sebs://www.example.com/moodle/mod/quiz/accessrule/seb/config.php?cmid=$quiz->cmid",
+            "sebs://www.example.com/moodle/mod/hippotrack/accessrule/seb/config.php?cmid=$quiz->cmid",
             link_generator::get_link($quiz->cmid, true));
     }
 
