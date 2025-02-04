@@ -25,7 +25,7 @@
 defined('MOODLE_INTERNAL') || die();
 
 /**
- * Quiz module upgrade function.
+ * hippotrack module upgrade function.
  * @param string $oldversion the version we are upgrading from.
  */
 function xmldb_quiz_upgrade($oldversion) {
@@ -38,7 +38,7 @@ function xmldb_quiz_upgrade($oldversion) {
     if ($oldversion < 2020061501) {
 
         // Define field completionminattempts to be added to quiz.
-        $table = new xmldb_table('quiz');
+        $table = new xmldb_table('hippotrack');
         $field = new xmldb_field('completionminattempts', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, '0',
             'completionpass');
 
@@ -48,39 +48,39 @@ function xmldb_quiz_upgrade($oldversion) {
         }
 
         // Quiz savepoint reached.
-        upgrade_mod_savepoint(true, 2020061501, 'quiz');
+        upgrade_mod_savepoint(true, 2020061501, 'hippotrack');
     }
 
     if ($oldversion < 2021052503) {
-        $table = new xmldb_table('quiz');
+        $table = new xmldb_table('hippotrack');
         $field = new xmldb_field('completionpass');
 
         if ($dbman->field_exists($table, $field)) {
-            $sql = "SELECT q.id, m.id as quizid " .
-                "FROM {quiz} q " .
-                "INNER JOIN {course_modules} cm ON cm.instance = q.id " .
+            $sql = "SELECT h.id, m.id as hippotrack_id " .
+                "FROM {hippotrack} h " .
+                "INNER JOIN {course_modules} cm ON cm.instance = h.id " .
                 "INNER JOIN {modules} m ON m.id = cm.module " .
-                "WHERE m.name = :name AND q.completionpass = :completionpass";
+                "WHERE m.name = :name AND h.completionpass = :completionpass";
 
             /** @var moodle_recordset $records */
-            $records = $DB->get_recordset_sql($sql, ['name' => 'quiz', 'completionpass' => 1], 0, 1000);
+            $records = $DB->get_recordset_sql($sql, ['name' => 'hippotrack', 'completionpass' => 1], 0, 1000);
             while ($records->valid()) {
                 $quizmodule = null;
                 foreach ($records as $record) {
                     $ids[] = $record->id;
-                    $quizmodule = $record->quizid;
+                    $quizmodule = $record->hippotrack_id;
                 }
 
                 if ($ids) {
                     list($insql, $params) = $DB->get_in_or_equal($ids, SQL_PARAMS_NAMED);
                     $DB->set_field_select('course_modules', 'completionpassgrade', 1,
-                        "module = :quiz AND instance $insql", $params + ['quiz' => $quizmodule]);
+                        "module = :hippotrack AND instance $insql", $params + ['hippotrack' => $quizmodule]);
 
                     // Reset the value so it doesn't get picked on the next run. The field will be dropped later.
-                    $DB->set_field_select('quiz', 'completionpass', 0, "id $insql", $params);
+                    $DB->set_field_select('hippotrack', 'completionpass', 0, "id $insql", $params);
 
                     // Get the next batch of records.
-                    $records = $DB->get_recordset_sql($sql, ['name' => 'quiz', 'completionpass' => 1], 0, 1000);
+                    $records = $DB->get_recordset_sql($sql, ['name' => 'hippotrack', 'completionpass' => 1], 0, 1000);
                 }
             }
             $records->close();
@@ -91,7 +91,7 @@ function xmldb_quiz_upgrade($oldversion) {
             }
         }
 
-        upgrade_mod_savepoint(true, 2021052503, 'quiz');
+        upgrade_mod_savepoint(true, 2021052503, 'hippotrack');
     }
 
     if ($oldversion < 2021101900) {
@@ -108,7 +108,7 @@ function xmldb_quiz_upgrade($oldversion) {
         }
 
         // Quiz savepoint reached.
-        upgrade_mod_savepoint(true, 2021101900, 'quiz');
+        upgrade_mod_savepoint(true, 2021101900, 'hippotrack');
     }
 
     if ($oldversion < 2022020300) {
@@ -154,14 +154,8 @@ function xmldb_quiz_upgrade($oldversion) {
         }
 
         // Quiz savepoint reached.
-        upgrade_mod_savepoint(true, 2022020300, 'quiz');
+        upgrade_mod_savepoint(true, 2022020300, 'hippotrack');
     }
-
-    // Automatically generated Moodle v4.0.0 release upgrade line.
-    // Put any upgrade step following this.
-
-    // Automatically generated Moodle v4.1.0 release upgrade line.
-    // Put any upgrade step following this.
 
     return true;
 }

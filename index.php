@@ -27,7 +27,7 @@ require_once("../../config.php");
 require_once("locallib.php");
 
 $id = required_param('id', PARAM_INT);
-$PAGE->set_url('/mod/quiz/index.php', array('id'=>$id));
+$PAGE->set_url('/mod/hippotrack/index.php', array('id'=>$id));
 if (!$course = $DB->get_record('course', array('id' => $id))) {
     throw new \moodle_exception('invalidcourseid');
 }
@@ -42,7 +42,7 @@ $event = \mod_hippotrack\event\course_module_instance_list_viewed::create($param
 $event->trigger();
 
 // Print the header.
-$strquizzes = get_string("modulenameplural", "quiz");
+$strquizzes = get_string("modulenameplural", "hippotrack");
 $PAGE->navbar->add($strquizzes);
 $PAGE->set_title($strquizzes);
 $PAGE->set_heading($course->fullname);
@@ -50,7 +50,7 @@ echo $OUTPUT->header();
 echo $OUTPUT->heading($strquizzes, 2);
 
 // Get all the appropriate data.
-if (!$quizzes = get_all_instances_in_course("quiz", $course)) {
+if (!$quizzes = get_all_instances_in_course("hippotrack", $course)) {
     notice(get_string('thereareno', 'moodle', $strquizzes), "../../course/view.php?id=$course->id");
     die;
 }
@@ -70,7 +70,7 @@ foreach ($quizzes as $quiz) {
 $headings = array(get_string('name'));
 $align = array('left');
 
-array_push($headings, get_string('quizcloses', 'quiz'));
+array_push($headings, get_string('quizcloses', 'hippotrack'));
 array_push($align, 'left');
 
 if (course_format_uses_sections($course->format)) {
@@ -82,17 +82,17 @@ array_unshift($align, 'center');
 
 $showing = '';
 
-if (has_capability('mod/quiz:viewreports', $coursecontext)) {
-    array_push($headings, get_string('attempts', 'quiz'));
+if (has_capability('mod/hippotrack:viewreports', $coursecontext)) {
+    array_push($headings, get_string('attempts', 'hippotrack'));
     array_push($align, 'left');
     $showing = 'stats';
 
-} else if (has_any_capability(array('mod/quiz:reviewmyattempts', 'mod/quiz:attempt'),
+} else if (has_any_capability(array('mod/hippotrack:reviewmyattempts', 'mod/hippotrack:attempt'),
         $coursecontext)) {
-    array_push($headings, get_string('grade', 'quiz'));
+    array_push($headings, get_string('grade', 'hippotrack'));
     array_push($align, 'left');
     if ($showfeedback) {
-        array_push($headings, get_string('feedback', 'quiz'));
+        array_push($headings, get_string('feedback', 'hippotrack'));
         array_push($align, 'left');
     }
     $showing = 'grades';
@@ -100,8 +100,8 @@ if (has_capability('mod/quiz:viewreports', $coursecontext)) {
     $grades = $DB->get_records_sql_menu('
             SELECT qg.quiz, qg.grade
             FROM {quiz_grades} qg
-            JOIN {quiz} q ON q.id = qg.quiz
-            WHERE q.course = ? AND qg.userid = ?',
+            JOIN {hippotrack} h ON h.id = qg.quiz
+            WHERE h.course = ? AND qg.userid = ?',
             array($course->id, $USER->id));
 }
 
@@ -114,7 +114,7 @@ $currentsection = '';
 // Get all closing dates.
 $timeclosedates = quiz_get_user_timeclose($course->id);
 foreach ($quizzes as $quiz) {
-    $cm = get_coursemodule_from_instance('quiz', $quiz->id);
+    $cm = get_coursemodule_from_instance('hippotrack', $quiz->id);
     $context = context_module::instance($cm->id);
     $data = array();
 
@@ -144,7 +144,7 @@ foreach ($quizzes as $quiz) {
     if (($timeclosedates[$quiz->id]->usertimeclose != 0)) {
         $data[] = userdate($timeclosedates[$quiz->id]->usertimeclose);
     } else {
-        $data[] = get_string('noclose', 'quiz');
+        $data[] = get_string('noclose', 'hippotrack');
     }
 
     if ($showing == 'stats') {
@@ -165,7 +165,7 @@ foreach ($quizzes as $quiz) {
                 $a = new stdClass();
                 $a->grade = quiz_format_grade($quiz, $grades[$quiz->id]);
                 $a->maxgrade = quiz_format_grade($quiz, $quiz->grade);
-                $grade = get_string('outofshort', 'quiz', $a);
+                $grade = get_string('outofshort', 'hippotrack', $a);
             }
             if ($alloptions->overallfeedback) {
                 $feedback = quiz_feedback_for_grade($grades[$quiz->id], $quiz, $context);
