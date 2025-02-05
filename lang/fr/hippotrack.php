@@ -25,11 +25,18 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-$string['pluginname'] = 'hippotrack';
-
-$string['pluginname'] = 'hippotrack';
+$string['pluginname'] = 'Hippotrack';
 $string['modulename'] = 'Hippotrack';
 $string['modulenameplural'] = 'Hippotrack';
 $string['pluginadministration'] = 'hippotrack Administration';
 $string['hippotrack:hostquizz'] = 'hippotrack  Hôte du Quizz';
 $string['hippotrack:addinstance'] = 'hippotrack Ajouter une instance';
+$string['hippotrack:view'] = 'Voir les activités Hippotrack';
+$string['hippotrack:attempt'] = 'Voir les activités Hippotrack';
+$string['hippotrack:reviewmyattempts'] = 'Revoir mes tentatives Hippotrack';
+
+// Form strings
+$string['form:timing'] = 'Timing';
+$string['form:quizopen'] = 'Ouvrir le quizz';
+$string['form:description'] = 'Description';
+$string['form:name'] = 'Nom';

@@ -26,7 +26,19 @@ defined('MOODLE_INTERNAL') || die();
 
 $capabilities = array(
 
-    'mod/hippotrack:addinstance' => array(
+    'mod/hippotrack:view' => [
+        'captype' => 'read',
+        'contextlevel' => CONTEXT_MODULE,
+        'archetypes' => [
+            'guest' => CAP_ALLOW,
+            'student' => CAP_ALLOW,
+            'teacher' => CAP_ALLOW,
+            'editingteacher' => CAP_ALLOW,
+            'manager' => CAP_ALLOW
+        ]
+    ],
+
+    'mod/hippotrack:addinstance' => [
         'riskbitmask' => RISK_XSS,
 
         'captype' => 'write',
@@ -36,8 +48,38 @@ $capabilities = array(
             'manager' => CAP_ALLOW
         ),
         'clonepermissionsfrom' => 'moodle/course:manageactivities'
-    )
+    ],
 
+    // Ability to do the quiz as a 'student'.
+    'mod/hippotrack:attempt' => [
+        'riskbitmask' => RISK_SPAM,
+        'captype' => 'write',
+        'contextlevel' => CONTEXT_MODULE,
+        'archetypes' => [
+            'student' => CAP_ALLOW
+        ]
+    ],
+
+    // Ability for a 'Student' to review their previous attempts. Review by
+    // 'Teachers' is controlled by mod/quiz:viewreports.
+    'mod/hippotrack:reviewmyattempts' => [
+        'captype' => 'read',
+        'contextlevel' => CONTEXT_MODULE,
+        'archetypes' => [
+            'student' => CAP_ALLOW
+        ],
+        'clonepermissionsfrom' => 'moodle/quiz:attempt'
+    ],
+
+    'mod/hippotrack:addattempt' => [
+        'captype' => 'write',
+        'contextlevel' => CONTEXT_MODULE,
+        'archetypes' => [
+            'teacher' => CAP_ALLOW,
+            'editingteacher' => CAP_ALLOW,
+            'manager' => CAP_ALLOW,
+        ],
+    ],
 
 );
 

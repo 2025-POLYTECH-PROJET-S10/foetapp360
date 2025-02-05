@@ -31,3 +31,12 @@ $string['modulenameplural'] = 'Hippotrack';
 $string['pluginadministration'] = 'hippotrack Administration';
 $string['hippotrack:hostquizz'] = 'hippotrack HostQuizz';
 $string['hippotrack:addinstance'] = 'hippotrack Add Instance';
+$string['hippotrack:view'] = 'View Hippotrack activity';
+$string['hippotrack:attempt'] = 'View Hippotrack attempt';
+$string['hippotrack:reviewmyattempts'] = 'Review my Hippotrack attempts';
+
+// Form strings
+$string['form:timing'] = 'Timing';
+$string['form:quizopen'] = 'Open the quizz';
+$string['form:description'] = 'Description';
+$string['form:name'] = 'Name';

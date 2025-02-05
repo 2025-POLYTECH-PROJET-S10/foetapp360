@@ -35,21 +35,39 @@ require_once($CFG->dirroot . '/course/moodleform_mod.php');
  */
 class mod_hippotrack_mod_form extends moodleform_mod
 {
+	/** @var array options to be used with date_time_selector fields in the quiz. */
+    public static $datefieldoptions = array('optional' => true);
+
+    protected $_feedbacks;
+    protected static $reviewfields = array(); // Initialised in the constructor.
+
+    /** @var int the max number of attempts allowed in any user or group override on this instance. */
+    protected $maxattemptsanyoverride = null;
 
 	/**
 	 * Defines forms elements
 	 */
 	public function definition()
 	{
+		global $COURSE, $CFG, $DB, $PAGE;
+        $hippotrackconfig = get_config('hippotrack');
+        $mform = $this->_form;
 
-		global $CFG, $DB, $PAGE, $USER, $COURSE;
+        // -------------------------------------------------------------------------------
+		// Description submenu
+        $mform->addElement('header', 'general', get_string('form:description', 'mod_hippotrack'));
 
-		$mform = &$this->_form;
+        // Name.
+        $mform->addElement('text', 'name', get_string('form:name', 'mod_hippotrack'), array('size'=>'64'));
+        if (!empty($CFG->formatstringstriptags)) {
+            $mform->setType('name', PARAM_TEXT);
+        } else {
+            $mform->setType('name', PARAM_CLEANHTML);
+        }
+        $mform->addRule('name', null, 'required', null, 'client');
+        $mform->addRule('name', get_string('maximumchars', '', 255), 'maxlength', 255, 'client');
 
-		//Add header
-		$mform->addElement('header', 'general', "Option du cours:");
-		$mform->addElement('text', 'name', 'Name', array('size' => '20'));
-		$mform->setType('name', PARAM_TEXT);// $mform -> addElement('course', $COURSE -> id);
+        // -------------------------------------------------------------------------------
 
 		// Adding the standard "Description" field.
 		$this->standard_intro_elements('Description');

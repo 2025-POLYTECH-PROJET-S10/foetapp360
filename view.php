@@ -55,9 +55,47 @@ if ($id) {
 //     throw new moodle_exception('DataBase for hippotrack not found');
 // }
 
+// TODO ajouter un check ici (voir dans quiz).
+$id = optional_param('id', 0, PARAM_INT); // Course Module ID, or ...
+$q  = optional_param('q',  0, PARAM_INT); // Quiz ID.
 
-$PAGE->set_cm($cm);
-$PAGE->set_context($context);
+// Check login and get instance
+require_login($course, true, $cm);
+$context = context_module::instance($cm->id);
+
+if (has_capability('moodle/site:config', $context)) {
+    echo "Bienvenue, Administrateur !";
+
+    // View attempts button
+    $url = new moodle_url('/mod/hippotrack/viewattempts.php', array('id' => $id));
+    echo $OUTPUT->single_button($url, 'Voir les tentatives', 'get');
+
+    // TEST add attemtp
+    $url = new moodle_url('/mod/hippotrack/addattempt.php', array('id' => $id));
+    echo $OUTPUT->single_button($url, 'Ajouter une tentative', 'get');
+
+
+} elseif (has_capability('mod/hippotrack:view', $context)) {
+    echo "Bienvenue, Utilisateur !";
+
+    // View attempts button
+    $url = new moodle_url('/mod/hippotrack/viewattempts.php', array('id' => $id));
+    echo $OUTPUT->single_button($url, 'Voir les tentatives', 'get');
+
+    // TEST add attemtp
+    $url = new moodle_url('/mod/hippotrack/addattempt.php', array('id' => $id));
+    echo $OUTPUT->single_button($url, 'Ajouter une tentative', 'get');
+
+} else {
+    echo "Accès refusé.";
+}
+
+// Cache some other capabilities we use several times.
+$canattempt = has_capability('mod/hippotrack:attempt', $context);
+
+// Create an object to manage all the other (non-roles) access rules.
+$timenow = time();
+
 $PAGE->set_url('/mod/hippotrack/view.php', array('id' => $id));
 
 //Debut de l'affichage
@@ -67,7 +105,7 @@ echo $OUTPUT->header();
 // Title Poll
 $divTitle = '<div id=divTitle>';
 $divTitle .= '<h2 id=namePoll>';
-$divTitle .= get_string('title', 'mod_nouveauplugin', $cm->name);
+$divTitle .= get_string('pluginname', 'mod_hippotrack', $cm->name);
 $divTitle .= '</h2>';
 $divTitle .= '<div>';
 
