@@ -81,10 +81,17 @@ $(document).ready(function () {
             updateTransform();
         });
 
-        // Move axis slider event
+        // Move axis slider event (Inclinaison)
         moveSlider.on("input", function () {
             translateDistance = parseInt($(this).val(), 10);
             updateTransform();
+
+            // ✅ Update the hidden field to send inclination value
+            let inclinationField = rotationContainer.find('input[name="inclinaison_' + schemaType + '"]');
+            if (inclinationField.length) {
+                inclinationField.val(translateDistance);
+            }
         });
+
     });
 });

@@ -1,4 +1,27 @@
 <?php
+
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+
+/**
+ * Version information
+ *
+ * @package    mod_easyvote
+ * @copyright  2016 Cyberlearn
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 require(__DIR__ . '/../../config.php');
 require_once($CFG->libdir . '/sessionlib.php');
 
@@ -28,21 +51,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['validate'])) {
         if (strpos($key, 'rotation_') === 0) {
             $field = str_replace('rotation_', '', $key);
             $rotation = intval($value);
-            $movement = optional_param("movement_$field", 0, PARAM_INT);
+            $inclinaison = optional_param("inclinaison_$field", 0, PARAM_INT);
 
             // Debugging
-            error_log("Processing: $field | Rotation: $rotation | Movement: $movement");
+            error_log("Processing: $field | Rotation: $rotation | Inclinaison: $inclinaison");
         }
     }
-
-    // Redirect to avoid form resubmission
-    redirect(new moodle_url('/mod/hippotrack/attempt.php', [
-        'id' => $id,
-        'difficulty' => $difficulty,
-        'submitted' => 1
-    ]));
-    exit;
 }
+
 
 
 
@@ -230,7 +246,8 @@ foreach ($possible_inputs as $field) {
         echo '<input type="range" class="rotate-slider" name="rotation_' . $field . '" min="0" max="360" value="0"><br>';
 
         echo '<label for="move-axis-slider">Inclinaison:</label>';
-        echo '<input type="range" class="move-axis-slider" name="movement_' . $field . '" min="-50" max="50" value="0"><br>';
+        echo '<input type="range" class="move-axis-slider" name="inclinaison_' . $field . '" min="-50" max="50" value="0"><br>';
+
 
         echo '</div>';  // Close .rotation-container
 
