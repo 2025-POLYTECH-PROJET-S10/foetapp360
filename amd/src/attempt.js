@@ -20,57 +20,71 @@
  * @copyright   2025 Lionel Di Marco <LDiMarco@chu-grenoble.fr>
  * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-define(['jquery'], function ($) {
-    return {
-        init: function () {
-            $(document).ready(function () {
-                $(".container").each(function () {
-                    let $container = $(this);
-                    let schemaType = $container.data("schema-type"); // Get schema type
-                    let angle = 0;
-                    let moveOffset = 0;
+$(document).ready(function () {
+    console.log("✅ JavaScript Loaded!");
 
-                    // Find the correct interior image dynamically
-                    let $interiorImage = $container.find("img").filter(function () {
-                        return this.className.includes("partogramme_interieur");
-                    });
+    $(".rotation-container").each(function () {
+        let rotationContainer = $(this);
+        let container = rotationContainer.find(".container");
 
-                    // Function to update rotation and positioning
-                    function updatePositions() {
-                        let radians = (angle * Math.PI) / 180;
-                        let xOffset = Math.sin(radians) * moveOffset;
-                        let yOffset = -Math.cos(radians) * moveOffset;
-
-                        // Apply transformations only to elements within this container
-                        $container.find(".partogramme_contour, .partogramme_contour2").css({
-                            transform: `rotate(${angle}deg)`,
-                            transformOrigin: 'center center'
-                        });
-
-                        // Move only the correct interior image
-                        $interiorImage.css({
-                            transform: `translate(${xOffset}px, ${yOffset}px) rotate(${angle}deg)`,
-                            transformOrigin: 'center center'
-                        });
-
-                        console.log(`Updated ${schemaType} -> Angle: ${angle}, Move Offset: ${moveOffset}`);
-                    }
-
-                    // Handle rotation slider (using updated name)
-                    $container.closest("form").find(".rotate-slider").on("input", function () {
-                        angle = parseFloat($(this).val());
-                        updatePositions();
-                    });
-
-                    // Handle inclinaison slider (using updated name)
-                    $container.closest("form").find(".move-axis-slider").on("input", function () {
-                        moveOffset = parseFloat($(this).val());
-                        updatePositions();
-                    });
-
-                    updatePositions(); // Ensure initial positioning
-                });
-            });
+        if (!container.length) {
+            console.error("❌ No .container found inside .rotation-container!", rotationContainer);
+            return;
         }
-    };
+
+        let schemaType = container.data("schema-type");
+        if (!schemaType) {
+            console.error("❌ No schema-type found in container", container);
+            return;
+        }
+
+        console.log("✅ Found container for schema:", schemaType);
+
+        let targetInteriorImage = container.find("." + schemaType + "_interior");
+        let targetContourImage = container.find("." + schemaType + "_contour");
+
+        if (!targetInteriorImage.length || !targetContourImage.length) {
+            console.error("❌ No interior or contour image found for schema type:", schemaType);
+            return;
+        }
+
+        console.log("✅ Found images:", targetInteriorImage, targetContourImage);
+
+        let rotateSlider = rotationContainer.find(".rotate-slider");
+        let moveSlider = rotationContainer.find(".move-axis-slider");
+
+        let rotationAngle = 0;
+        let translateDistance = 0;
+
+        // ✅ Set transform-origin to ensure correct rotation pivot
+        targetInteriorImage.css("transform-origin", "center center");
+        targetContourImage.css("transform-origin", "center center");
+
+        function updateTransform() {
+            let radian = (rotationAngle * Math.PI) / 180; // Convert degrees to radians
+            let xOffset = translateDistance * Math.sin(radian);
+            let yOffset = -translateDistance * Math.cos(radian);
+
+            console.log(`🔄 Rotating: ${rotationAngle}° | ↔ Moving: ${translateDistance}px (X: ${xOffset}, Y: ${yOffset})`);
+
+            // ✅ Apply correct transformations
+            let transformString = `translate(${xOffset}px, ${yOffset}px) rotate(${rotationAngle}deg)`;
+
+            // Apply the transformations
+            targetInteriorImage.css("transform", transformString);
+            targetContourImage.css("transform", `rotate(${rotationAngle}deg)`);
+        }
+
+        // Rotation slider event
+        rotateSlider.on("input", function () {
+            rotationAngle = parseInt($(this).val(), 10);
+            updateTransform();
+        });
+
+        // Move axis slider event
+        moveSlider.on("input", function () {
+            translateDistance = parseInt($(this).val(), 10);
+            updateTransform();
+        });
+    });
 });

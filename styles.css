@@ -1,47 +1,45 @@
 .container {
     position: relative;
     width: 672px;
-    /* Ensure the container is the same size as bassin */
     height: 392px;
     display: flex;
     justify-content: center;
     align-items: center;
+    overflow: hidden;
+    /* Prevents images from overflowing */
 }
 
+/* Base styles for images inside the container */
+.container img {
+    position: absolute;
+    max-width: 100%;
+    max-height: 100%;
+}
+
+/* Ensure the background stays fixed in place */
 .bassin {
     height: 100%;
-    /* Keeps the bassin image responsive inside the container */
     width: auto;
     z-index: 4;
 }
 
-/* Apply the same centering technique to all partogramme images */
-.container img.partogramme_contour,
-.container img.partogramme_interieur,
-.container img.partogramme_contour2,
-.container img.partogramme_interieur_simplifie {
 
-    position: absolute;
-}
 
-/* Individual sizes and stacking order */
-.partogramme_contour2 {
-    width: 340px;
-    /* Adjust size as needed */
-    z-index: 3;
-}
-
-.partogramme_interieur {
+.partogramme_interior {
     width: 275px;
-    z-index: 2;
-}
-
-.partogramme_interieur_simplifie {
-    width: 150px;
-    z-index: 2;
+    z-index: 1;
 }
 
 .partogramme_contour {
+    max-width: 300px;
+    z-index: 2;
+}
+
+.simplified_schematic_interior {
     width: 150px;
     z-index: 1;
+}
+
+.simplified_schematic_contour {
+    z-index: 2;
 }

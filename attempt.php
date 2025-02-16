@@ -45,13 +45,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['validate'])) {
 }
 
 
-// if ($_SERVER["REQUEST_METHOD"] == "POST") {
-//     echo "<pre>";
-//     print_r($_POST);
-//     echo "</pre>";
-//     exit();
-// }
-
 
 
 echo $OUTPUT->header();
@@ -82,15 +75,15 @@ $session = $DB->get_record('hippotrack_training_sessions', array(
 
 // 📌 🔥 CORRECTION : Définir toujours $possible_inputs avant toute logique
 $possible_inputs = ($difficulty === 'easy') ?
-    ['name', 'sigle', 'partogramme', 'shema_simplifie', 'vue_anterieure', 'vue_laterale'] :
-    ['name', 'sigle', 'partogramme', 'shema_simplifie'];
+    ['name', 'sigle', 'partogramme', 'simplified_schematic', 'vue_anterieure', 'vue_laterale'] :
+    ['name', 'sigle', 'partogramme', 'simplified_schematic'];
 
 // 📌 S'assurer qu'on a bien une question dès la première session
 if (!$session || $new_question == 1) {
     $random_entry = $DB->get_record_sql("SELECT * FROM {hippotrack_datasets} ORDER BY RAND() LIMIT 1");
     $possible_inputs = ($difficulty === 'easy') ?
-        ['name', 'sigle', 'partogramme', 'shema_simplifie', 'vue_anterieure', 'vue_laterale'] :
-        ['name', 'sigle', 'partogramme', 'shema_simplifie'];
+        ['name', 'sigle', 'partogramme', 'simplified_schematic', 'vue_anterieure', 'vue_laterale'] :
+        ['name', 'sigle', 'partogramme', 'simplified_schematic'];
 
     $random_input = $possible_inputs[array_rand($possible_inputs)];
 
@@ -131,7 +124,7 @@ if ($submitted) {
     $feedback = "Bravo ! Toutes les réponses sont correctes.";
 
     foreach ($possible_inputs as $field) {
-        if ($field === 'partogramme' || $field === 'shema_simplifie') {
+        if ($field === 'partogramme' || $field === 'simplified_schematic') {
             // 🔥 Correction spéciale pour partogramme et schéma simplifié (ils utilisent rotation + inclinaison)
             $student_inclinaison = required_param("inclinaison_$field", PARAM_RAW);
             $student_rotation = required_param("rotation_$field", PARAM_RAW);
@@ -173,7 +166,7 @@ if ($submitted) {
         $attempt->input_type = $field;
         $attempt->timeanswered = time();
 
-        if ($field === 'partogramme' || $field === 'shema_simplifie') {
+        if ($field === 'partogramme' || $field === 'simplified_schematic') {
             // 🔥 Cas spécial : Stocker la rotation et l'inclinaison pour partogramme et schéma
             $student_inclinaison = required_param("inclinaison_$field", PARAM_RAW);
             $student_rotation = required_param("rotation_$field", PARAM_RAW);
@@ -208,39 +201,40 @@ if ($submitted) {
 }
 
 echo html_writer::start_tag('form', array('method' => 'post', 'action' => 'attempt.php?id=' . $id . '&difficulty=' . $difficulty . '&submitted=1'));
+$PAGE->requires->js_call_amd('mod_hippotrack/attempt', 'init');
 
 foreach ($possible_inputs as $field) {
     $label = ucfirst(str_replace('_', ' ', $field));
     $is_given_input = ($field === $random_input);
     $readonly = $is_given_input ? 'readonly' : '';
 
-    if ($field === 'partogramme' || $field === 'shema_simplifie') {
+    if ($field === 'partogramme' || $field === 'simplified_schematic') {
         echo html_writer::tag('h4', $label);
 
-        $PAGE->requires->js_call_amd('mod_hippotrack/attempt', 'init');
-
-        $interior_image = ($field === 'partogramme') ? 'partogramme_interieur' : 'partogramme_interieur_simplifie';
+        $interior_image = ($field === 'partogramme') ? 'partogramme_interior' : 'simplified_schematic_interior';
         $background_image = ($field === 'partogramme') ? 'bassin' : 'null';
+        $contour_class = ($field === 'partogramme') ? 'partogramme_contour' : 'simplified_schematic_contour';
+
+        echo '<div class="rotation-container">'; // New div wrapper
 
         echo '<div class="container" data-schema-type="' . $field . '">';
         if ($background_image !== 'null') {
             echo '<img class="' . $background_image . '" src="' . new moodle_url('/mod/hippotrack/pix/' . $background_image . '.png') . '">';
         }
-        echo '<img class="partogramme_contour2" src="' . new moodle_url('/mod/hippotrack/pix/partogramme_contour2.png') . '">';
-        echo '<img class="' . $interior_image . '" src="' . new moodle_url('/mod/hippotrack/pix/' . $interior_image) . '.png">';
-        echo '<img class="partogramme_contour" src="' . new moodle_url('/mod/hippotrack/pix/partogramme_contour.png') . '">';
-        echo '</div>';
+        echo '<img class="' . $contour_class . '" src="' . new moodle_url('/mod/hippotrack/pix/' . $contour_class . '.png') . '">';
+        echo '<img class="' . $interior_image . '" src="' . new moodle_url('/mod/hippotrack/pix/' . $interior_image . '.png') . '">';
+        echo '</div>';  // Close .container
 
-        // 🚀 Ensure we always include this field in the form submission
-        echo '<input type="hidden" name="' . $field . '" value="submitted">';
-
-        // Rotation slider (name = "rotation_partogramme")
+        // Sliders inside the new div
         echo '<label for="rotate-slider">Rotation:</label>';
         echo '<input type="range" class="rotate-slider" name="rotation_' . $field . '" min="0" max="360" value="0"><br>';
 
-        // Inclinaison slider (name = "inclinaison_partogramme" now)
-        echo '<label for="move-axis-slider">Move Up/Down (Inclinaison):</label>';
-        echo '<input type="range" class="move-axis-slider" name="inclinaison_' . $field . '" min="-50" max="50" value="0"><br>';
+        echo '<label for="move-axis-slider">Inclinaison:</label>';
+        echo '<input type="range" class="move-axis-slider" name="movement_' . $field . '" min="-50" max="50" value="0"><br>';
+
+        echo '</div>';  // Close .rotation-container
+
+
 
 
     } else {
