@@ -65,5 +65,16 @@ $capabilities = array(
             'editingteacher' => CAP_ALLOW,
             'manager' => CAP_ALLOW
         )
+        ),
+
+    // 📌 🔥 Nouvelle permission pour permettre aux tous de voir les images et ainsi de suite
+    'mod/hippotrack:viewimages' => array(
+        'captype' => 'read',
+        'contextlevel' => CONTEXT_MODULE,
+        'archetypes' => array(
+            'teacher' => CAP_ALLOW,
+            'editingteacher' => CAP_ALLOW,
+            'manager' => CAP_ALLOW
+        )
     )
 );

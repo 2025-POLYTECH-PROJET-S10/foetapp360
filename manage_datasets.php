@@ -2,10 +2,11 @@
 require(__DIR__ . '/../../config.php');
 require_once(__DIR__ . '/classes/form/db_form.php');
 
+// Add namespace reference at the top
+use mod_hippotrack\image_manager;
+
 // 📌 Parameter Validation
 $cmid = required_param('cmid', PARAM_INT);
-$savedata = optional_param('save_data',0, PARAM_INT);
-debugging('save_data' . $savedata, DEBUG_DEVELOPER);
 $userid = $USER->id;
 
 // 📌 Retrieve Course Module and Context
@@ -52,43 +53,108 @@ if ($deleting && confirm_sesskey()) {
 
 // 📌 Helper Function to Render Datasets Table
 function render_datasets_table($datasets, $context, $cmid, $OUTPUT) {
+    global $CFG;
+
     if (empty($datasets)) {
         return html_writer::tag('p', "Aucune donnée disponible.", array('class' => 'alert alert-warning'));
     }
 
+    // Initialize image managers with system context (matches installation context)
+    $image_manager_anterieure = new image_manager(
+        'vue_anterieure'
+    );
+    
+    $image_manager_laterale = new image_manager(
+        'vue_laterale'
+    );
+
     $table_html = html_writer::start_tag('table', array('class' => 'table table-striped'));
     $table_html .= html_writer::start_tag('thead') . html_writer::start_tag('tr');
-    $table_html .= html_writer::tag('th', 'Nom') . html_writer::tag('th', 'Sigle') . html_writer::tag('th', 'Rotation') . html_writer::tag('th', 'Inclinaison') . html_writer::tag('th', 'Vue Antérieure') . html_writer::tag('th', 'Vue Latérale') . html_writer::tag('th', 'Actions');
+    $table_html .= html_writer::tag('th', 'Nom') 
+        . html_writer::tag('th', 'Sigle') 
+        . html_writer::tag('th', 'Rotation') 
+        . html_writer::tag('th', 'Inclinaison') 
+        . html_writer::tag('th', 'Vue Antérieure') 
+        . html_writer::tag('th', 'Vue Latérale') 
+        . html_writer::tag('th', 'Actions');
     $table_html .= html_writer::end_tag('tr') . html_writer::end_tag('thead');
 
     $table_html .= html_writer::start_tag('tbody');
-    foreach ($datasets as $dataset) {
-        $fs = get_file_storage();
-        $files_vue_anterieure = $fs->get_area_files($context->id, 'mod_hippotrack', 'vue_anterieure', $dataset->id);
-        $files_vue_laterale = $fs->get_area_files($context->id, 'mod_hippotrack', 'vue_laterale', $dataset->id);
 
-        $vue_anterieure_url = !empty($files_vue_anterieure) ? moodle_url::make_pluginfile_url($context->id, 'mod_hippotrack', 'vue_anterieure', $dataset->id, '/', 'vue_anterieure.jpg') : '#';
-        $vue_laterale_url = !empty($files_vue_laterale) ? moodle_url::make_pluginfile_url($context->id, 'mod_hippotrack', 'vue_laterale', $dataset->id, '/', 'vue_laterale.jpg') : '#';
+
+    foreach ($datasets as $dataset) {
+        // Get actual filenames from database record
+        $anterieure_filename = $dataset->vue_anterieure;
+        $laterale_filename = $dataset->vue_laterale;
+
+        // Get image URLs using image manager
+        $anterieure_url = $image_manager_anterieure->getImageUrl($dataset->id, $anterieure_filename);
+        $laterale_url = $image_manager_laterale->getImageUrl($dataset->id, $laterale_filename);
+
+        // Create image previews with lightbox functionality
+        $anterieure_img = $anterieure_url 
+            ? html_writer::link(
+                $anterieure_url,
+                html_writer::empty_tag('img', array(
+                    'src' => $anterieure_url,
+                    'style' => 'max-width: 100px; height: auto;',
+                    'class' => 'img-thumbnail',
+                    'loading' => 'lazy'
+                )),
+                array('data-lightbox' => 'vue_anterieure')
+              )
+            : html_writer::tag('span', 'Image manquante', array('class' => 'text-muted'));
+
+        $laterale_img = $laterale_url 
+            ? html_writer::link(
+                $laterale_url,
+                html_writer::empty_tag('img', array(
+                    'src' => $laterale_url,
+                    'style' => 'max-width: 100px; height: auto;',
+                    'class' => 'img-thumbnail',
+                    'loading' => 'lazy'
+                )),
+                array('data-lightbox' => 'vue_laterale')
+              )
+            : html_writer::tag('span', 'Image manquante', array('class' => 'text-muted'));
 
         $table_html .= html_writer::start_tag('tr');
         $table_html .= html_writer::tag('td', $dataset->name);
         $table_html .= html_writer::tag('td', $dataset->sigle);
         $table_html .= html_writer::tag('td', $dataset->rotation);
         $table_html .= html_writer::tag('td', $dataset->inclinaison);
-        $table_html .= html_writer::tag('td', html_writer::empty_tag('img', array('src' => $vue_anterieure_url, 'width' => 50)));
-        $table_html .= html_writer::tag('td', html_writer::empty_tag('img', array('src' => $vue_laterale_url, 'width' => 50)));
+        $table_html .= html_writer::tag('td', $anterieure_img);
+        $table_html .= html_writer::tag('td', $laterale_img);
 
-        // Actions (Edit and Delete)
-        $edit_url = new moodle_url('/mod/hippotrack/db_form_submission.php', array('cmid' => $cmid, 'edit' => $dataset->id));
-        $delete_url = new moodle_url('/mod/hippotrack/manage_datasets.php', array('cmid' => $cmid, 'delete' => $dataset->id, 'sesskey' => sesskey()));
-        $table_html .= html_writer::tag('td',
-            $OUTPUT->single_button($edit_url, 'Modifier', 'get') .
-            $OUTPUT->single_button($delete_url, 'Supprimer', 'post')
+        // Actions
+        $edit_url = new moodle_url('/mod/hippotrack/db_form_submission.php', 
+            array('cmid' => $cmid, 'edit' => $dataset->id));
+        $delete_url = new moodle_url('/mod/hippotrack/manage_datasets.php', 
+            array('cmid' => $cmid, 'delete' => $dataset->id, 'sesskey' => sesskey()));
+        
+        $actions = html_writer::div(
+            $OUTPUT->single_button($edit_url, 'Modifier', 'get', ['class' => 'mr-1']) .
+            $OUTPUT->single_button($delete_url, 'Supprimer', 'post'),
+            'd-flex justify-content-around'
         );
 
+        $table_html .= html_writer::tag('td', $actions);
         $table_html .= html_writer::end_tag('tr');
     }
     $table_html .= html_writer::end_tag('tbody') . html_writer::end_tag('table');
+
+    // // Add lightbox CSS/JS if any images exist
+    // if (!empty($anterieure_url) || !empty($laterale_url)) {
+    //     $table_html .= html_writer::tag('img', '', array(
+    //         'src' => $anterieure_url,
+    //         'rel' => 'stylesheet'
+    //     ));
+
+    //     $table_html .= html_writer::tag('img', '', array(
+    //         'src' => $laterale_url,
+    //         'rel' => 'stylesheet'
+    //     ));
+    // }
 
     return $table_html;
 }
