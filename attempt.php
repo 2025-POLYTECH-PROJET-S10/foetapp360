@@ -131,6 +131,7 @@ $random_input = $session->input_type;
 $random_input_label = ucfirst(str_replace('_', ' ', $random_input));
 $pre_filled_value = $random_entry->$random_input;
 
+
 echo html_writer::tag('h3', "Trouvez les bonnes correspondances pour :");
 
 // 📌 Correction après validation

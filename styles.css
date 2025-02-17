@@ -18,7 +18,7 @@
 
 /* Ensure the background stays fixed in place */
 .bassin {
-    height: 100%;
+    height: 75%;
     width: auto;
     z-index: 4;
 }
@@ -26,17 +26,21 @@
 
 
 .partogramme_interior {
-    width: 275px;
+    /* width: 325px; */
+    height: 90%;
     z-index: 1;
 }
 
 .partogramme_contour {
-    max-width: 300px;
+    /* max-width: 400px; */
+    /* width: 500px; */
+    height: 100%;
     z-index: 2;
 }
 
 .simplified_schematic_interior {
-    width: 150px;
+    /* width: 150px; */
+    height: 90%;
     z-index: 1;
 }
 
