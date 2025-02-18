@@ -7,6 +7,7 @@ $session_id = required_param('session_id', PARAM_INT);
 $difficulty = optional_param('difficulty', '', PARAM_ALPHA);
 $new_question = optional_param('new_question', 0, PARAM_INT);
 $submitted = optional_param('submitted', 0, PARAM_INT);
+$first_time = optional_param('first_time', 0, PARAM_INT);
 $userid = $USER->id;
 
 $cm = get_coursemodule_from_id('hippotrack', $cmid, 0, false, MUST_EXIST);
@@ -24,6 +25,10 @@ $PAGE->set_title("Session d'entraînement");
 $PAGE->set_heading("Session d'entraînement");
 
 echo $OUTPUT->header();
+
+if (empty($difficulty)) {
+    $_SESSION['hippotrack_session_' . $session_id]['_time_start'] = time();
+}
 
 // 📌 Étape 1 : Sélection de la difficulté
 if (empty($difficulty)) {
@@ -83,20 +88,25 @@ if ($submitted) {
     }
     echo html_writer::tag('p', $feedback, array('class' => $is_correct ? 'correct' : 'incorrect'));
 
-    // Incrémente le nombre de question
-    if (!isset($_SESSION['hippotrack_session_' . $session_id . '_sumgrades'])) {
-        // Si la variable n'existe pas, on l'initialise à 1
-        $_SESSION['hippotrack_session_' . $session_id . '_sumgrades'] = 1;
-    } else {
-        if($is_correct){
-            $_SESSION['hippotrack_session_' . $session_id . '_sumgrades']++;
-        }
-    }
-
     // 📌 Enregistrer les réponses de l'étudiant dans la base de données
     // Vérifier si une tentative existe déjà, sinon l'initialiser
     if (!isset($_SESSION['hippotrack_session_' . $session_id])) {
         $_SESSION['hippotrack_session_' . $session_id] = [];
+    }
+
+    // Incrémente le nombre de question
+    if (!isset($_SESSION['hippotrack_session_' . $session_id]['_sumgrades'])) {
+        // Si la variable n'existe pas, on l'initialise à 1
+        if($is_correct){
+            $_SESSION['hippotrack_session_' . $session_id]['_sumgrades'] = 1;
+        }
+        else{
+            $_SESSION['hippotrack_session_' . $session_id]['_sumgrades'] = 0;
+        }
+    } else {
+        if($is_correct){
+            $_SESSION['hippotrack_session_' . $session_id]['_sumgrades']++;
+        }
     }
 
     // Créer une nouvelle entrée avec les valeurs de base
@@ -105,10 +115,10 @@ if ($submitted) {
     ];
 
     // Ajouter l’entrée à la session
-    $_SESSION['hippotrack_session_' . $session_id][] = $new_attempt;
+    $_SESSION['hippotrack_session_' . $session_id]['attempts'][] = $new_attempt;
 
     // Récupérer l'index de la dernière entrée ajoutée
-    $last_index = count($_SESSION['hippotrack_session_' . $session_id]) - 1;
+    $last_index = count($_SESSION['hippotrack_session_' . $session_id]['attempts']) - 1;
 
     // Compléter l'entrée avec les réponses de l'utilisateur
     foreach ($possible_inputs as $field) {
@@ -121,7 +131,7 @@ if ($submitted) {
             $student_answer = required_param($field, PARAM_RAW); // Récupère la réponse
         }
         // Ajouter la réponse de l'utilisateur au dernier enregistrement
-        $_SESSION['hippotrack_session_' . $session_id][$last_index][$field] = $student_answer;
+        $_SESSION['hippotrack_session_' . $session_id]['attempts'][$last_index][$field] = $student_answer;
     }
 
     // Sauvegarde la réponse actuelle
@@ -147,17 +157,17 @@ else {
     $random_input_label = ucfirst(str_replace('_', ' ', $random_input));
 
     // Enregistre la difficulté dans la session.
-    if (!isset($_SESSION['hippotrack_session_' . $session_id . '_difficulty'])) {
-        $_SESSION['hippotrack_session_' . $session_id . '_difficulty'] = $difficulty;
+    if (!isset($_SESSION['hippotrack_session_' . $session_id]['_difficulty'])) {
+        $_SESSION['hippotrack_session_' . $session_id]['_difficulty'] = $difficulty;
     }
 
     // Incrémente le nombre de question
-    if (!isset($_SESSION['hippotrack_session_' . $session_id . '_questionsdone'])) {
+    if (!isset($_SESSION['hippotrack_session_' . $session_id]['_questionsdone'])) {
         // Si la variable n'existe pas, on l'initialise à 1
-        $_SESSION['hippotrack_session_' . $session_id . '_questionsdone'] = 1;
+        $_SESSION['hippotrack_session_' . $session_id]['_questionsdone'] = 1;
     } else {
         // Si la variable existe, on l'incrémente de 1
-        $_SESSION['hippotrack_session_' . $session_id . '_questionsdone']++;
+        $_SESSION['hippotrack_session_' . $session_id]['_questionsdone']++;
     }
 
     echo html_writer::tag('h3', "Trouvez les bonnes correspondances pour :");
