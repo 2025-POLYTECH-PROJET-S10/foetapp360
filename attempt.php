@@ -164,12 +164,6 @@ if ($submitted) {
             // 🔥 Cas normal (name, sigle, vue_anterieure, vue_laterale)
             $student_answer = required_param($field, PARAM_RAW);
             $correct_answer = $random_entry->$field;
-
-            // Debugging: Log the values
-            echo ("Field: $field");
-            echo ("Student Answer: $student_answer");
-            echo ("Correct Answer: $correct_answer");
-
             if ($student_answer != $correct_answer) {
                 $is_correct = false;
                 $feedback = "Oops, certaines réponses sont incorrectes. Vérifiez et essayez encore !";
