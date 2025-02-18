@@ -57,7 +57,7 @@ class manage_datasets_form extends moodleform {
             null,
             [
                 'maxbytes' => $maxbytes,
-                'accepted_types' => '*',
+                'accepted_types' => 'image',
             ]
         );
 
@@ -68,7 +68,7 @@ class manage_datasets_form extends moodleform {
             null,
             [
                 'maxbytes' => $maxbytes,
-                'accepted_types' => '*',
+                'accepted_types' => 'image',
             ]
         );
 

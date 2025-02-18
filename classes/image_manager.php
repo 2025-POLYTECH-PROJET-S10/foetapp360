@@ -52,7 +52,16 @@ class image_manager {
     }
 
     // Modified delete method
-    public function deleteImage($itemid, $filename) {
+    private function _delete_image_with_id($itemid) {
+        global $DB;
+        $record = $DB->get_record("hippotrack_datasets" , ["id"=> $itemid]);
+
+        if ($this->filearea == "vue_anterieure") {
+            $filename = $record->nom_vue_anterieure;
+        } else {
+            $filename = $record->nom_vue_laterale;
+        }
+
         $fs = get_file_storage();
         if ($file = $fs->get_file(
             $this->contextid,
@@ -64,7 +73,18 @@ class image_manager {
         )) {
             return $file->delete();
         }
+
         return false;
+    }
+
+    public function updateImageFromContent($itemid, $filename, $filecontent) {
+        $fs = get_file_storage();
+
+        // remove the old file with this itemid
+        $this->deleteImage($itemid);
+
+        // add the new image
+        $this->addImageFromContent($itemid, $filename, $filecontent);
     }
 
     /**
@@ -93,5 +113,59 @@ class image_manager {
             '/',
             $filename
         );
+    }
+
+    // Add Image from file content (string)
+    public function addImageFromContent($itemid, $filename, $filecontent) {
+        $fs = get_file_storage();
+        $fileinfo = $this->create_file_info($itemid, $filename);
+        $fs->create_file_from_string($fileinfo, $filecontent);
+    }
+
+    private function _debug_print_file_info($file) {
+        if (!$file) {
+            debugging("File is null or does not exist.", DEBUG_DEVELOPER);
+            return;
+        }
+    
+        debugging("File Information:", DEBUG_DEVELOPER);
+        debugging("ID: " . $file->get_id(), DEBUG_DEVELOPER);
+        debugging("Context ID: " . $file->get_contextid(), DEBUG_DEVELOPER);
+        debugging("Component: " . $file->get_component(), DEBUG_DEVELOPER);
+        debugging("File Area: " . $file->get_filearea(), DEBUG_DEVELOPER);
+        debugging("Item ID: " . $file->get_itemid(), DEBUG_DEVELOPER);
+        debugging("File Path: " . $file->get_filepath(), DEBUG_DEVELOPER);
+        debugging("File Name: " . $file->get_filename(), DEBUG_DEVELOPER);
+        debugging("File Size: " . $file->get_filesize() . " bytes", DEBUG_DEVELOPER);
+        debugging("MIME Type: " . $file->get_mimetype(), DEBUG_DEVELOPER);
+        debugging("Content Hash: " . $file->get_contenthash(), DEBUG_DEVELOPER);
+        debugging("Time Created: " . date("Y-m-d H:i:s", $file->get_timecreated()), DEBUG_DEVELOPER);
+        debugging("Time Modified: " . date("Y-m-d H:i:s", $file->get_timemodified()), DEBUG_DEVELOPER);
+    }
+
+
+    public function addImageFromForm($itemid, $mform, $elem) {
+        $newfilename = $mform->get_new_filename($elem);
+        $file = $mform->save_stored_file($elem, $this->contextid, $this->component, $this->filearea, $itemid, "/", $newfilename); // the last one is filepath, true is to and store the images overwrite
+
+        if (!$file) {
+            throw new moodle_exception("Couldn't Save File, error in Database","","", $file->get_context()->id);
+        }
+    }
+
+    public function delete_image($itemid, $filename){
+        $file = $this->getImageFile($itemid, $filename);
+        if (!$file) {
+            return true;
+        }
+        return $file->delete();
+    }
+
+    public function updateImageFromForm($itemid, $mform, $elem) {
+        // remove the old file with this itemid
+        $this->_delete_image_with_id($itemid);
+
+        // add the new image
+        $this->addImageFromForm($itemid, $mform, $elem);
     }
 }

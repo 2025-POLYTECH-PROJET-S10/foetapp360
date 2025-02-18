@@ -1,4 +1,6 @@
 <?php
+
+use mod_hippotrack\image_manager;
 require(__DIR__ . '/../../config.php');
 require_once(__DIR__ . '/classes/form/db_form.php');
 
@@ -26,44 +28,6 @@ $showform = optional_param('addnew', 0, PARAM_BOOL); // Add a new entry
 
 global $DB;
 
-/**
- * Save the form data to the database.
-* This should be called after the form is submitted and validated.
-*/
-function _save_submission($data) {
-    global $DB, $context;
-
-    if ($data) {
-        $record = new stdClass();
-        $record->name = $data->name;
-        $record->sigle = $data->sigle;
-        $record->rotation = $data->rotation;
-        $record->inclinaison = $data->inclinaison;
-
-        // Save filepicker data
-        $fs = get_file_storage();
-        $draftitemid_vue_anterieure = file_get_submitted_draft_itemid('vue_anterieure');
-        $draftitemid_vue_laterale = file_get_submitted_draft_itemid('vue_laterale');
-
-        if ($data->id) {
-            // Update existing record
-            $record->id = $data->id;
-            $DB->update_record('hippotrack_datasets', $record);
-
-            // Save files to the appropriate file areas
-            file_save_draft_area_files($draftitemid_vue_anterieure, $context->id, 'mod_hippotrack', 'vue_anterieure', $record->id);
-            file_save_draft_area_files($draftitemid_vue_laterale, $context->id, 'mod_hippotrack', 'vue_laterale', $record->id);
-        } else {
-            // Insert a new record
-            $record->id = $DB->insert_record('hippotrack_datasets', $record);
-
-            // Save files to the appropriate file areas
-            file_save_draft_area_files($draftitemid_vue_anterieure, $context->id, 'mod_hippotrack', 'vue_anterieure', $record->id);
-            file_save_draft_area_files($draftitemid_vue_laterale, $context->id, 'mod_hippotrack', 'vue_laterale', $record->id);
-        }
-    }
-}
-
 
 // 📌 Create Form
 if ($editing){
@@ -81,8 +45,14 @@ if ($mform->is_cancelled()) {
     // throw new moodle_exception("Operation cancelled");
 } else if ($data = $mform->get_data()) {
     try {
-        $draftitemid_vue_anterieure = file_get_submitted_draft_itemid('vue_anterieure');
-        $draftitemid_vue_laterale = file_get_submitted_draft_itemid('vue_laterale');
+        // Create Image Managers
+        $image_manager_anterieure = new image_manager('vue_anterieure');
+        $image_manager_laterale = new image_manager('vue_laterale');
+
+        // Get the names for the images
+        $vue_anterieure = $mform->get_new_filename('vue_anterieure');
+        $vue_laterale = $mform->get_new_filename('vue_laterale');
+
         
         if ($editing) {
             // Update existing entry
@@ -93,8 +63,17 @@ if ($mform->is_cancelled()) {
             $dataset->sigle = $data->sigle;
             $dataset->rotation = $data->rotation;
             $dataset->inclinaison = $data->inclinaison;
-            $record->vue_anterieure = $data->vue_anterieure;
-            $record->vue_laterale = $data->vue_laterale;
+            
+            // Upload new images
+            if (!empty($vue_anterieure)) {
+                $image_manager_anterieure->updateImageFromForm($editing, $mform, 'vue_anterieure');
+                $record->vue_anterieure = $mform->get_new_filename('vue_anterieure');
+            }
+            if (!empty($vue_laterale)) {
+                $image_manager_laterale->updateImageFromForm($editing, $mform, 'vue_laterale');
+                $record->vue_laterale = $mform->get_new_filename('vue_laterale');
+            }
+            
             $DB->update_record('hippotrack_datasets', $dataset);
         } else {
             // Insert new entry
@@ -103,9 +82,18 @@ if ($mform->is_cancelled()) {
             $record->sigle = $data->sigle;
             $record->rotation = $data->rotation;
             $record->inclinaison = $data->inclinaison;
-            $record->vue_anterieure = $data->vue_anterieure;
-            $record->vue_laterale = $data->vue_laterale;
+            $record->vue_anterieure = $mform->get_new_filename('vue_anterieure');
+            $record->vue_laterale = $mform->get_new_filename('vue_laterale');
             $newid = $DB->insert_record('hippotrack_datasets', $record);
+            
+            // Upload new images
+            if (!empty($vue_anterieure)) {
+                $image_manager_anterieure->addImageFromForm($newid, $mform, 'vue_anterieure');
+            }
+            if (!empty($vue_laterale)) {
+                $image_manager_laterale->addImageFromForm($newid, $mform,'vue_laterale');
+            }
+
         }
         
         // Redirect with success message

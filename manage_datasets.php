@@ -33,6 +33,15 @@ $showform = optional_param('addnew', 0, PARAM_BOOL); // Add a new entry
 // 📌 Handle Deletion
 if ($deleting && confirm_sesskey()) {
     try {
+        // Delete images 
+        $image_manager_anterieure = new image_manager('vue_anterieure');
+        $image_manager_laterale = new image_manager('vue_laterale');
+
+        $dataset = $DB->get_record('hippotrack_datasets', array('id' => $deleting), '*', MUST_EXIST);
+
+        $image_manager_anterieure->delete_image($dataset->id, $dataset->vue_anterieure);
+        $image_manager_laterale->delete_image($dataset->id, $dataset->vue_laterale);
+
         $DB->delete_records('hippotrack_datasets', array('id' => $deleting));
         redirect(
             new moodle_url('/mod/hippotrack/manage_datasets.php', array('cmid' => $cmid)),
@@ -142,19 +151,6 @@ function render_datasets_table($datasets, $context, $cmid, $OUTPUT) {
         $table_html .= html_writer::end_tag('tr');
     }
     $table_html .= html_writer::end_tag('tbody') . html_writer::end_tag('table');
-
-    // // Add lightbox CSS/JS if any images exist
-    // if (!empty($anterieure_url) || !empty($laterale_url)) {
-    //     $table_html .= html_writer::tag('img', '', array(
-    //         'src' => $anterieure_url,
-    //         'rel' => 'stylesheet'
-    //     ));
-
-    //     $table_html .= html_writer::tag('img', '', array(
-    //         'src' => $laterale_url,
-    //         'rel' => 'stylesheet'
-    //     ));
-    // }
 
     return $table_html;
 }
