@@ -189,7 +189,7 @@ function mod_hippotrack_pluginfile(
 
     $file = $image_manager->getImageFile($itemid, $filename);
     if (!$file) {
-        throw new moodle_exception('filenotfound' . " | " . $filepath . " | " . $filearea , 'error', '', $filename);
+        throw new moodle_exception("Le fichier est introuvable !" . " -- " . $filepath . " -- " . $filearea , 'error', '', $filename);
         // The file does not exist.
         return false;
     }
