@@ -25,22 +25,31 @@
 
 defined('MOODLE_INTERNAL') || die();
 
+use mod_hippotrack\image_manager;
+
 /**
  * Function executed when the plugin is installed.
  */
 function xmldb_hippotrack_install() {
     global $DB, $CFG;
+    
+    // Initialize image managers for both views
+    $image_manager_anterieure = new image_manager(
+        'vue_anterieure'
+    );
+    
+    $image_manager_laterale = new image_manager(
+        'vue_laterale'
+    );
 
-    // 📌 Chemin du fichier CSV contenant les ensembles de données
+    // CSV file path
     $csv_file = $CFG->dirroot . '/mod/hippotrack/datasets.csv';
 
-    // 📌 Vérifier si le fichier existe
     if (!file_exists($csv_file)) {
         debugging('⚠️ Fichier CSV introuvable : ' . $csv_file, DEBUG_DEVELOPER);
         return true;
     }
 
-    // 📌 Ouvrir le fichier CSV
     $handle = fopen($csv_file, 'r');
     if (!$handle) {
         debugging('⚠️ Impossible d’ouvrir le fichier CSV.', DEBUG_DEVELOPER);
@@ -48,26 +57,23 @@ function xmldb_hippotrack_install() {
     }
 
     $line_number = 0;
-    while (($data = fgetcsv($handle, 1000, ",")) !== FALSE) {  
+    while (($data = fgetcsv($handle, 1000, ",")) !== FALSE) {
         $line_number++;
-        if ($line_number == 1) {
-            continue; // Ignorer l'en-tête
-        }
+        if ($line_number == 1) continue;
 
-        // 📌 Vérifier que toutes les colonnes sont bien présentes
-        if (count($data) < 5) {  // ⚠️ Suppression de `schema_simplifie`, donc 5 colonnes au lieu de 6
+        if (count($data) < 5) {
             debugging("⚠️ Ligne $line_number mal formatée dans le CSV.", DEBUG_DEVELOPER);
             continue;
         }
 
-        // 📌 Assignation correcte des valeurs
+        // Data parsing
         $name = trim($data[0]);
         $sigle = trim($data[1]);
         $partogramme = trim($data[2]);
-        $vue_anterieure = trim($data[3]);
-        $vue_laterale = trim($data[4]);
+        $nom_vue_anterieure = trim($data[3]);
+        $nom_vue_laterale = trim($data[4]);
 
-        // 📌 Séparer la rotation et l’inclinaison
+        // Handle rotation/inclination
         if (strpos($partogramme, ';') !== false) {
             list($rotation, $inclinaison) = explode(';', $partogramme);
         } else {
@@ -75,21 +81,31 @@ function xmldb_hippotrack_install() {
             $inclinaison = 0;
         }
 
-        // 📌 Préparer l'objet à insérer en base
+        // Create database record
         $record = new stdClass();
         $record->name = $name;
         $record->sigle = $sigle;
         $record->rotation = (int) $rotation;
         $record->inclinaison = (int) $inclinaison;
-        $record->vue_anterieure = $vue_anterieure;
-        $record->vue_laterale = $vue_laterale;
+        $record->vue_anterieure = $nom_vue_anterieure;
+        $record->vue_laterale = $nom_vue_laterale;
+
 
         // 📌 Insérer en base
-        $DB->insert_record('hippotrack_datasets', $record);
+        $new_id = $DB->insert_record('hippotrack_datasets', $record);
+
+        // Upload anterior view image
+        if (!empty($nom_vue_anterieure)) {
+            $image_manager_anterieure->upload_pix_image($new_id,$nom_vue_anterieure);
+        }
+
+        // Upload lateral view image
+        if (!empty($nom_vue_laterale)) {
+            $image_manager_laterale->upload_pix_image($new_id,$nom_vue_laterale);
+        }
     }
 
     fclose($handle);
-
-    debugging('✅ Importation des données initiales terminée avec succès.', DEBUG_DEVELOPER);
+    debugging('✅ Importation des données et images terminée avec succès.', DEBUG_DEVELOPER);
     return true;
 }
