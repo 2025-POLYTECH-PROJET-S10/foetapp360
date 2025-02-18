@@ -27,28 +27,12 @@ $(document).ready(function () {
         let rotationContainer = $(this);
         let container = rotationContainer.find(".container");
 
-        if (!container.length) {
-            console.error("❌ No .container found inside .rotation-container!", rotationContainer);
-            return;
-        }
+        if (!container.length) return;
 
         let schemaType = container.data("schema-type");
-        if (!schemaType) {
-            console.error("❌ No schema-type found in container", container);
-            return;
-        }
-
-        console.log("✅ Found container for schema:", schemaType);
 
         let targetInteriorImage = container.find("." + schemaType + "_interior");
         let targetContourImage = container.find("." + schemaType + "_contour");
-
-        if (!targetInteriorImage.length || !targetContourImage.length) {
-            console.error("❌ No interior or contour image found for schema type:", schemaType);
-            return;
-        }
-
-        console.log("✅ Found images:", targetInteriorImage, targetContourImage);
 
         let rotateSlider = rotationContainer.find(".rotate-slider");
         let moveSlider = rotationContainer.find(".move-axis-slider");
@@ -56,42 +40,66 @@ $(document).ready(function () {
         let rotationAngle = 0;
         let translateDistance = 0;
 
-        // ✅ Set transform-origin to ensure correct rotation pivot
-        targetInteriorImage.css("transform-origin", "center center");
-        targetContourImage.css("transform-origin", "center center");
-
         function updateTransform() {
-            let radian = (rotationAngle * Math.PI) / 180; // Convert degrees to radians
+            let radian = (rotationAngle * Math.PI) / 180;
             let xOffset = translateDistance * Math.sin(radian);
             let yOffset = -translateDistance * Math.cos(radian);
 
-            console.log(`🔄 Rotating: ${rotationAngle}° | ↔ Moving: ${translateDistance}px (X: ${xOffset}, Y: ${yOffset})`);
-
-            // ✅ Apply correct transformations
-            let transformString = `translate(${xOffset}px, ${yOffset}px) rotate(${rotationAngle}deg)`;
-
-            // Apply the transformations
-            targetInteriorImage.css("transform", transformString);
+            targetInteriorImage.css("transform", `translate(${xOffset}px, ${yOffset}px) rotate(${rotationAngle}deg)`);
             targetContourImage.css("transform", `rotate(${rotationAngle}deg)`);
         }
 
-        // Rotation slider event
         rotateSlider.on("input", function () {
             rotationAngle = parseInt($(this).val(), 10);
             updateTransform();
         });
 
-        // Move axis slider event (Inclinaison)
         moveSlider.on("input", function () {
             translateDistance = parseInt($(this).val(), 10);
             updateTransform();
-
-            // ✅ Update the hidden field to send inclination value
-            let inclinationField = rotationContainer.find('input[name="inclinaison_' + schemaType + '"]');
-            if (inclinationField.length) {
-                inclinationField.val(translateDistance);
-            }
         });
-
     });
+
+    $(document).ready(function () {
+        $(".image-cycling-container").each(function () {
+            let container = $(this);
+            let fullPrefix = container.data("prefix"); // e.g., "bb_vue_ante_bf"
+            let cyclingImage = container.find(".cycling-image");
+            let hiddenInput = container.find(".selected-position");
+
+            let currentPosition = parseInt(cyclingImage.data("current"), 10);
+            let variation = fullPrefix.includes("_bf") ? "bf" : "mf"; // Detect initial variation
+            let basePrefix = fullPrefix.replace(/_(bf_|mf_)$/, ""); // Remove bf/mf to get the base part
+
+            function updateImage() {
+                let imagePath = `/mod/hippotrack/pix/${basePrefix}_${variation}_${currentPosition}.png`;
+                cyclingImage.attr("src", imagePath);
+                hiddenInput.val(`${basePrefix}_${variation}_${currentPosition}`);
+            }
+
+            let max_image = 8;
+            let min_image = 1;
+
+            // ⬅️ Previous Button
+            container.find(".prev-btn").on("click", function () {
+                currentPosition = currentPosition > min_image ? currentPosition - 1 : max_image;
+                updateImage();
+            });
+
+            // ➡️ Next Button
+            container.find(".next-btn").on("click", function () {
+                currentPosition = currentPosition < max_image ? currentPosition + 1 : min_image;
+                updateImage();
+            });
+
+            // 🔄 Toggle bf/mf
+            container.find(".toggle-btn").on("click", function () {
+                variation = (variation === "bf") ? "mf" : "bf"; // Toggle bf <-> mf
+                updateImage();
+            });
+        });
+    });
+
+
+
 });

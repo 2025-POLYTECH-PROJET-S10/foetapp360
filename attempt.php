@@ -232,34 +232,52 @@ foreach ($possible_inputs as $field) {
         $background_image = ($field === 'partogramme') ? 'bassin' : 'null';
         $contour_class = ($field === 'partogramme') ? 'partogramme_contour' : 'simplified_schematic_contour';
 
-        echo '<div class="rotation-container">'; // New div wrapper
-
+        echo '<div class="rotation-container">';
         echo '<div class="container" data-schema-type="' . $field . '">';
+
         if ($background_image !== 'null') {
             echo '<img class="' . $background_image . '" src="' . new moodle_url('/mod/hippotrack/pix/' . $background_image . '.png') . '">';
         }
+
         echo '<img class="' . $contour_class . '" src="' . new moodle_url('/mod/hippotrack/pix/' . $contour_class . '.png') . '">';
         echo '<img class="' . $interior_image . '" src="' . new moodle_url('/mod/hippotrack/pix/' . $interior_image . '.png') . '">';
         echo '</div>';  // Close .container
 
-        // Sliders inside the new div
+        // Rotation & Inclination Sliders
         echo '<label for="rotate-slider">Rotation:</label>';
         echo '<input type="range" class="rotate-slider" name="rotation_' . $field . '" min="0" max="360" value="0"><br>';
 
         echo '<label for="move-axis-slider">Inclinaison:</label>';
         echo '<input type="range" class="move-axis-slider" name="inclinaison_' . $field . '" min="-50" max="50" value="0"><br>';
 
-
         echo '</div>';  // Close .rotation-container
+    }
+
+    // 🆕 NEW: Vue Antérieure & Vue Latérale Image Cycling
+    elseif ($field === 'vue_anterieure' || $field === 'vue_laterale') {
+        echo html_writer::tag('h4', $label);
+
+        $prefix = ($field === 'vue_anterieure') ? 'bb_vue_ante_bf_' : 'bb_vue_lat_bf_';
+        $image_path = new moodle_url('/mod/hippotrack/pix/' . $prefix . '1.png');
+
+        echo '<div class="image-cycling-container" data-schema-type="' . $field . '" data-prefix="' . $prefix . '">';
+        echo '<img class="background-image" src="' . new moodle_url('/mod/hippotrack/pix/partogramme_contour.png') . '">'; // Placeholder background
+        echo '<button type="button" class="prev-btn">←</button>';
+        echo '<img class="cycling-image" src="' . new moodle_url('/mod/hippotrack/pix/' . $prefix . '1.png') . '" data-current="1">';
+        echo '<button type="button" class="next-btn">→</button>';
+        echo '<button type="button" class="toggle-btn">🔄 Toggle bf/mf</button>'; // 🆕 Toggle button
+        echo '<input type="hidden" class="selected-position" name="' . $field . '" value="' . $prefix . '_1">';
+        echo '</div>';
 
 
 
-
+        // Hidden input to store selected position
+        echo '<input type="hidden" name="' . $field . '" class="selected-position" value="1">';
     } else {
         echo html_writer::tag('label', $label, array('for' => $field));
         echo html_writer::empty_tag('input', array(
             'type' => 'text',
-            'name' => $field, // ✅ Ensure the correct name is included
+            'name' => $field,
             'id' => $field,
             'value' => $is_given_input ? $pre_filled_value : '',
             'required' => true,
@@ -268,6 +286,7 @@ foreach ($possible_inputs as $field) {
         echo "<br>";
     }
 }
+
 
 // 📌 Hidden field to debug missing parameters
 echo '<input type="hidden" name="debug_submission" value="1">';
