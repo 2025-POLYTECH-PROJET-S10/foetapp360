@@ -2,6 +2,8 @@
 require(__DIR__ . '/../../config.php');
 require_once(__DIR__ . '/lib.php');
 
+global $USER, $DB;
+
 $id = required_param('id', PARAM_INT); // Course module ID
 
 $cm = get_coursemodule_from_id('hippotrack', $id, 0, false, MUST_EXIST);
@@ -57,17 +59,27 @@ if ($is_student) {
     echo html_writer::start_div('hippotrack-student-options');
 
     // 🔍 Vérification des essais
-    $existing_attempts = $DB->count_records('hippotrack_training_sessions', array('userid' => $USER->id, 'instanceid' => $moduleinstance->id));
+    //$existing_attempts = $DB->count_records('hippotrack_session', array('userid' => $USER->id, 'instanceid' => $moduleinstance->id));
     $history_url = new moodle_url('/mod/hippotrack/history.php', array('id' => $id));
 
+    /*
     if (page_exists('history.php')) {
         echo $OUTPUT->single_button($history_url, '📜 Voir les anciennes tentatives', 'get');
     } else {
         echo html_writer::tag('button', '📜 Voir les anciennes tentatives (Bientôt dispo)', array('disabled' => 'disabled', 'class' => 'btn btn-secondary'));
-    }
+    }*/
 
     // ▶️ Lancer une session d'exercice
-    $attempt_url = new moodle_url('/mod/hippotrack/attempt.php', array('id' => $id));
+    // Vérifier si une session existe pour cet utilisateur et cet id_hippotrack
+    $existingSession = $DB->get_record_sql(
+        "SELECT MAX(id) as maxid FROM {hippotrack_session} WHERE id_hippotrack = ? AND userid = ?",
+        [$id, $USER->id]
+    );
+
+    // Définir le nouvel ID
+    $session_id = ($existingSession && $existingSession->maxid !== null) ? $existingSession->maxid + 1 : 1;
+
+    $attempt_url = new moodle_url('/mod/hippotrack/attempt.php', array('id' => $id, 'session_id' => $session_id));
     if (page_exists('attempt.php')) {
         echo $OUTPUT->single_button($attempt_url, '🚀 Lancer une session d\'exercice', 'get');
     } else {
