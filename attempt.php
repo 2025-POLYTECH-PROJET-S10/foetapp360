@@ -45,19 +45,23 @@ $PAGE->set_url('/mod/hippotrack/attempt.php', array('id' => $id));
 $PAGE->set_title("Session d'entraînement");
 $PAGE->set_heading("Session d'entraînement");
 
-
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['validate'])) {
     foreach ($_POST as $key => $value) {
+        // Check if the key contains 'rotation_' to match the field for the selected image
         if (strpos($key, 'rotation_') === 0) {
-            $field = str_replace('rotation_', '', $key);
+            $field = str_replace('rotation_', '', $key); // Extract the field name
             $rotation = intval($value);
             $inclinaison = optional_param("inclinaison_$field", 0, PARAM_INT);
 
             // Debugging
             error_log("Processing: $field | Rotation: $rotation | Inclinaison: $inclinaison");
+
+
         }
     }
 }
+
+
 
 
 
@@ -161,6 +165,11 @@ if ($submitted) {
             $student_answer = required_param($field, PARAM_RAW);
             $correct_answer = $random_entry->$field;
 
+            // Debugging: Log the values
+            echo ("Field: $field");
+            echo ("Student Answer: $student_answer");
+            echo ("Correct Answer: $correct_answer");
+
             if ($student_answer != $correct_answer) {
                 $is_correct = false;
                 $feedback = "Oops, certaines réponses sont incorrectes. Vérifiez et essayez encore !";
@@ -168,6 +177,8 @@ if ($submitted) {
 
             echo html_writer::tag('p', "<strong>$field :</strong> Votre réponse : $student_answer | Réponse correcte : $correct_answer");
         }
+
+
 
 
 
@@ -251,23 +262,35 @@ foreach ($possible_inputs as $field) {
         echo '<input type="range" class="move-axis-slider" name="inclinaison_' . $field . '" min="-50" max="50" value="0"><br>';
 
         echo '</div>';  // Close .rotation-container
-    }
-
-    // 🆕 NEW: Vue Antérieure & Vue Latérale Image Cycling
-    elseif ($field === 'vue_anterieure' || $field === 'vue_laterale') {
+    } elseif ($field === 'vue_anterieure' || $field === 'vue_laterale') {
         echo html_writer::tag('h4', $label);
 
         $prefix = ($field === 'vue_anterieure') ? 'bb_vue_ante_bf_' : 'bb_vue_lat_bf_';
         $image_path = new moodle_url('/mod/hippotrack/pix/' . $prefix . '1.png');
 
+        // **🆕 Select Background Image Based on $field**
+        $background_image = ($field === 'vue_anterieure') ? 'bassin_anterieur.png' : 'bassin_laterale.png';
+
         echo '<div class="image-cycling-container" data-schema-type="' . $field . '" data-prefix="' . $prefix . '">';
-        echo '<img class="background-image" src="' . new moodle_url('/mod/hippotrack/pix/partogramme_contour.png') . '">'; // Placeholder background
-        echo '<button type="button" class="prev-btn">←</button>';
+
+        echo '<div class="container">';
+        // 🆕 Dynamically set background image
+        echo '<img class="background-image" src="' . new moodle_url('/mod/hippotrack/pix/' . $background_image) . '">';
         echo '<img class="cycling-image" src="' . new moodle_url('/mod/hippotrack/pix/' . $prefix . '1.png') . '" data-current="1">';
-        echo '<button type="button" class="next-btn">→</button>';
-        echo '<button type="button" class="toggle-btn">🔄 Toggle bf/mf</button>'; // 🆕 Toggle button
-        echo '<input type="hidden" class="selected-position" name="' . $field . '" value="' . $prefix . '_1">';
         echo '</div>';
+
+        echo '<div class="container button-container">';
+        echo '<button type="button" class="prev-btn">←</button>';
+        echo '<button type="button" class="next-btn">→</button>';
+        echo '<button type="button" class="toggle-btn">🔄 Toggle bf/mf</button>'; // Toggle button
+        echo '<input type="hidden" class="selected-position" name="rotation_' . $field . '" value="' . $prefix . '_1">';
+        echo '</div>';
+
+        echo '</div>';
+
+
+
+
 
 
 

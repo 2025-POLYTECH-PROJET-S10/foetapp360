@@ -42,70 +42,51 @@
     z-index: 2;
 }
 
-
 .image-cycling-container {
+    min-height: 200px;
+    max-height: 400px;
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
     position: relative;
     width: 100%;
-    /* Ensure the container takes full width */
-    height: 300px;
-    /* Set fixed height */
-    margin-bottom: 20px;
-    /* Space between image cycling containers */
-}
-
-.image-cycling-container {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    position: relative;
-    width: 100%;
-    /* Ensure the container takes full width */
-    height: 300px;
-    /* Set fixed height */
-    margin-bottom: 20px;
-    /* Space between image cycling containers */
-}
-
-.background-image,
-.cycling-image {
-    position: absolute;
-    /* Stack on top of each other */
-    top: 0;
-    left: 0;
-    width: 100%;
-    /* Ensure they take the full container width */
-    height: 100%;
-    /* Ensure they maintain the aspect ratio */
-    object-fit: contain;
-    /* Ensure images maintain their aspect ratio */
-}
-
-.cycling-image {
-    z-index: 2;
-    /* Image in front */
+    /* Ensure container width is flexible */
 }
 
 .background-image {
+
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: auto;
     z-index: 1;
-    /* Background image */
+    /* Make sure background image stays behind the cycling image */
 }
 
+.cycling-image {
+    height: 80%;
+    max-width: 100%;
+    max-height: 150px;
+    /*I can't fix the height to be in %*/
+    z-index: 2;
+    object-fit: contain;
+    /* Ensures the image scales correctly */
+}
+
+
 .prev-btn,
-.next-btn,
-.toggle-btn {
+.next-btn {
     background: #ddd;
     border: none;
     font-size: 20px;
     padding: 5px 10px;
     cursor: pointer;
     position: absolute;
-    bottom: 10px;
-    /* Place buttons at the bottom */
+    top: 50%;
+    transform: translateY(-50%);
     z-index: 3;
-    /* Ensure buttons are clickable */
 }
 
 .prev-btn {
@@ -114,4 +95,35 @@
 
 .next-btn {
     right: 10px;
+}
+
+.toggle-btn {
+    background: #ddd;
+    border: none;
+    font-size: 20px;
+    padding: 5px 10px;
+    cursor: pointer;
+    position: absolute;
+    bottom: 10px;
+    /* Position it at the bottom of the container */
+    z-index: 3;
+}
+
+.selected-position {
+    display: none;
+    /* Hide the hidden input field */
+}
+
+.background-image {
+    height: 100%;
+    width: auto;
+    left: 50%;
+    transform: translateX(-50%);
+
+    /* transform: translate(-50%, -50%); */
+    /* Centers both horizontally and vertically */
+}
+
+.button-container {
+    height: 100px;
 }

@@ -73,8 +73,9 @@ $(document).ready(function () {
 
             function updateImage() {
                 let imagePath = `/mod/hippotrack/pix/${basePrefix}_${variation}_${currentPosition}.png`;
-                cyclingImage.attr("src", imagePath);
-                hiddenInput.val(`${basePrefix}_${variation}_${currentPosition}`);
+                cyclingImage.attr("src", imagePath); // Update the displayed image
+                let imageName = `${basePrefix}_${variation}_${currentPosition}`;
+                hiddenInput.val(imageName); // Update the hidden input field
             }
 
             let max_image = 8;
@@ -99,6 +100,7 @@ $(document).ready(function () {
             });
         });
     });
+
 
 
 
