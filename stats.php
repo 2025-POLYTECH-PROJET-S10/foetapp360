@@ -20,20 +20,42 @@ $PAGE->set_heading("Statistiques des exercices");
 
 echo $OUTPUT->header();
 
-// 📌 Récupérer les statistiques des tentatives
-$stats = $DB->get_records_sql("
-    SELECT a.input_type, COUNT(a.id) as attempts, 
-           SUM(a.is_correct) as correct, 
-           ROUND(AVG(s.timespent), 2) as avg_time
-    FROM {hippotrack_attempts} a
-    JOIN {hippotrack_training_sessions} s ON a.sessionid = s.id
-    WHERE s.instanceid = ?
-    GROUP BY a.input_type
-    ORDER BY attempts DESC", array($instance->id));
+// 🔍 Check if user is a teacher/admin
+$is_teacher = has_capability('mod/hippotrack:manage', $context);
 
-echo html_writer::tag('h2', "Difficulté des exercices par type d'input");
+// 📌 SQL Query: Different for Teachers vs. Students
+if ($is_teacher) {
+    // 🎓 Teacher: View Stats for All Students
+    $stats = $DB->get_records_sql("
+        SELECT a.input_type, COUNT(a.id) as attempts, 
+               SUM(a.is_correct) as correct, 
+               ROUND(AVG(s.timespent), 2) as avg_time
+        FROM {hippotrack_attempt} a
+        JOIN {hippotrack_sessions} s ON a.id_session = s.id
+        WHERE s.instanceid = ?
+        GROUP BY a.input_type
+        ORDER BY attempts DESC", array($instance->id));
+} else {
+    // 🧑‍🎓 Student: View Only Their Own Stats
+    $stats = $DB->get_records_sql("
+        SELECT a.input_type, COUNT(a.id) as attempts, 
+               SUM(a.is_correct) as correct, 
+               ROUND(AVG(s.timespent), 2) as avg_time
+        FROM {hippotrack_attempt} a
+        JOIN {hippotrack_training_sessions} s ON a.sessionid = s.id
+        WHERE s.instanceid = ? AND s.userid = ?
+        GROUP BY a.input_type
+        ORDER BY attempts DESC", array($instance->id, $userid));
+}
 
-// 📌 Affichage des stats sous forme de tableau
+// 🎯 Display Role-Specific Titles
+if ($is_teacher) {
+    echo html_writer::tag('h2', "Statistiques globales des exercices");
+} else {
+    echo html_writer::tag('h2', "Vos statistiques personnelles");
+}
+
+// 📌 Display Table of Statistics
 echo html_writer::start_tag('table', array('class' => 'table table-bordered', 'style' => 'width:100%; text-align:center;'));
 echo html_writer::start_tag('thead');
 echo html_writer::start_tag('tr');
@@ -60,7 +82,7 @@ foreach ($stats as $stat) {
 echo html_writer::end_tag('tbody');
 echo html_writer::end_tag('table');
 
-// 🔙 Bouton retour vers `view.php`
+// 🔙 Back Button
 $back_url = new moodle_url('/mod/hippotrack/view.php', array('id' => $id));
 echo $OUTPUT->single_button($back_url, 'Retour', 'get');
 
