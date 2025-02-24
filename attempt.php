@@ -172,6 +172,7 @@ if ($submitted) {
         // Ajouter la réponse de l'utilisateur au dernier enregistrement
         $_SESSION['hippotrack_session_' . $session_id]['attempts'][$last_index][$field] = $student_answer;
     }
+    $_SESSION['hippotrack_session_' . $session_id]['attempts'][$last_index]['given_input'] = $_POST['input'];
 
     // Sauvegarde la réponse actuelle
     $student_data = array_filter($_POST, function ($key) {
@@ -265,7 +266,7 @@ else {
             echo '<button type="button" class="hippotrack_attempt_prev-btn">←</button>';
             echo '<button type="button" class="hippotrack_attempt_next-btn">→</button>';
             echo '<button type="button" class="hippotrack_attempt_toggle_btn">🔄 Toggle bf/mf</button>'; // Toggle button
-            echo '<input type="hidden" class="hippotrack_attempt_selected_position" name="rotation_' . $field . '" value="' . ($is_given_input ? ($random_dataset->$random_input) : $prefix ) . '">';
+            echo '<input type="hidden" class="hippotrack_attempt_selected_position" name="' . $field . '" value="' . ($is_given_input ? ($random_dataset->$random_input) : $prefix ) . '">';
             echo '</div>';
 
             echo '</div>';

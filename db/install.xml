@@ -68,6 +68,7 @@
         <FIELD NAME="schema_simplifie" TYPE="text" NOTNULL="false" COMMENT="Réponse de l'étudiant: inclinaison et rotation du schema simplifie"/>
         <FIELD NAME="vue_anterieure" TYPE="char" LENGTH="255" NOTNULL="true" COMMENT="Nom du fichier image de la vue antérieure"/>
         <FIELD NAME="vue_laterale" TYPE="char" LENGTH="255" NOTNULL="true" COMMENT="Nom du fichier image de la vue latérale"/>
+        <FIELD NAME="given_input" TYPE="char" LENGTH="255" NOTNULL="true" COMMENT="name/sigle/partogram/schema_simplifie/vue_anterieur/vue_laterale"/>
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id,id_session"/>

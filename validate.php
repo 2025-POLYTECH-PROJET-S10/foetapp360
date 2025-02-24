@@ -34,17 +34,18 @@ foreach ($_SESSION['hippotrack_session_' . $session_id]['attempts'] as $response
     $record->name = $response['name'];
     $record->sigle = $response['sigle'];
     $record->partogram = $response['partogramme'];
-    $record->schema_simplifie = $response['schema_simplifie']; //TODO a mettre a jour
+    $record->schema_simplifie = $response['schema_simplifie'];
     if (isset($response['vue_anterieure'])) {
         $record->vue_anterieure = $response['vue_anterieure'];
     } else {
         $record->vue_anterieure = "";
     }
     if (isset($response['vue_laterale'])) {
-        $record->vue_anterieure = $response['vue_laterale'];
+        $record->vue_laterale = $response['vue_laterale'];
     } else {
-        $record->vue_anterieure = "";
+        $record->vue_laterale = "";
     }
+    $record->given_input = $response['given_input'];
     $DB->insert_record('hippotrack_attempt', $record);
     $attempt_number++;
 }
