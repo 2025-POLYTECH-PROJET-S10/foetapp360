@@ -93,7 +93,6 @@ $possible_inputs = ($difficulty === 'easy') ?
 if ($submitted) {
     echo html_writer::tag('h3', "Correction :");
     $is_correct = true;
-    $feedback = "Bravo ! Toutes les réponses sont correctes.";
     $dataset = $DB->get_record_sql("SELECT * FROM {hippotrack_datasets} WHERE id = :dataset_id", array('dataset_id' => $_POST['dataset_id']));
 
     foreach ($possible_inputs as $field) {
@@ -108,24 +107,33 @@ if ($submitted) {
             // Vérification des deux valeurs ensemble
             if ($student_inclinaison != $correct_inclinaison || $student_rotation != $correct_rotation) {
                 $is_correct = false;
-                $feedback = "Oops, certaines réponses sont incorrectes. Vérifiez et essayez encore !";
             }
-
-            echo html_writer::tag('p', "<strong>$field :</strong> Votre inclinaison : $student_inclinaison | Rotation : $student_rotation <br> Réponse correcte : Inclinaison $correct_inclinaison | Rotation $correct_rotation");
-        } else {
+            echo html_writer::tag('p', "<strong>$field :</strong> Votre inclinaison : $student_inclinaison | Rotation : $student_rotation <br>");
+        } 
+        else {
             // 🔥 Cas normal (name, sigle, vue_anterieure, vue_laterale)
             $student_answer = required_param($field, PARAM_RAW);
             $correct_answer = $dataset->$field;
         
             if ($student_answer != $correct_answer) {
                 $is_correct = false;
-                $feedback = "Oops, certaines réponses sont incorrectes. Vérifiez et essayez encore !";
             }
-
-            echo html_writer::tag('p', "<strong>$field :</strong> Votre réponse : $student_answer | Réponse correcte : $correct_answer");
+            echo html_writer::tag('p', "<strong>$field :</strong> Votre réponse : $student_answer");
         }
+
+        $feedback_data_id = $DB->get_record_sql(
+            "SELECT id_feedback_data FROM {hippotrack_feedback} 
+            WHERE input_dataset = :input_dataset 
+            AND expected_dataset = :expected_dataset",
+            array(
+                'input_dataset' => $_POST['input_dataset'], // Ajout du paramètre manquant
+                'expected_dataset' => $_POST['dataset_id']
+            )
+        );
+        $feedback_string = $DB->get_record_sql("SELECT id_feedback_data FROM {hippotrack_feedback} WHERE id = :id", array('id' => $feedback_data_id));
+        echo html_writer::tag('p', $feedback_string);
     }
-    echo html_writer::tag('p', $feedback, array('class' => $is_correct ? 'correct' : 'incorrect'));
+    echo html_writer::tag('p', array('class' => $is_correct ? 'correct' : 'incorrect'));
 
     // 📌 Enregistrer les réponses de l'étudiant dans la base de données
     // Vérifier si une tentative existe déjà, sinon l'initialiser
