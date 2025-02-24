@@ -183,7 +183,6 @@ if ($submitted) {
 else {
     $random_dataset = $DB->get_record_sql("SELECT * FROM {hippotrack_datasets} ORDER BY RAND() LIMIT 1"); // TODO A regarder pk random un peu bizarre
     $random_input = $possible_inputs[array_rand($possible_inputs)]; // get random input from dataset
-    $random_input_label = ucfirst(str_replace('_', ' ', $random_input));
 
     // Enregistre la difficulté dans la session.
     if (!isset($_SESSION['hippotrack_session_' . $session_id . '_difficulty'])) {
@@ -239,30 +238,27 @@ else {
             echo html_writer::tag('h4', $label);
     
             $prefix = ($field === 'vue_anterieure') ? 'bb_vue_ante_bf_' : 'bb_vue_lat_bf_';
-            $image_path = new moodle_url('/mod/hippotrack/pix/' . $prefix . '1.png');
-    
+            $image_path = new moodle_url('/mod/hippotrack/pix/' . ($is_given_input ? ($random_dataset->$random_input) : ($prefix . '1.png')));
+
             // **🆕 Select Background Image Based on $field**
             $background_image = ($field === 'vue_anterieure') ? 'bassin_anterieur.png' : 'bassin_laterale.png';
-    
+
             echo '<div class="image_cycling_hippotrack_container" data-schema-type="' . $field . '" data-prefix="' . $prefix . '">';
-    
+
             echo '<div class="hippotrack_container">';
             // 🆕 Dynamically set background image
             echo '<img class="hippotrack_background-image" src="' . new moodle_url('/mod/hippotrack/pix/' . $background_image) . '">';
-            echo '<img class="hippotrack_attempt_cycling-image" src="' . new moodle_url('/mod/hippotrack/pix/' . $prefix . '1.png') . '" data-current="1">';
+            echo '<img class="hippotrack_attempt_cycling-image" src="' . $image_path . '">';
             echo '</div>';
-    
+
             echo '<div class="hippotrack_container button-hippotrack_container">';
             echo '<button type="button" class="hippotrack_attempt_prev-btn">←</button>';
             echo '<button type="button" class="hippotrack_attempt_next-btn">→</button>';
             echo '<button type="button" class="hippotrack_attempt_toggle_btn">🔄 Toggle bf/mf</button>'; // Toggle button
-            echo '<input type="hidden" class="hippotrack_attempt_selected_position" name="rotation_' . $field . '" value="' . $prefix . '_1">';
+            echo '<input type="hidden" class="hippotrack_attempt_selected_position" name="rotation_' . $field . '" value="' . ($is_given_input ? ($random_dataset->$random_input) : $prefix ) . '">';
             echo '</div>';
-    
+
             echo '</div>';
-    
-            // Hidden input to store selected position
-            echo '<input type="hidden" name="' . $field . '" class="hippotrack_attempt_selected_position" value="1">';
         } else {
             echo html_writer::tag('label', $label, array('for' => $field));
             echo html_writer::empty_tag('input', array(

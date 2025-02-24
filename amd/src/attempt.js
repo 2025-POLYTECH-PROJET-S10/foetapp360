@@ -16,8 +16,9 @@ define(['jquery'], function($) {
                 let rotateSlider = rotationhippotrack_container.find(".rotate-slider");
                 let moveSlider = rotationhippotrack_container.find(".move-axis-slider");
 
-                let rotationAngle = 0;
-                let translateDistance = 0;
+                let rotationAngle = rotateSlider.val();
+                let translateDistance = moveSlider.val();
+                updateTransform();
 
                 /**
                  * Met à jour la transformation CSS des images.
