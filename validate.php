@@ -46,6 +46,7 @@ foreach ($_SESSION['hippotrack_session_' . $session_id]['attempts'] as $response
         $record->vue_laterale = "";
     }
     $record->given_input = $response['given_input'];
+    $record->is_correct = $response['is_correct'];
     $DB->insert_record('hippotrack_attempt', $record);
     $attempt_number++;
 }
