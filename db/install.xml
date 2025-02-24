@@ -46,7 +46,6 @@
         <FIELD NAME="timefinish" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="Time when the attempt was submitted. 0 if the attempt has not been submitted yet."/>
         <FIELD NAME="sumgrades" TYPE="number" LENGTH="10" NOTNULL="false" SEQUENCE="false" DECIMALS="5" COMMENT="Total marks for this attempt."/>
         <FIELD NAME="questionsdone" TYPE="number" LENGTH="10" NOTNULL="false" SEQUENCE="false" DECIMALS="5" COMMENT="Total questions responded for this attempt."/>
-        <FIELD NAME="gradednotificationsenttime" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" COMMENT="The timestamp when the 'graded' notification was sent."/>
         <FIELD NAME="difficulty" TYPE="text" NOTNULL="false" SEQUENCE="false" COMMENT="Easy of Hard"/>
       </FIELDS>
       <KEYS>
@@ -74,6 +73,29 @@
         <KEY NAME="primary" TYPE="primary" FIELDS="id,id_session"/>
         <KEY NAME="fk_id_session" TYPE="foreign" FIELDS="id_session" REFTABLE="hippotrack_session" REFFIELDS="id"/>
         <KEY NAME="fk_id_dataset" TYPE="foreign" FIELDS="id_dataset" REFTABLE="hippotrack_datasets" REFFIELDS="id"/>
+      </KEYS>
+    </TABLE>
+
+    <TABLE NAME="hippotrack_feedback" COMMENT="Stock les feedback à renvoyer pour un dataset">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" COMMENT="Standard Moodle primary key."/>
+        <FIELD NAME="input_dataset" TYPE="text" NOTNULL="false" COMMENT="Nom du dataset entrée par l'étudiant"/>
+        <FIELD NAME="expected_dataset" TYPE="text" NOTNULL="false" COMMENT="Nom du dataset entrée par l'étudiant"/>
+        <FIELD NAME="id_feedback" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="ID of the feedback data."/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+        <KEY NAME="fk_id_feedback" TYPE="foreign" FIELDS="id_feedback" REFTABLE="hippotrack_feedback_data" REFFIELDS="id"/>
+      </KEYS>
+    </TABLE>
+
+    <TABLE NAME="hippotrack_feedback_data" COMMENT="Stock les feedback à renvoyer pour un dataset">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" COMMENT="Standard Moodle primary key."/>
+        <FIELD NAME="feedback" TYPE="text" NOTNULL="false" COMMENT="Nom du dataset entrée par l'étudiant"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
       </KEYS>
     </TABLE>
   </TABLES>

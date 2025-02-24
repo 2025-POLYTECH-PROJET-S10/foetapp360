@@ -17,17 +17,16 @@ if (!isset($_SESSION['hippotrack_session_' . $session_id]) || empty($_SESSION['h
 $session = new stdClass();
 $session->id_hippotrack = $id;
 $session->userid = $USER->id;
-$session->timestart = $timefinish;
+$session->timestart = $_SESSION['hippotrack_session_' . $session_id]['_time_start'];
 $session->timefinish = $timefinish;
-$session->sumgrades = $_SESSION['hippotrack_session_' . $session_id . '_sumgrades'];
-$session->questionsdone = $_SESSION['hippotrack_session_' . $session_id . '_questionsdone'];
-$session->gradednotificationsenttime = $timefinish;
-$session->difficulty = $_SESSION['hippotrack_session_' . $session_id . '_difficulty'];
+$session->sumgrades = $_SESSION['hippotrack_session_' . $session_id]['_sumgrades'];
+$session->questionsdone = $_SESSION['hippotrack_session_' . $session_id]['_questionsdone'];
+$session->difficulty = $_SESSION['hippotrack_session_' . $session_id]['_difficulty'];
 $DB->insert_record('hippotrack_session', $session);
 
 // Sauvegarde en base de données des tentatives
 $attempt_number = 0;
-foreach ($_SESSION['hippotrack_session_' . $session_id] as $response) {
+foreach ($_SESSION['hippotrack_session_' . $session_id]['attempts'] as $response) {
     $record = new stdClass();
     $record->id_session = $session_id;
     $record->id_dataset = $response['id_dataset'];
@@ -52,9 +51,6 @@ foreach ($_SESSION['hippotrack_session_' . $session_id] as $response) {
 
 // Supprimer la session après enregistrement
 unset($_SESSION['hippotrack_session_' . $session_id]);
-unset($_SESSION['hippotrack_session_' . $session_id . '_sumgrades']);
-unset($_SESSION['hippotrack_session_' . $session_id . '_questionsdone']);
-unset($_SESSION['hippotrack_session_' . $session_id . '_difficulty']);
 
 // Rediriger vers la page de fin de quiz
 $finish_url = new moodle_url('/mod/hippotrack/view.php', array('id' => $id));
