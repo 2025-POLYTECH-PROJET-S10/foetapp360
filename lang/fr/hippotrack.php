@@ -33,3 +33,11 @@ $string['modulenameplural'] = 'Hippotrack';
 $string['pluginadministration'] = 'hippotrack Administration';
 $string['hippotrack:hostquizz'] = 'hippotrack  Hôte du Quizz';
 $string['hippotrack:addinstance'] = 'hippotrack Ajouter une instance';
+
+// Chaînes ajoutées pour les statistiques
+$string['stats'] = 'Statistiques';
+$string['globalstats'] = 'Statistiques globales';
+$string['studentstats'] = 'Statistiques de l\'étudiant';
+$string['selectstudent'] = 'Sélectionner un étudiant';
+$string['mystats'] = 'Mes statistiques';
+$string['success'] = 'Succès';

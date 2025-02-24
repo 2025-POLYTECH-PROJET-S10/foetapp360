@@ -71,7 +71,7 @@
         <FIELD NAME="schema_simplifie" TYPE="text" NOTNULL="false" COMMENT="Réponse de l'étudiant: inclinaison et rotation du schema simplifie"/>
         <FIELD NAME="vue_anterieure" TYPE="char" LENGTH="255" NOTNULL="true" COMMENT="Nom du fichier image de la vue antérieure"/>
         <FIELD NAME="vue_laterale" TYPE="char" LENGTH="255" NOTNULL="true" COMMENT="Nom du fichier image de la vue latérale"/>
-        <FIELD NAME='success' TYPE='int' LENGTH='1' NOTNULL='true' DEFAULT='0' COMMENT='1 if the attempt is successful, 0 otherwise'/>
+        <FIELD NAME='success' TYPE='int' LENGTH='1' NOTNULL='true' DEFAULT='1' COMMENT='1 if the attempt is successful, 0 otherwise'/>
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id,id_session"/>

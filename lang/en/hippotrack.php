@@ -31,3 +31,12 @@ $string['modulenameplural'] = 'Hippotrack';
 $string['pluginadministration'] = 'hippotrack Administration';
 $string['hippotrack:hostquizz'] = 'hippotrack HostQuizz';
 $string['hippotrack:addinstance'] = 'hippotrack Add Instance';
+
+
+// For Stats
+$string['stats'] = 'Statistics';
+$string['globalstats'] = 'Global statistics';
+$string['studentstats'] = 'Student statistics';
+$string['selectstudent'] = 'Select a student';
+$string['mystats'] = 'My statistics';
+$string['success'] = 'Success';

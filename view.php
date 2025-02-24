@@ -69,6 +69,15 @@ if ($is_student) {
         echo html_writer::tag('button', '📜 Voir les anciennes tentatives (Bientôt dispo)', array('disabled' => 'disabled', 'class' => 'btn btn-secondary'));
     }*/
 
+    // 📊 Voir les statistiques
+    $stats_url = new moodle_url('/mod/hippotrack/mystats.php', array('id' => $id));
+    if (page_exists('stats.php')) {
+        echo $OUTPUT->single_button($stats_url, '📊 Voir les statistiques', 'get');
+    } else {
+        echo html_writer::tag('button', '📊 Voir les statistiques (Bientôt dispo)', array('disabled' => 'disabled', 'class' => 'btn btn-secondary'));
+    }
+
+
     // ▶️ Lancer une session d'exercice
     // Vérifier si une session existe pour cet utilisateur et cet id_hippotrack
     $existingSession = $DB->get_record_sql(
