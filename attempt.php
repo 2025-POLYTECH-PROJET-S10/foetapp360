@@ -173,7 +173,7 @@ if ($submitted) {
         $_SESSION['hippotrack_session_' . $session_id]['attempts'][$last_index][$field] = $student_answer;
     }
     $_SESSION['hippotrack_session_' . $session_id]['attempts'][$last_index]['given_input'] = $_POST['input'];
-    $_SESSION['hippotrack_session_' . $session_id]['attempts'][$last_index]['is_correct'] = $is_correct;
+    $_SESSION['hippotrack_session_' . $session_id]['attempts'][$last_index]['is_correct'] = (int) $is_correct;
 
     // Sauvegarde la réponse actuelle
     $student_data = array_filter($_POST, function ($key) {
