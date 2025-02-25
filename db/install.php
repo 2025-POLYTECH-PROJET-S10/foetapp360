@@ -42,7 +42,74 @@ function xmldb_hippotrack_install() {
         'vue_laterale'
     );
 
-    // CSV file path
+        // 📌 Importation des feedbacks
+        $feedback_csv = $CFG->dirroot . '/mod/hippotrack/feedback_texts.csv';
+
+        if (!file_exists($feedback_csv)) {
+            debugging('⚠️ Fichier CSV des feedbacks introuvable : ' . $feedback_csv, DEBUG_DEVELOPER);
+        } else {
+            $handle = fopen($feedback_csv, 'r');
+            if (!$handle) {
+                debugging('⚠️ Impossible d’ouvrir le fichier CSV des feedbacks.', DEBUG_DEVELOPER);
+            } else {
+                while (($data = fgetcsv($handle, 1000, ",")) !== FALSE) {
+                    $feedback_text = trim($data[0]);
+    
+                    if (!empty($feedback_text)) {
+                        $record = new stdClass();
+                        $record->feedback = $feedback_text;
+    
+                        // 📌 Insérer en base
+                        $DB->insert_record('hippotrack_feedback_data', $record);
+                    }
+                }
+                fclose($handle);
+                debugging('✅ Importation des feedbacks terminée avec succès.', DEBUG_DEVELOPER);
+            }
+        }
+
+        // 📌 Importation des combinaisons de feedbacks
+        $feedback_combinations_csv = $CFG->dirroot . '/mod/hippotrack/feedback_combinations.csv';
+
+        if (!file_exists($feedback_combinations_csv)) {
+            debugging('⚠️ Fichier CSV des combinaisons de feedbacks introuvable : ' . $feedback_combinations_csv, DEBUG_DEVELOPER);
+        } else {
+            $handle = fopen($feedback_combinations_csv, 'r');
+            if (!$handle) {
+                debugging('⚠️ Impossible d’ouvrir le fichier CSV des combinaisons de feedbacks.', DEBUG_DEVELOPER);
+            } else {
+                $line_number = 0;
+                while (($data = fgetcsv($handle, 1000, ",")) !== FALSE) {
+                    $line_number++;
+                    if ($line_number == 1) continue; // Ignorer la première ligne (en-têtes)
+    
+                    if (count($data) < 5) {
+                        debugging("⚠️ Ligne $line_number mal formatée dans le CSV.", DEBUG_DEVELOPER);
+                        continue;
+                    }
+    
+                    $record = new stdClass();
+                    $record->input_dataset = trim($data[0]);
+                    $record->expected_dataset = trim($data[1]);
+                    $record->input_inclinaison = (int) trim($data[2]);
+                    $record->expected_inclinaison = (int) trim($data[3]);
+                    $record->id_feedback = (int) trim($data[4]);
+    
+                    // 📌 Insérer en base
+                    try {
+                        $DB->insert_record('hippotrack_feedback', $record);
+                    } catch (Exception $e) {
+                        debugging("⚠️ Erreur lors de l'insertion de la ligne $line_number : " . $e->getMessage(), DEBUG_DEVELOPER);
+                    }
+                }
+                fclose($handle);
+                debugging('✅ Importation des combinaisons de feedbacks terminée avec succès.', DEBUG_DEVELOPER);
+            }
+        }
+    
+    
+
+    // CSV file path for datasets
     $csv_file = $CFG->dirroot . '/mod/hippotrack/datasets.csv';
 
     if (!file_exists($csv_file)) {

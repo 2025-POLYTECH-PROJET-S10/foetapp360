@@ -1,0 +1,577 @@
+input_dataset,expected_dataset,input_inclinaison,expected_inclinaison,id_feedback
+Occipito-Sacrée,Occipito-Sacrée,1,1,1
+Occipito-Sacrée,Occipito-Iliaque Droite Postérieure,1,1,5
+Occipito-Sacrée,Occipito-Iliaque Droite Transverse,1,1,5
+Occipito-Sacrée,Occipito-Iliaque Droite Antérieure,1,1,5
+Occipito-Sacrée,Occipito-Pubien,1,1,2
+Occipito-Sacrée,Occipito-Iliaque Gauche Transverse,1,1,5
+Occipito-Sacrée,Occipito-Iliaque Gauche Transverse,1,1,5
+Occipito-Sacrée,Occipito-Iliaque Gauche Postérieure,1,1,5
+Occipito-Sacrée,Occipito-Sacrée,1,0,3
+Occipito-Sacrée,Occipito-Iliaque Droite Postérieure,1,0,5
+Occipito-Sacrée,Occipito-Iliaque Droite Transverse,1,0,5
+Occipito-Sacrée,Occipito-Iliaque Droite Antérieure,1,0,5
+Occipito-Sacrée,Occipito-Pubien,1,0,2
+Occipito-Sacrée,Occipito-Iliaque Gauche Transverse,1,0,5
+Occipito-Sacrée,Occipito-Iliaque Gauche Transverse,1,0,5
+Occipito-Sacrée,Occipito-Iliaque Gauche Postérieure,1,0,5
+Occipito-Sacrée,Occipito-Sacrée,1,-1,5
+Occipito-Sacrée,Occipito-Iliaque Droite Postérieure,1,-1,5
+Occipito-Sacrée,Occipito-Iliaque Droite Transverse,1,-1,5
+Occipito-Sacrée,Occipito-Iliaque Droite Antérieure,1,-1,5
+Occipito-Sacrée,Occipito-Pubien,1,-1,2
+Occipito-Sacrée,Occipito-Iliaque Gauche Transverse,1,-1,5
+Occipito-Sacrée,Occipito-Iliaque Gauche Transverse,1,-1,5
+Occipito-Sacrée,Occipito-Iliaque Gauche Postérieure,1,-1,5
+Occipito-Iliaque Droite Postérieure,Occipito-Sacrée,1,1,5
+Occipito-Iliaque Droite Postérieure,Occipito-Iliaque Droite Postérieure,1,1,1
+Occipito-Iliaque Droite Postérieure,Occipito-Iliaque Droite Transverse,1,1,5
+Occipito-Iliaque Droite Postérieure,Occipito-Iliaque Droite Antérieure,1,1,2
+Occipito-Iliaque Droite Postérieure,Occipito-Pubien,1,1,5
+Occipito-Iliaque Droite Postérieure,Occipito-Iliaque Gauche Transverse,1,1,5
+Occipito-Iliaque Droite Postérieure,Occipito-Iliaque Gauche Transverse,1,1,5
+Occipito-Iliaque Droite Postérieure,Occipito-Iliaque Gauche Postérieure,1,1,4
+Occipito-Iliaque Droite Postérieure,Occipito-Sacrée,1,0,5
+Occipito-Iliaque Droite Postérieure,Occipito-Iliaque Droite Postérieure,1,0,3
+Occipito-Iliaque Droite Postérieure,Occipito-Iliaque Droite Transverse,1,0,5
+Occipito-Iliaque Droite Postérieure,Occipito-Iliaque Droite Antérieure,1,0,2
+Occipito-Iliaque Droite Postérieure,Occipito-Pubien,1,0,5
+Occipito-Iliaque Droite Postérieure,Occipito-Iliaque Gauche Transverse,1,0,5
+Occipito-Iliaque Droite Postérieure,Occipito-Iliaque Gauche Transverse,1,0,5
+Occipito-Iliaque Droite Postérieure,Occipito-Iliaque Gauche Postérieure,1,0,5
+Occipito-Iliaque Droite Postérieure,Occipito-Sacrée,1,-1,5
+Occipito-Iliaque Droite Postérieure,Occipito-Iliaque Droite Postérieure,1,-1,5
+Occipito-Iliaque Droite Postérieure,Occipito-Iliaque Droite Transverse,1,-1,5
+Occipito-Iliaque Droite Postérieure,Occipito-Iliaque Droite Antérieure,1,-1,2
+Occipito-Iliaque Droite Postérieure,Occipito-Pubien,1,-1,5
+Occipito-Iliaque Droite Postérieure,Occipito-Iliaque Gauche Transverse,1,-1,5
+Occipito-Iliaque Droite Postérieure,Occipito-Iliaque Gauche Transverse,1,-1,5
+Occipito-Iliaque Droite Postérieure,Occipito-Iliaque Gauche Postérieure,1,-1,5
+Occipito-Iliaque Droite Transverse,Occipito-Sacrée,1,1,5
+Occipito-Iliaque Droite Transverse,Occipito-Iliaque Droite Postérieure,1,1,5
+Occipito-Iliaque Droite Transverse,Occipito-Iliaque Droite Transverse,1,1,1
+Occipito-Iliaque Droite Transverse,Occipito-Iliaque Droite Antérieure,1,1,5
+Occipito-Iliaque Droite Transverse,Occipito-Pubien,1,1,5
+Occipito-Iliaque Droite Transverse,Occipito-Iliaque Gauche Transverse,1,1,5
+Occipito-Iliaque Droite Transverse,Occipito-Iliaque Gauche Transverse,1,1,4
+Occipito-Iliaque Droite Transverse,Occipito-Iliaque Gauche Postérieure,1,1,5
+Occipito-Iliaque Droite Transverse,Occipito-Sacrée,1,0,5
+Occipito-Iliaque Droite Transverse,Occipito-Iliaque Droite Postérieure,1,0,5
+Occipito-Iliaque Droite Transverse,Occipito-Iliaque Droite Transverse,1,0,3
+Occipito-Iliaque Droite Transverse,Occipito-Iliaque Droite Antérieure,1,0,5
+Occipito-Iliaque Droite Transverse,Occipito-Pubien,1,0,5
+Occipito-Iliaque Droite Transverse,Occipito-Iliaque Gauche Transverse,1,0,5
+Occipito-Iliaque Droite Transverse,Occipito-Iliaque Gauche Transverse,1,0,5
+Occipito-Iliaque Droite Transverse,Occipito-Iliaque Gauche Postérieure,1,0,5
+Occipito-Iliaque Droite Transverse,Occipito-Sacrée,1,-1,5
+Occipito-Iliaque Droite Transverse,Occipito-Iliaque Droite Postérieure,1,-1,5
+Occipito-Iliaque Droite Transverse,Occipito-Iliaque Droite Transverse,1,-1,5
+Occipito-Iliaque Droite Transverse,Occipito-Iliaque Droite Antérieure,1,-1,5
+Occipito-Iliaque Droite Transverse,Occipito-Pubien,1,-1,5
+Occipito-Iliaque Droite Transverse,Occipito-Iliaque Gauche Transverse,1,-1,5
+Occipito-Iliaque Droite Transverse,Occipito-Iliaque Gauche Transverse,1,-1,5
+Occipito-Iliaque Droite Transverse,Occipito-Iliaque Gauche Postérieure,1,-1,5
+Occipito-Iliaque Droite Antérieure,Occipito-Sacrée,1,1,5
+Occipito-Iliaque Droite Antérieure,Occipito-Iliaque Droite Postérieure,1,1,2
+Occipito-Iliaque Droite Antérieure,Occipito-Iliaque Droite Transverse,1,1,5
+Occipito-Iliaque Droite Antérieure,Occipito-Iliaque Droite Antérieure,1,1,1
+Occipito-Iliaque Droite Antérieure,Occipito-Pubien,1,1,5
+Occipito-Iliaque Droite Antérieure,Occipito-Iliaque Gauche Transverse,1,1,4
+Occipito-Iliaque Droite Antérieure,Occipito-Iliaque Gauche Transverse,1,1,5
+Occipito-Iliaque Droite Antérieure,Occipito-Iliaque Gauche Postérieure,1,1,5
+Occipito-Iliaque Droite Antérieure,Occipito-Sacrée,1,0,5
+Occipito-Iliaque Droite Antérieure,Occipito-Iliaque Droite Postérieure,1,0,2
+Occipito-Iliaque Droite Antérieure,Occipito-Iliaque Droite Transverse,1,0,5
+Occipito-Iliaque Droite Antérieure,Occipito-Iliaque Droite Antérieure,1,0,3
+Occipito-Iliaque Droite Antérieure,Occipito-Pubien,1,0,5
+Occipito-Iliaque Droite Antérieure,Occipito-Iliaque Gauche Transverse,1,0,5
+Occipito-Iliaque Droite Antérieure,Occipito-Iliaque Gauche Transverse,1,0,5
+Occipito-Iliaque Droite Antérieure,Occipito-Iliaque Gauche Postérieure,1,0,5
+Occipito-Iliaque Droite Antérieure,Occipito-Sacrée,1,-1,5
+Occipito-Iliaque Droite Antérieure,Occipito-Iliaque Droite Postérieure,1,-1,2
+Occipito-Iliaque Droite Antérieure,Occipito-Iliaque Droite Transverse,1,-1,5
+Occipito-Iliaque Droite Antérieure,Occipito-Iliaque Droite Antérieure,1,-1,5
+Occipito-Iliaque Droite Antérieure,Occipito-Pubien,1,-1,5
+Occipito-Iliaque Droite Antérieure,Occipito-Iliaque Gauche Transverse,1,-1,5
+Occipito-Iliaque Droite Antérieure,Occipito-Iliaque Gauche Transverse,1,-1,5
+Occipito-Iliaque Droite Antérieure,Occipito-Iliaque Gauche Postérieure,1,-1,5
+Occipito-Pubien,Occipito-Sacrée,1,1,2
+Occipito-Pubien,Occipito-Iliaque Droite Postérieure,1,1,5
+Occipito-Pubien,Occipito-Iliaque Droite Transverse,1,1,5
+Occipito-Pubien,Occipito-Iliaque Droite Antérieure,1,1,5
+Occipito-Pubien,Occipito-Pubien,1,1,1
+Occipito-Pubien,Occipito-Iliaque Gauche Transverse,1,1,5
+Occipito-Pubien,Occipito-Iliaque Gauche Transverse,1,1,5
+Occipito-Pubien,Occipito-Iliaque Gauche Postérieure,1,1,5
+Occipito-Pubien,Occipito-Sacrée,1,0,2
+Occipito-Pubien,Occipito-Iliaque Droite Postérieure,1,0,5
+Occipito-Pubien,Occipito-Iliaque Droite Transverse,1,0,5
+Occipito-Pubien,Occipito-Iliaque Droite Antérieure,1,0,5
+Occipito-Pubien,Occipito-Pubien,1,0,3
+Occipito-Pubien,Occipito-Iliaque Gauche Transverse,1,0,5
+Occipito-Pubien,Occipito-Iliaque Gauche Transverse,1,0,5
+Occipito-Pubien,Occipito-Iliaque Gauche Postérieure,1,0,5
+Occipito-Pubien,Occipito-Sacrée,1,-1,2
+Occipito-Pubien,Occipito-Iliaque Droite Postérieure,1,-1,5
+Occipito-Pubien,Occipito-Iliaque Droite Transverse,1,-1,5
+Occipito-Pubien,Occipito-Iliaque Droite Antérieure,1,-1,5
+Occipito-Pubien,Occipito-Pubien,1,-1,5
+Occipito-Pubien,Occipito-Iliaque Gauche Transverse,1,-1,5
+Occipito-Pubien,Occipito-Iliaque Gauche Transverse,1,-1,5
+Occipito-Pubien,Occipito-Iliaque Gauche Postérieure,1,-1,5
+Occipito-Iliaque Gauche Antérieur,Occipito-Sacrée,1,1,5
+Occipito-Iliaque Gauche Antérieur,Occipito-Iliaque Droite Postérieure,1,1,5
+Occipito-Iliaque Gauche Antérieur,Occipito-Iliaque Droite Transverse,1,1,5
+Occipito-Iliaque Gauche Antérieur,Occipito-Iliaque Droite Antérieure,1,1,4
+Occipito-Iliaque Gauche Antérieur,Occipito-Pubien,1,1,5
+Occipito-Iliaque Gauche Antérieur,Occipito-Iliaque Gauche Transverse,1,1,1
+Occipito-Iliaque Gauche Antérieur,Occipito-Iliaque Gauche Transverse,1,1,5
+Occipito-Iliaque Gauche Antérieur,Occipito-Iliaque Gauche Postérieure,1,1,2
+Occipito-Iliaque Gauche Antérieur,Occipito-Sacrée,1,0,5
+Occipito-Iliaque Gauche Antérieur,Occipito-Iliaque Droite Postérieure,1,0,5
+Occipito-Iliaque Gauche Antérieur,Occipito-Iliaque Droite Transverse,1,0,5
+Occipito-Iliaque Gauche Antérieur,Occipito-Iliaque Droite Antérieure,1,0,5
+Occipito-Iliaque Gauche Antérieur,Occipito-Pubien,1,0,5
+Occipito-Iliaque Gauche Antérieur,Occipito-Iliaque Gauche Transverse,1,0,3
+Occipito-Iliaque Gauche Antérieur,Occipito-Iliaque Gauche Transverse,1,0,5
+Occipito-Iliaque Gauche Antérieur,Occipito-Iliaque Gauche Postérieure,1,0,5
+Occipito-Iliaque Gauche Antérieur,Occipito-Sacrée,1,-1,5
+Occipito-Iliaque Gauche Antérieur,Occipito-Iliaque Droite Postérieure,1,-1,5
+Occipito-Iliaque Gauche Antérieur,Occipito-Iliaque Droite Transverse,1,-1,5
+Occipito-Iliaque Gauche Antérieur,Occipito-Iliaque Droite Antérieure,1,-1,5
+Occipito-Iliaque Gauche Antérieur,Occipito-Pubien,1,-1,5
+Occipito-Iliaque Gauche Antérieur,Occipito-Iliaque Gauche Transverse,1,-1,5
+Occipito-Iliaque Gauche Antérieur,Occipito-Iliaque Gauche Transverse,1,-1,5
+Occipito-Iliaque Gauche Antérieur,Occipito-Iliaque Gauche Postérieure,1,-1,5
+Occipito-Iliaque Gauche Transverse,Occipito-Sacrée,1,1,5
+Occipito-Iliaque Gauche Transverse,Occipito-Iliaque Droite Postérieure,1,1,5
+Occipito-Iliaque Gauche Transverse,Occipito-Iliaque Droite Transverse,1,1,4
+Occipito-Iliaque Gauche Transverse,Occipito-Iliaque Droite Antérieure,1,1,5
+Occipito-Iliaque Gauche Transverse,Occipito-Pubien,1,1,5
+Occipito-Iliaque Gauche Transverse,Occipito-Iliaque Gauche Transverse,1,1,5
+Occipito-Iliaque Gauche Transverse,Occipito-Iliaque Gauche Transverse,1,1,1
+Occipito-Iliaque Gauche Transverse,Occipito-Iliaque Gauche Postérieure,1,1,5
+Occipito-Iliaque Gauche Transverse,Occipito-Sacrée,1,0,5
+Occipito-Iliaque Gauche Transverse,Occipito-Iliaque Droite Postérieure,1,0,5
+Occipito-Iliaque Gauche Transverse,Occipito-Iliaque Droite Transverse,1,0,5
+Occipito-Iliaque Gauche Transverse,Occipito-Iliaque Droite Antérieure,1,0,5
+Occipito-Iliaque Gauche Transverse,Occipito-Pubien,1,0,5
+Occipito-Iliaque Gauche Transverse,Occipito-Iliaque Gauche Transverse,1,0,5
+Occipito-Iliaque Gauche Transverse,Occipito-Iliaque Gauche Transverse,1,0,3
+Occipito-Iliaque Gauche Transverse,Occipito-Iliaque Gauche Postérieure,1,0,5
+Occipito-Iliaque Gauche Transverse,Occipito-Sacrée,1,-1,5
+Occipito-Iliaque Gauche Transverse,Occipito-Iliaque Droite Postérieure,1,-1,5
+Occipito-Iliaque Gauche Transverse,Occipito-Iliaque Droite Transverse,1,-1,5
+Occipito-Iliaque Gauche Transverse,Occipito-Iliaque Droite Antérieure,1,-1,5
+Occipito-Iliaque Gauche Transverse,Occipito-Pubien,1,-1,5
+Occipito-Iliaque Gauche Transverse,Occipito-Iliaque Gauche Transverse,1,-1,5
+Occipito-Iliaque Gauche Transverse,Occipito-Iliaque Gauche Transverse,1,-1,5
+Occipito-Iliaque Gauche Transverse,Occipito-Iliaque Gauche Postérieure,1,-1,5
+Occipito-Iliaque Gauche Postérieure,Occipito-Sacrée,1,1,5
+Occipito-Iliaque Gauche Postérieure,Occipito-Iliaque Droite Postérieure,1,1,4
+Occipito-Iliaque Gauche Postérieure,Occipito-Iliaque Droite Transverse,1,1,5
+Occipito-Iliaque Gauche Postérieure,Occipito-Iliaque Droite Antérieure,1,1,5
+Occipito-Iliaque Gauche Postérieure,Occipito-Pubien,1,1,5
+Occipito-Iliaque Gauche Postérieure,Occipito-Iliaque Gauche Transverse,1,1,2
+Occipito-Iliaque Gauche Postérieure,Occipito-Iliaque Gauche Transverse,1,1,5
+Occipito-Iliaque Gauche Postérieure,Occipito-Iliaque Gauche Postérieure,1,1,1
+Occipito-Iliaque Gauche Postérieure,Occipito-Sacrée,1,0,5
+Occipito-Iliaque Gauche Postérieure,Occipito-Iliaque Droite Postérieure,1,0,5
+Occipito-Iliaque Gauche Postérieure,Occipito-Iliaque Droite Transverse,1,0,5
+Occipito-Iliaque Gauche Postérieure,Occipito-Iliaque Droite Antérieure,1,0,5
+Occipito-Iliaque Gauche Postérieure,Occipito-Pubien,1,0,5
+Occipito-Iliaque Gauche Postérieure,Occipito-Iliaque Gauche Transverse,1,0,5
+Occipito-Iliaque Gauche Postérieure,Occipito-Iliaque Gauche Transverse,1,0,5
+Occipito-Iliaque Gauche Postérieure,Occipito-Iliaque Gauche Postérieure,1,0,3
+Occipito-Iliaque Gauche Postérieure,Occipito-Sacrée,1,-1,5
+Occipito-Iliaque Gauche Postérieure,Occipito-Iliaque Droite Postérieure,1,-1,5
+Occipito-Iliaque Gauche Postérieure,Occipito-Iliaque Droite Transverse,1,-1,5
+Occipito-Iliaque Gauche Postérieure,Occipito-Iliaque Droite Antérieure,1,-1,5
+Occipito-Iliaque Gauche Postérieure,Occipito-Pubien,1,-1,5
+Occipito-Iliaque Gauche Postérieure,Occipito-Iliaque Gauche Transverse,1,-1,5
+Occipito-Iliaque Gauche Postérieure,Occipito-Iliaque Gauche Transverse,1,-1,5
+Occipito-Iliaque Gauche Postérieure,Occipito-Iliaque Gauche Postérieure,1,-1,5
+Occipito-Sacrée,Occipito-Sacrée,0,1,3
+Occipito-Sacrée,Occipito-Iliaque Droite Postérieure,0,1,5
+Occipito-Sacrée,Occipito-Iliaque Droite Transverse,0,1,5
+Occipito-Sacrée,Occipito-Iliaque Droite Antérieure,0,1,5
+Occipito-Sacrée,Occipito-Pubien,0,1,2
+Occipito-Sacrée,Occipito-Iliaque Gauche Transverse,0,1,5
+Occipito-Sacrée,Occipito-Iliaque Gauche Transverse,0,1,5
+Occipito-Sacrée,Occipito-Iliaque Gauche Postérieure,0,1,5
+Occipito-Sacrée,Occipito-Sacrée,0,0,1
+Occipito-Sacrée,Occipito-Iliaque Droite Postérieure,0,0,5
+Occipito-Sacrée,Occipito-Iliaque Droite Transverse,0,0,5
+Occipito-Sacrée,Occipito-Iliaque Droite Antérieure,0,0,5
+Occipito-Sacrée,Occipito-Pubien,0,0,2
+Occipito-Sacrée,Occipito-Iliaque Gauche Transverse,0,0,5
+Occipito-Sacrée,Occipito-Iliaque Gauche Transverse,0,0,5
+Occipito-Sacrée,Occipito-Iliaque Gauche Postérieure,0,0,5
+Occipito-Sacrée,Occipito-Sacrée,0,-1,3
+Occipito-Sacrée,Occipito-Iliaque Droite Postérieure,0,-1,5
+Occipito-Sacrée,Occipito-Iliaque Droite Transverse,0,-1,5
+Occipito-Sacrée,Occipito-Iliaque Droite Antérieure,0,-1,5
+Occipito-Sacrée,Occipito-Pubien,0,-1,5
+Occipito-Sacrée,Occipito-Iliaque Gauche Transverse,0,-1,5
+Occipito-Sacrée,Occipito-Iliaque Gauche Transverse,0,-1,5
+Occipito-Sacrée,Occipito-Iliaque Gauche Postérieure,0,-1,5
+Occipito-Iliaque Droite Postérieure,Occipito-Sacrée,0,1,5
+Occipito-Iliaque Droite Postérieure,Occipito-Iliaque Droite Postérieure,0,1,3
+Occipito-Iliaque Droite Postérieure,Occipito-Iliaque Droite Transverse,0,1,5
+Occipito-Iliaque Droite Postérieure,Occipito-Iliaque Droite Antérieure,0,1,2
+Occipito-Iliaque Droite Postérieure,Occipito-Pubien,0,1,5
+Occipito-Iliaque Droite Postérieure,Occipito-Iliaque Gauche Transverse,0,1,5
+Occipito-Iliaque Droite Postérieure,Occipito-Iliaque Gauche Transverse,0,1,5
+Occipito-Iliaque Droite Postérieure,Occipito-Iliaque Gauche Postérieure,0,1,5
+Occipito-Iliaque Droite Postérieure,Occipito-Sacrée,0,0,5
+Occipito-Iliaque Droite Postérieure,Occipito-Iliaque Droite Postérieure,0,0,1
+Occipito-Iliaque Droite Postérieure,Occipito-Iliaque Droite Transverse,0,0,5
+Occipito-Iliaque Droite Postérieure,Occipito-Iliaque Droite Antérieure,0,0,2
+Occipito-Iliaque Droite Postérieure,Occipito-Pubien,0,0,5
+Occipito-Iliaque Droite Postérieure,Occipito-Iliaque Gauche Transverse,0,0,5
+Occipito-Iliaque Droite Postérieure,Occipito-Iliaque Gauche Transverse,0,0,5
+Occipito-Iliaque Droite Postérieure,Occipito-Iliaque Gauche Postérieure,0,0,4
+Occipito-Iliaque Droite Postérieure,Occipito-Sacrée,0,-1,5
+Occipito-Iliaque Droite Postérieure,Occipito-Iliaque Droite Postérieure,0,-1,3
+Occipito-Iliaque Droite Postérieure,Occipito-Iliaque Droite Transverse,0,-1,5
+Occipito-Iliaque Droite Postérieure,Occipito-Iliaque Droite Antérieure,0,-1,5
+Occipito-Iliaque Droite Postérieure,Occipito-Pubien,0,-1,5
+Occipito-Iliaque Droite Postérieure,Occipito-Iliaque Gauche Transverse,0,-1,5
+Occipito-Iliaque Droite Postérieure,Occipito-Iliaque Gauche Transverse,0,-1,5
+Occipito-Iliaque Droite Postérieure,Occipito-Iliaque Gauche Postérieure,0,-1,5
+Occipito-Iliaque Droite Transverse,Occipito-Sacrée,0,1,5
+Occipito-Iliaque Droite Transverse,Occipito-Iliaque Droite Postérieure,0,1,3
+Occipito-Iliaque Droite Transverse,Occipito-Iliaque Droite Transverse,0,1,5
+Occipito-Iliaque Droite Transverse,Occipito-Iliaque Droite Antérieure,0,1,2
+Occipito-Iliaque Droite Transverse,Occipito-Pubien,0,1,5
+Occipito-Iliaque Droite Transverse,Occipito-Iliaque Gauche Transverse,0,1,5
+Occipito-Iliaque Droite Transverse,Occipito-Iliaque Gauche Transverse,0,1,5
+Occipito-Iliaque Droite Transverse,Occipito-Iliaque Gauche Postérieure,0,1,5
+Occipito-Iliaque Droite Transverse,Occipito-Sacrée,0,0,5
+Occipito-Iliaque Droite Transverse,Occipito-Iliaque Droite Postérieure,0,0,1
+Occipito-Iliaque Droite Transverse,Occipito-Iliaque Droite Transverse,0,0,5
+Occipito-Iliaque Droite Transverse,Occipito-Iliaque Droite Antérieure,0,0,2
+Occipito-Iliaque Droite Transverse,Occipito-Pubien,0,0,5
+Occipito-Iliaque Droite Transverse,Occipito-Iliaque Gauche Transverse,0,0,5
+Occipito-Iliaque Droite Transverse,Occipito-Iliaque Gauche Transverse,0,0,5
+Occipito-Iliaque Droite Transverse,Occipito-Iliaque Gauche Postérieure,0,0,4
+Occipito-Iliaque Droite Transverse,Occipito-Sacrée,0,-1,5
+Occipito-Iliaque Droite Transverse,Occipito-Iliaque Droite Postérieure,0,-1,3
+Occipito-Iliaque Droite Transverse,Occipito-Iliaque Droite Transverse,0,-1,5
+Occipito-Iliaque Droite Transverse,Occipito-Iliaque Droite Antérieure,0,-1,5
+Occipito-Iliaque Droite Transverse,Occipito-Pubien,0,-1,5
+Occipito-Iliaque Droite Transverse,Occipito-Iliaque Gauche Transverse,0,-1,5
+Occipito-Iliaque Droite Transverse,Occipito-Iliaque Gauche Transverse,0,-1,5
+Occipito-Iliaque Droite Transverse,Occipito-Iliaque Gauche Postérieure,0,-1,5
+Occipito-Iliaque Droite Antérieure,Occipito-Sacrée,0,1,5
+Occipito-Iliaque Droite Antérieure,Occipito-Iliaque Droite Postérieure,0,1,2
+Occipito-Iliaque Droite Antérieure,Occipito-Iliaque Droite Transverse,0,1,5
+Occipito-Iliaque Droite Antérieure,Occipito-Iliaque Droite Antérieure,0,1,3
+Occipito-Iliaque Droite Antérieure,Occipito-Pubien,0,1,5
+Occipito-Iliaque Droite Antérieure,Occipito-Iliaque Gauche Transverse,0,1,5
+Occipito-Iliaque Droite Antérieure,Occipito-Iliaque Gauche Transverse,0,1,5
+Occipito-Iliaque Droite Antérieure,Occipito-Iliaque Gauche Postérieure,0,1,5
+Occipito-Iliaque Droite Antérieure,Occipito-Sacrée,0,0,5
+Occipito-Iliaque Droite Antérieure,Occipito-Iliaque Droite Postérieure,0,0,2
+Occipito-Iliaque Droite Antérieure,Occipito-Iliaque Droite Transverse,0,0,5
+Occipito-Iliaque Droite Antérieure,Occipito-Iliaque Droite Antérieure,0,0,1
+Occipito-Iliaque Droite Antérieure,Occipito-Pubien,0,0,5
+Occipito-Iliaque Droite Antérieure,Occipito-Iliaque Gauche Transverse,0,0,4
+Occipito-Iliaque Droite Antérieure,Occipito-Iliaque Gauche Transverse,0,0,5
+Occipito-Iliaque Droite Antérieure,Occipito-Iliaque Gauche Postérieure,0,0,5
+Occipito-Iliaque Droite Antérieure,Occipito-Sacrée,0,-1,5
+Occipito-Iliaque Droite Antérieure,Occipito-Iliaque Droite Postérieure,0,-1,5
+Occipito-Iliaque Droite Antérieure,Occipito-Iliaque Droite Transverse,0,-1,5
+Occipito-Iliaque Droite Antérieure,Occipito-Iliaque Droite Antérieure,0,-1,3
+Occipito-Iliaque Droite Antérieure,Occipito-Pubien,0,-1,5
+Occipito-Iliaque Droite Antérieure,Occipito-Iliaque Gauche Transverse,0,-1,5
+Occipito-Iliaque Droite Antérieure,Occipito-Iliaque Gauche Transverse,0,-1,5
+Occipito-Iliaque Droite Antérieure,Occipito-Iliaque Gauche Postérieure,0,-1,5
+Occipito-Pubien,Occipito-Sacrée,0,1,2
+Occipito-Pubien,Occipito-Iliaque Droite Postérieure,0,1,5
+Occipito-Pubien,Occipito-Iliaque Droite Transverse,0,1,5
+Occipito-Pubien,Occipito-Iliaque Droite Antérieure,0,1,5
+Occipito-Pubien,Occipito-Pubien,0,1,3
+Occipito-Pubien,Occipito-Iliaque Gauche Transverse,0,1,5
+Occipito-Pubien,Occipito-Iliaque Gauche Transverse,0,1,5
+Occipito-Pubien,Occipito-Iliaque Gauche Postérieure,0,1,5
+Occipito-Pubien,Occipito-Sacrée,0,0,2
+Occipito-Pubien,Occipito-Iliaque Droite Postérieure,0,0,5
+Occipito-Pubien,Occipito-Iliaque Droite Transverse,0,0,5
+Occipito-Pubien,Occipito-Iliaque Droite Antérieure,0,0,5
+Occipito-Pubien,Occipito-Pubien,0,0,1
+Occipito-Pubien,Occipito-Iliaque Gauche Transverse,0,0,5
+Occipito-Pubien,Occipito-Iliaque Gauche Transverse,0,0,5
+Occipito-Pubien,Occipito-Iliaque Gauche Postérieure,0,0,5
+Occipito-Pubien,Occipito-Sacrée,0,-1,5
+Occipito-Pubien,Occipito-Iliaque Droite Postérieure,0,-1,5
+Occipito-Pubien,Occipito-Iliaque Droite Transverse,0,-1,5
+Occipito-Pubien,Occipito-Iliaque Droite Antérieure,0,-1,5
+Occipito-Pubien,Occipito-Pubien,0,-1,3
+Occipito-Pubien,Occipito-Iliaque Gauche Transverse,0,-1,5
+Occipito-Pubien,Occipito-Iliaque Gauche Transverse,0,-1,5
+Occipito-Pubien,Occipito-Iliaque Gauche Postérieure,0,-1,5
+Occipito-Iliaque Gauche Antérieur,Occipito-Sacrée,0,1,5
+Occipito-Iliaque Gauche Antérieur,Occipito-Iliaque Droite Postérieure,0,1,5
+Occipito-Iliaque Gauche Antérieur,Occipito-Iliaque Droite Transverse,0,1,5
+Occipito-Iliaque Gauche Antérieur,Occipito-Iliaque Droite Antérieure,0,1,5
+Occipito-Iliaque Gauche Antérieur,Occipito-Pubien,0,1,5
+Occipito-Iliaque Gauche Antérieur,Occipito-Iliaque Gauche Transverse,0,1,3
+Occipito-Iliaque Gauche Antérieur,Occipito-Iliaque Gauche Transverse,0,1,5
+Occipito-Iliaque Gauche Antérieur,Occipito-Iliaque Gauche Postérieure,0,1,5
+Occipito-Iliaque Gauche Antérieur,Occipito-Sacrée,0,0,5
+Occipito-Iliaque Gauche Antérieur,Occipito-Iliaque Droite Postérieure,0,0,5
+Occipito-Iliaque Gauche Antérieur,Occipito-Iliaque Droite Transverse,0,0,5
+Occipito-Iliaque Gauche Antérieur,Occipito-Iliaque Droite Antérieure,0,0,4
+Occipito-Iliaque Gauche Antérieur,Occipito-Pubien,0,0,5
+Occipito-Iliaque Gauche Antérieur,Occipito-Iliaque Gauche Transverse,0,0,1
+Occipito-Iliaque Gauche Antérieur,Occipito-Iliaque Gauche Transverse,0,0,5
+Occipito-Iliaque Gauche Antérieur,Occipito-Iliaque Gauche Postérieure,0,0,2
+Occipito-Iliaque Gauche Antérieur,Occipito-Sacrée,0,-1,5
+Occipito-Iliaque Gauche Antérieur,Occipito-Iliaque Droite Postérieure,0,-1,5
+Occipito-Iliaque Gauche Antérieur,Occipito-Iliaque Droite Transverse,0,-1,5
+Occipito-Iliaque Gauche Antérieur,Occipito-Iliaque Droite Antérieure,0,-1,5
+Occipito-Iliaque Gauche Antérieur,Occipito-Pubien,0,-1,5
+Occipito-Iliaque Gauche Antérieur,Occipito-Iliaque Gauche Transverse,0,-1,3
+Occipito-Iliaque Gauche Antérieur,Occipito-Iliaque Gauche Transverse,0,-1,5
+Occipito-Iliaque Gauche Antérieur,Occipito-Iliaque Gauche Postérieure,0,-1,5
+Occipito-Iliaque Gauche Transverse,Occipito-Sacrée,0,1,5
+Occipito-Iliaque Gauche Transverse,Occipito-Iliaque Droite Postérieure,0,1,5
+Occipito-Iliaque Gauche Transverse,Occipito-Iliaque Droite Transverse,0,1,5
+Occipito-Iliaque Gauche Transverse,Occipito-Iliaque Droite Antérieure,0,1,5
+Occipito-Iliaque Gauche Transverse,Occipito-Pubien,0,1,5
+Occipito-Iliaque Gauche Transverse,Occipito-Iliaque Gauche Transverse,0,1,5
+Occipito-Iliaque Gauche Transverse,Occipito-Iliaque Gauche Transverse,0,1,3
+Occipito-Iliaque Gauche Transverse,Occipito-Iliaque Gauche Postérieure,0,1,5
+Occipito-Iliaque Gauche Transverse,Occipito-Sacrée,0,0,5
+Occipito-Iliaque Gauche Transverse,Occipito-Iliaque Droite Postérieure,0,0,5
+Occipito-Iliaque Gauche Transverse,Occipito-Iliaque Droite Transverse,0,0,4
+Occipito-Iliaque Gauche Transverse,Occipito-Iliaque Droite Antérieure,0,0,5
+Occipito-Iliaque Gauche Transverse,Occipito-Pubien,0,0,5
+Occipito-Iliaque Gauche Transverse,Occipito-Iliaque Gauche Transverse,0,0,5
+Occipito-Iliaque Gauche Transverse,Occipito-Iliaque Gauche Transverse,0,0,1
+Occipito-Iliaque Gauche Transverse,Occipito-Iliaque Gauche Postérieure,0,0,5
+Occipito-Iliaque Gauche Transverse,Occipito-Sacrée,0,-1,5
+Occipito-Iliaque Gauche Transverse,Occipito-Iliaque Droite Postérieure,0,-1,5
+Occipito-Iliaque Gauche Transverse,Occipito-Iliaque Droite Transverse,0,-1,5
+Occipito-Iliaque Gauche Transverse,Occipito-Iliaque Droite Antérieure,0,-1,5
+Occipito-Iliaque Gauche Transverse,Occipito-Pubien,0,-1,5
+Occipito-Iliaque Gauche Transverse,Occipito-Iliaque Gauche Transverse,0,-1,5
+Occipito-Iliaque Gauche Transverse,Occipito-Iliaque Gauche Transverse,0,-1,3
+Occipito-Iliaque Gauche Transverse,Occipito-Iliaque Gauche Postérieure,0,-1,5
+Occipito-Iliaque Gauche Postérieure,Occipito-Sacrée,0,1,5
+Occipito-Iliaque Gauche Postérieure,Occipito-Iliaque Droite Postérieure,0,1,5
+Occipito-Iliaque Gauche Postérieure,Occipito-Iliaque Droite Transverse,0,1,5
+Occipito-Iliaque Gauche Postérieure,Occipito-Iliaque Droite Antérieure,0,1,5
+Occipito-Iliaque Gauche Postérieure,Occipito-Pubien,0,1,5
+Occipito-Iliaque Gauche Postérieure,Occipito-Iliaque Gauche Transverse,0,1,5
+Occipito-Iliaque Gauche Postérieure,Occipito-Iliaque Gauche Transverse,0,1,5
+Occipito-Iliaque Gauche Postérieure,Occipito-Iliaque Gauche Postérieure,0,1,3
+Occipito-Iliaque Gauche Postérieure,Occipito-Sacrée,0,0,5
+Occipito-Iliaque Gauche Postérieure,Occipito-Iliaque Droite Postérieure,0,0,4
+Occipito-Iliaque Gauche Postérieure,Occipito-Iliaque Droite Transverse,0,0,5
+Occipito-Iliaque Gauche Postérieure,Occipito-Iliaque Droite Antérieure,0,0,5
+Occipito-Iliaque Gauche Postérieure,Occipito-Pubien,0,0,5
+Occipito-Iliaque Gauche Postérieure,Occipito-Iliaque Gauche Transverse,0,0,2
+Occipito-Iliaque Gauche Postérieure,Occipito-Iliaque Gauche Transverse,0,0,5
+Occipito-Iliaque Gauche Postérieure,Occipito-Iliaque Gauche Postérieure,0,0,1
+Occipito-Iliaque Gauche Postérieure,Occipito-Sacrée,0,-1,5
+Occipito-Iliaque Gauche Postérieure,Occipito-Iliaque Droite Postérieure,0,-1,5
+Occipito-Iliaque Gauche Postérieure,Occipito-Iliaque Droite Transverse,0,-1,5
+Occipito-Iliaque Gauche Postérieure,Occipito-Iliaque Droite Antérieure,0,-1,5
+Occipito-Iliaque Gauche Postérieure,Occipito-Pubien,0,-1,5
+Occipito-Iliaque Gauche Postérieure,Occipito-Iliaque Gauche Transverse,0,-1,5
+Occipito-Iliaque Gauche Postérieure,Occipito-Iliaque Gauche Transverse,0,-1,5
+Occipito-Iliaque Gauche Postérieure,Occipito-Iliaque Gauche Postérieure,0,-1,3
+Occipito-Sacrée,Occipito-Sacrée,-1,1,3
+Occipito-Sacrée,Occipito-Iliaque Droite Postérieure,-1,1,5
+Occipito-Sacrée,Occipito-Iliaque Droite Transverse,-1,1,5
+Occipito-Sacrée,Occipito-Iliaque Droite Antérieure,-1,1,5
+Occipito-Sacrée,Occipito-Pubien,-1,1,2
+Occipito-Sacrée,Occipito-Iliaque Gauche Transverse,-1,1,5
+Occipito-Sacrée,Occipito-Iliaque Gauche Transverse,-1,1,5
+Occipito-Sacrée,Occipito-Iliaque Gauche Postérieure,-1,1,5
+Occipito-Sacrée,Occipito-Sacrée,-1,0,3
+Occipito-Sacrée,Occipito-Iliaque Droite Postérieure,-1,0,5
+Occipito-Sacrée,Occipito-Iliaque Droite Transverse,-1,0,5
+Occipito-Sacrée,Occipito-Iliaque Droite Antérieure,-1,0,5
+Occipito-Sacrée,Occipito-Pubien,-1,0,5
+Occipito-Sacrée,Occipito-Iliaque Gauche Transverse,-1,0,5
+Occipito-Sacrée,Occipito-Iliaque Gauche Transverse,-1,0,5
+Occipito-Sacrée,Occipito-Iliaque Gauche Postérieure,-1,0,5
+Occipito-Sacrée,Occipito-Sacrée,-1,-1,1
+Occipito-Sacrée,Occipito-Iliaque Droite Postérieure,-1,-1,5
+Occipito-Sacrée,Occipito-Iliaque Droite Transverse,-1,-1,5
+Occipito-Sacrée,Occipito-Iliaque Droite Antérieure,-1,-1,5
+Occipito-Sacrée,Occipito-Pubien,-1,-1,2
+Occipito-Sacrée,Occipito-Iliaque Gauche Transverse,-1,-1,5
+Occipito-Sacrée,Occipito-Iliaque Gauche Transverse,-1,-1,5
+Occipito-Sacrée,Occipito-Iliaque Gauche Postérieure,-1,-1,5
+Occipito-Iliaque Droite Postérieure,Occipito-Sacrée,-1,1,5
+Occipito-Iliaque Droite Postérieure,Occipito-Iliaque Droite Postérieure,-1,1,3
+Occipito-Iliaque Droite Postérieure,Occipito-Iliaque Droite Transverse,-1,1,5
+Occipito-Iliaque Droite Postérieure,Occipito-Iliaque Droite Antérieure,-1,1,2
+Occipito-Iliaque Droite Postérieure,Occipito-Pubien,-1,1,5
+Occipito-Iliaque Droite Postérieure,Occipito-Iliaque Gauche Transverse,-1,1,5
+Occipito-Iliaque Droite Postérieure,Occipito-Iliaque Gauche Transverse,-1,1,5
+Occipito-Iliaque Droite Postérieure,Occipito-Iliaque Gauche Postérieure,-1,1,5
+Occipito-Iliaque Droite Postérieure,Occipito-Sacrée,-1,0,5
+Occipito-Iliaque Droite Postérieure,Occipito-Iliaque Droite Postérieure,-1,0,3
+Occipito-Iliaque Droite Postérieure,Occipito-Iliaque Droite Transverse,-1,0,5
+Occipito-Iliaque Droite Postérieure,Occipito-Iliaque Droite Antérieure,-1,0,5
+Occipito-Iliaque Droite Postérieure,Occipito-Pubien,-1,0,5
+Occipito-Iliaque Droite Postérieure,Occipito-Iliaque Gauche Transverse,-1,0,5
+Occipito-Iliaque Droite Postérieure,Occipito-Iliaque Gauche Transverse,-1,0,5
+Occipito-Iliaque Droite Postérieure,Occipito-Iliaque Gauche Postérieure,-1,0,5
+Occipito-Iliaque Droite Postérieure,Occipito-Sacrée,-1,-1,5
+Occipito-Iliaque Droite Postérieure,Occipito-Iliaque Droite Postérieure,-1,-1,1
+Occipito-Iliaque Droite Postérieure,Occipito-Iliaque Droite Transverse,-1,-1,5
+Occipito-Iliaque Droite Postérieure,Occipito-Iliaque Droite Antérieure,-1,-1,2
+Occipito-Iliaque Droite Postérieure,Occipito-Pubien,-1,-1,5
+Occipito-Iliaque Droite Postérieure,Occipito-Iliaque Gauche Transverse,-1,-1,5
+Occipito-Iliaque Droite Postérieure,Occipito-Iliaque Gauche Transverse,-1,-1,5
+Occipito-Iliaque Droite Postérieure,Occipito-Iliaque Gauche Postérieure,-1,-1,4
+Occipito-Iliaque Droite Transverse,Occipito-Sacrée,-1,1,5
+Occipito-Iliaque Droite Transverse,Occipito-Iliaque Droite Postérieure,-1,1,5
+Occipito-Iliaque Droite Transverse,Occipito-Iliaque Droite Transverse,-1,1,3
+Occipito-Iliaque Droite Transverse,Occipito-Iliaque Droite Antérieure,-1,1,5
+Occipito-Iliaque Droite Transverse,Occipito-Pubien,-1,1,5
+Occipito-Iliaque Droite Transverse,Occipito-Iliaque Gauche Transverse,-1,1,5
+Occipito-Iliaque Droite Transverse,Occipito-Iliaque Gauche Transverse,-1,1,5
+Occipito-Iliaque Droite Transverse,Occipito-Iliaque Gauche Postérieure,-1,1,5
+Occipito-Iliaque Droite Transverse,Occipito-Sacrée,-1,0,5
+Occipito-Iliaque Droite Transverse,Occipito-Iliaque Droite Postérieure,-1,0,5
+Occipito-Iliaque Droite Transverse,Occipito-Iliaque Droite Transverse,-1,0,3
+Occipito-Iliaque Droite Transverse,Occipito-Iliaque Droite Antérieure,-1,0,5
+Occipito-Iliaque Droite Transverse,Occipito-Pubien,-1,0,5
+Occipito-Iliaque Droite Transverse,Occipito-Iliaque Gauche Transverse,-1,0,5
+Occipito-Iliaque Droite Transverse,Occipito-Iliaque Gauche Transverse,-1,0,5
+Occipito-Iliaque Droite Transverse,Occipito-Iliaque Gauche Postérieure,-1,0,5
+Occipito-Iliaque Droite Transverse,Occipito-Sacrée,-1,-1,5
+Occipito-Iliaque Droite Transverse,Occipito-Iliaque Droite Postérieure,-1,-1,5
+Occipito-Iliaque Droite Transverse,Occipito-Iliaque Droite Transverse,-1,-1,1
+Occipito-Iliaque Droite Transverse,Occipito-Iliaque Droite Antérieure,-1,-1,5
+Occipito-Iliaque Droite Transverse,Occipito-Pubien,-1,-1,5
+Occipito-Iliaque Droite Transverse,Occipito-Iliaque Gauche Transverse,-1,-1,5
+Occipito-Iliaque Droite Transverse,Occipito-Iliaque Gauche Transverse,-1,-1,4
+Occipito-Iliaque Droite Transverse,Occipito-Iliaque Gauche Postérieure,-1,-1,5
+Occipito-Iliaque Droite Antérieure,Occipito-Sacrée,-1,1,5
+Occipito-Iliaque Droite Antérieure,Occipito-Iliaque Droite Postérieure,-1,1,2
+Occipito-Iliaque Droite Antérieure,Occipito-Iliaque Droite Transverse,-1,1,5
+Occipito-Iliaque Droite Antérieure,Occipito-Iliaque Droite Antérieure,-1,1,3
+Occipito-Iliaque Droite Antérieure,Occipito-Pubien,-1,1,5
+Occipito-Iliaque Droite Antérieure,Occipito-Iliaque Gauche Transverse,-1,1,5
+Occipito-Iliaque Droite Antérieure,Occipito-Iliaque Gauche Transverse,-1,1,5
+Occipito-Iliaque Droite Antérieure,Occipito-Iliaque Gauche Postérieure,-1,1,5
+Occipito-Iliaque Droite Antérieure,Occipito-Sacrée,-1,0,5
+Occipito-Iliaque Droite Antérieure,Occipito-Iliaque Droite Postérieure,-1,0,5
+Occipito-Iliaque Droite Antérieure,Occipito-Iliaque Droite Transverse,-1,0,5
+Occipito-Iliaque Droite Antérieure,Occipito-Iliaque Droite Antérieure,-1,0,3
+Occipito-Iliaque Droite Antérieure,Occipito-Pubien,-1,0,5
+Occipito-Iliaque Droite Antérieure,Occipito-Iliaque Gauche Transverse,-1,0,5
+Occipito-Iliaque Droite Antérieure,Occipito-Iliaque Gauche Transverse,-1,0,5
+Occipito-Iliaque Droite Antérieure,Occipito-Iliaque Gauche Postérieure,-1,0,5
+Occipito-Iliaque Droite Antérieure,Occipito-Sacrée,-1,-1,5
+Occipito-Iliaque Droite Antérieure,Occipito-Iliaque Droite Postérieure,-1,-1,2
+Occipito-Iliaque Droite Antérieure,Occipito-Iliaque Droite Transverse,-1,-1,5
+Occipito-Iliaque Droite Antérieure,Occipito-Iliaque Droite Antérieure,-1,-1,1
+Occipito-Iliaque Droite Antérieure,Occipito-Pubien,-1,-1,5
+Occipito-Iliaque Droite Antérieure,Occipito-Iliaque Gauche Transverse,-1,-1,4
+Occipito-Iliaque Droite Antérieure,Occipito-Iliaque Gauche Transverse,-1,-1,5
+Occipito-Iliaque Droite Antérieure,Occipito-Iliaque Gauche Postérieure,-1,-1,5
+Occipito-Pubien,Occipito-Sacrée,-1,1,2
+Occipito-Pubien,Occipito-Iliaque Droite Postérieure,-1,1,5
+Occipito-Pubien,Occipito-Iliaque Droite Transverse,-1,1,5
+Occipito-Pubien,Occipito-Iliaque Droite Antérieure,-1,1,5
+Occipito-Pubien,Occipito-Pubien,-1,1,3
+Occipito-Pubien,Occipito-Iliaque Gauche Transverse,-1,1,5
+Occipito-Pubien,Occipito-Iliaque Gauche Transverse,-1,1,5
+Occipito-Pubien,Occipito-Iliaque Gauche Postérieure,-1,1,5
+Occipito-Pubien,Occipito-Sacrée,-1,0,5
+Occipito-Pubien,Occipito-Iliaque Droite Postérieure,-1,0,5
+Occipito-Pubien,Occipito-Iliaque Droite Transverse,-1,0,5
+Occipito-Pubien,Occipito-Iliaque Droite Antérieure,-1,0,5
+Occipito-Pubien,Occipito-Pubien,-1,0,3
+Occipito-Pubien,Occipito-Iliaque Gauche Transverse,-1,0,5
+Occipito-Pubien,Occipito-Iliaque Gauche Transverse,-1,0,5
+Occipito-Pubien,Occipito-Iliaque Gauche Postérieure,-1,0,5
+Occipito-Pubien,Occipito-Sacrée,-1,-1,2
+Occipito-Pubien,Occipito-Iliaque Droite Postérieure,-1,-1,5
+Occipito-Pubien,Occipito-Iliaque Droite Transverse,-1,-1,5
+Occipito-Pubien,Occipito-Iliaque Droite Antérieure,-1,-1,5
+Occipito-Pubien,Occipito-Pubien,-1,-1,1
+Occipito-Pubien,Occipito-Iliaque Gauche Transverse,-1,-1,5
+Occipito-Pubien,Occipito-Iliaque Gauche Transverse,-1,-1,5
+Occipito-Pubien,Occipito-Iliaque Gauche Postérieure,-1,-1,5
+Occipito-Iliaque Gauche Antérieur,Occipito-Sacrée,-1,1,5
+Occipito-Iliaque Gauche Antérieur,Occipito-Iliaque Droite Postérieure,-1,1,5
+Occipito-Iliaque Gauche Antérieur,Occipito-Iliaque Droite Transverse,-1,1,5
+Occipito-Iliaque Gauche Antérieur,Occipito-Iliaque Droite Antérieure,-1,1,5
+Occipito-Iliaque Gauche Antérieur,Occipito-Pubien,-1,1,5
+Occipito-Iliaque Gauche Antérieur,Occipito-Iliaque Gauche Transverse,-1,1,3
+Occipito-Iliaque Gauche Antérieur,Occipito-Iliaque Gauche Transverse,-1,1,5
+Occipito-Iliaque Gauche Antérieur,Occipito-Iliaque Gauche Postérieure,-1,1,5
+Occipito-Iliaque Gauche Antérieur,Occipito-Sacrée,-1,0,5
+Occipito-Iliaque Gauche Antérieur,Occipito-Iliaque Droite Postérieure,-1,0,5
+Occipito-Iliaque Gauche Antérieur,Occipito-Iliaque Droite Transverse,-1,0,5
+Occipito-Iliaque Gauche Antérieur,Occipito-Iliaque Droite Antérieure,-1,0,5
+Occipito-Iliaque Gauche Antérieur,Occipito-Pubien,-1,0,5
+Occipito-Iliaque Gauche Antérieur,Occipito-Iliaque Gauche Transverse,-1,0,3
+Occipito-Iliaque Gauche Antérieur,Occipito-Iliaque Gauche Transverse,-1,0,5
+Occipito-Iliaque Gauche Antérieur,Occipito-Iliaque Gauche Postérieure,-1,0,5
+Occipito-Iliaque Gauche Antérieur,Occipito-Sacrée,-1,-1,5
+Occipito-Iliaque Gauche Antérieur,Occipito-Iliaque Droite Postérieure,-1,-1,5
+Occipito-Iliaque Gauche Antérieur,Occipito-Iliaque Droite Transverse,-1,-1,5
+Occipito-Iliaque Gauche Antérieur,Occipito-Iliaque Droite Antérieure,-1,-1,4
+Occipito-Iliaque Gauche Antérieur,Occipito-Pubien,-1,-1,5
+Occipito-Iliaque Gauche Antérieur,Occipito-Iliaque Gauche Transverse,-1,-1,1
+Occipito-Iliaque Gauche Antérieur,Occipito-Iliaque Gauche Transverse,-1,-1,5
+Occipito-Iliaque Gauche Antérieur,Occipito-Iliaque Gauche Postérieure,-1,-1,2
+Occipito-Iliaque Gauche Transverse,Occipito-Sacrée,-1,1,5
+Occipito-Iliaque Gauche Transverse,Occipito-Iliaque Droite Postérieure,-1,1,5
+Occipito-Iliaque Gauche Transverse,Occipito-Iliaque Droite Transverse,-1,1,5
+Occipito-Iliaque Gauche Transverse,Occipito-Iliaque Droite Antérieure,-1,1,5
+Occipito-Iliaque Gauche Transverse,Occipito-Pubien,-1,1,5
+Occipito-Iliaque Gauche Transverse,Occipito-Iliaque Gauche Transverse,-1,1,5
+Occipito-Iliaque Gauche Transverse,Occipito-Iliaque Gauche Transverse,-1,1,3
+Occipito-Iliaque Gauche Transverse,Occipito-Iliaque Gauche Postérieure,-1,1,5
+Occipito-Iliaque Gauche Transverse,Occipito-Sacrée,-1,0,5
+Occipito-Iliaque Gauche Transverse,Occipito-Iliaque Droite Postérieure,-1,0,5
+Occipito-Iliaque Gauche Transverse,Occipito-Iliaque Droite Transverse,-1,0,5
+Occipito-Iliaque Gauche Transverse,Occipito-Iliaque Droite Antérieure,-1,0,5
+Occipito-Iliaque Gauche Transverse,Occipito-Pubien,-1,0,5
+Occipito-Iliaque Gauche Transverse,Occipito-Iliaque Gauche Transverse,-1,0,5
+Occipito-Iliaque Gauche Transverse,Occipito-Iliaque Gauche Transverse,-1,0,3
+Occipito-Iliaque Gauche Transverse,Occipito-Iliaque Gauche Postérieure,-1,0,5
+Occipito-Iliaque Gauche Transverse,Occipito-Sacrée,-1,-1,5
+Occipito-Iliaque Gauche Transverse,Occipito-Iliaque Droite Postérieure,-1,-1,5
+Occipito-Iliaque Gauche Transverse,Occipito-Iliaque Droite Transverse,-1,-1,4
+Occipito-Iliaque Gauche Transverse,Occipito-Iliaque Droite Antérieure,-1,-1,5
+Occipito-Iliaque Gauche Transverse,Occipito-Pubien,-1,-1,5
+Occipito-Iliaque Gauche Transverse,Occipito-Iliaque Gauche Transverse,-1,-1,5
+Occipito-Iliaque Gauche Transverse,Occipito-Iliaque Gauche Transverse,-1,-1,1
+Occipito-Iliaque Gauche Transverse,Occipito-Iliaque Gauche Postérieure,-1,-1,5
+Occipito-Iliaque Gauche Postérieure,Occipito-Sacrée,-1,1,5
+Occipito-Iliaque Gauche Postérieure,Occipito-Iliaque Droite Postérieure,-1,1,5
+Occipito-Iliaque Gauche Postérieure,Occipito-Iliaque Droite Transverse,-1,1,5
+Occipito-Iliaque Gauche Postérieure,Occipito-Iliaque Droite Antérieure,-1,1,5
+Occipito-Iliaque Gauche Postérieure,Occipito-Pubien,-1,1,5
+Occipito-Iliaque Gauche Postérieure,Occipito-Iliaque Gauche Transverse,-1,1,5
+Occipito-Iliaque Gauche Postérieure,Occipito-Iliaque Gauche Transverse,-1,1,5
+Occipito-Iliaque Gauche Postérieure,Occipito-Iliaque Gauche Postérieure,-1,1,3
+Occipito-Iliaque Gauche Postérieure,Occipito-Sacrée,-1,0,5
+Occipito-Iliaque Gauche Postérieure,Occipito-Iliaque Droite Postérieure,-1,0,5
+Occipito-Iliaque Gauche Postérieure,Occipito-Iliaque Droite Transverse,-1,0,5
+Occipito-Iliaque Gauche Postérieure,Occipito-Iliaque Droite Antérieure,-1,0,5
+Occipito-Iliaque Gauche Postérieure,Occipito-Pubien,-1,0,5
+Occipito-Iliaque Gauche Postérieure,Occipito-Iliaque Gauche Transverse,-1,0,5
+Occipito-Iliaque Gauche Postérieure,Occipito-Iliaque Gauche Transverse,-1,0,5
+Occipito-Iliaque Gauche Postérieure,Occipito-Iliaque Gauche Postérieure,-1,0,3
+Occipito-Iliaque Gauche Postérieure,Occipito-Sacrée,-1,-1,5
+Occipito-Iliaque Gauche Postérieure,Occipito-Iliaque Droite Postérieure,-1,-1,4
+Occipito-Iliaque Gauche Postérieure,Occipito-Iliaque Droite Transverse,-1,-1,5
+Occipito-Iliaque Gauche Postérieure,Occipito-Iliaque Droite Antérieure,-1,-1,5
+Occipito-Iliaque Gauche Postérieure,Occipito-Pubien,-1,-1,5
+Occipito-Iliaque Gauche Postérieure,Occipito-Iliaque Gauche Transverse,-1,-1,2
+Occipito-Iliaque Gauche Postérieure,Occipito-Iliaque Gauche Transverse,-1,-1,5
+Occipito-Iliaque Gauche Postérieure,Occipito-Iliaque Gauche Postérieure,-1,-1,1
