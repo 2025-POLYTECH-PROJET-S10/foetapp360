@@ -2,7 +2,7 @@
 // Fichier : mod/hippotrack/stats.php
 
 require_once('../../config.php');
-require_once($CFG->dirroot . '/mod/hippotrack/classes/StatsManager.php');
+require_once($CFG->dirroot . '/mod/hippotrack/classes/stats_manager.php');
 
 global $DB, $PAGE, $OUTPUT, $USER;
 
@@ -25,10 +25,10 @@ $PAGE->set_title(get_string('stats', 'mod_hippotrack'));
 $PAGE->set_heading($course->fullname);
 
 // Instanciation du gestionnaire de statistiques
-$statsmanager = new \mod_hippotrack\StatsManager($DB);
+$stats_manager = new \mod_hippotrack\stats_manager($DB);
 
 // Récupération des statistiques globales
-$globalstats = $statsmanager->get_global_stats($cmid);
+$globalstats = $stats_manager->get_global_stats($cmid);
 
 // Récupération de la liste des étudiants pour le menu déroulant
 $students = $DB->get_records_sql(
@@ -39,9 +39,18 @@ $students = $DB->get_records_sql(
     ['hippotrackid' => $cmid]
 );
 
+function get_user_fullname($user) {
+    return $user->firstname .' '. $user->lastname;
+}
+
 // Affichage
 echo $OUTPUT->header();
 echo $OUTPUT->heading(get_string('stats', 'mod_hippotrack'));
+
+
+/* -------------------------------------------------------------------------- */
+/*                            STATISTIQUES GLOBALES                           */
+/* -------------------------------------------------------------------------- */
 
 // Statistiques globales
 echo html_writer::start_tag('div', ['class' => 'global-stats']);
@@ -50,23 +59,102 @@ echo html_writer::tag('p', 'Nombre total d’étudiants : ' . ($globalstats['tot
 echo html_writer::tag('p', 'Taux de réussite : ' . (($globalstats['success_rate']/$globalstats['total_attempts']) ?? 0)*100 . '%');
 echo html_writer::end_tag('div');
 
-// Menu déroulant pour sélectionner un étudiant
-$options = [0 => get_string('selectstudent', 'mod_hippotrack')];
-foreach ($students as $student) {
-    $options[$student->id] = fullname($student);
+/* -------------------------------------------------------------------------- */
+/*                             DEBUT TABLEAU EXOS                             */
+/* -------------------------------------------------------------------------- */
+
+echo html_writer::start_tag('table', array('class' => 'table table-striped'));
+echo html_writer::start_tag('thead');
+echo html_writer::tag('tr',
+    html_writer::tag('th', "Nom") .
+    html_writer::tag('th', "Sigle") .
+    html_writer::tag('th', get_string('attempts', 'mod_hippotrack')) .
+    html_writer::tag('th', get_string('successrate', 'mod_hippotrack'))
+);
+echo html_writer::end_tag('thead');
+
+echo html_writer::start_tag('tbody');
+
+$correct_datasets = $DB->get_records('hippotrack_datasets', null, '', '*');
+
+foreach ($correct_datasets as $dataset) {
+    $exostats = $stats_manager->get_exo_stats($cm->instance, $dataset->id);
+    $attempts = $exostats['total_attempts'] ?? 0;
+    $successrate = $exostats['success_rate'] ?? 0;
+
+    echo html_writer::start_tag('tr');
+    echo html_writer::tag('td', $dataset->name);
+    echo html_writer::tag('td', $dataset->sigle);
+    echo html_writer::tag('td', $attempts);
+    echo html_writer::tag('td', $successrate . '%');
+    echo html_writer::end_tag('tr');
 }
-echo html_writer::select($options, 'userid', $userid, false, [
-    'id' => 'student_selector',
-    'onchange' => 'location.href="?id=' . $cmid . '&userid="+this.value;'
-]);
+
+echo html_writer::end_tag('tbody');
+
+
+/* -------------------------------------------------------------------------- */
+/*                             FIN TABLEAU EXOS                               */
+/* -------------------------------------------------------------------------- */
+
+/* -------------------------------------------------------------------------- */
+/*                       DEBUT TABLEAU ÉTUDIANTS                              */
+/* -------------------------------------------------------------------------- */
+
+// Tableau récapitulatif de tous les étudiants avec le nombre d'attempts et leur taux de réussite
+echo html_writer::start_tag('table', array('class' => 'table table-striped'));
+echo html_writer::start_tag('thead');
+echo html_writer::tag('tr',
+    html_writer::tag('th', get_string('student', 'mod_hippotrack')) .
+    html_writer::tag('th', get_string('attempts', 'mod_hippotrack')) .
+    html_writer::tag('th', get_string('successrate', 'mod_hippotrack')) .
+    html_writer::tag('th', '')
+);
+echo html_writer::end_tag('thead');
+echo html_writer::start_tag('tbody');
+
+foreach ($students as $student) {
+    // Récupération des statistiques de l'étudiant
+    $studentstats = $stats_manager->get_student_stats($cmid, $student->id);
+    $attempts = count($studentstats);
+
+    // Récupération des données de performance pour calculer le taux de réussite
+    $performance = $stats_manager->get_student_performance_data($student->id, $cmid);
+    $totalAttempts = count($performance);
+    $successful = 0;
+    foreach ($performance as $attempt) {
+        if ($attempt->success) {
+            $successful++;
+        }
+    }
+    $rate = $totalAttempts > 0 ? round(($successful / $totalAttempts) * 100, 2) : 0;
+
+    // Création d'un bouton pour afficher les statistiques complètes de l'étudiant
+    $url = new moodle_url('/mod/hippotrack/stats.php', ['id' => $cmid, 'userid' => $student->id]);
+    $button = html_writer::link($url, get_string('showstats', 'mod_hippotrack'), ['class' => 'btn btn-primary']);
+
+    echo html_writer::start_tag('tr');
+    echo html_writer::tag('td', get_user_fullname($student));
+    echo html_writer::tag('td', $attempts);
+    echo html_writer::tag('td', $rate . '%');
+    echo html_writer::tag('td', $button);
+    echo html_writer::end_tag('tr');
+}
+
+echo html_writer::end_tag('tbody');
+echo html_writer::end_tag('table');
+
+/* -------------------------------------------------------------------------- */
+/*                            FIN TABLEAU ÉTUDIANTS                           */
+/* -------------------------------------------------------------------------- */
 
 // Statistiques spécifiques à un étudiant
 if ($userid) {
-    $studentstats = $statsmanager->get_student_stats($cmid, $userid);
-    $performancedata = $statsmanager->get_student_performance_data($userid, $cmid);
+    $studentstats = $stats_manager->get_student_stats($cmid, $userid);
+    $performancedata = $stats_manager->get_student_performance_data($userid, $cmid);
 
     echo html_writer::start_tag('div', ['class' => 'student-stats']);
-    echo html_writer::tag('h3', get_string('studentstats', 'mod_hippotrack') . ' : ' . fullname($students[$userid]));
+    echo html_writer::tag('h3', get_string('studentstats', 'mod_hippotrack') . ' : ' . get_user_fullname($students[$userid]));
     echo '<ul>';
     foreach ($studentstats as $session) {
         echo html_writer::tag('li', 'Session #' . $session->id . ' - Note : ' . $session->sumgrades . ' - Questions : ' . $session->questionsdone);

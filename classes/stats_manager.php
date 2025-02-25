@@ -1,5 +1,5 @@
 <?php
-// Fichier : mod/hippotrack/classes/StatsManager.php
+// Fichier : mod/hippotrack/classes/stats_manager.php
 
 namespace mod_hippotrack;
 
@@ -7,11 +7,11 @@ defined('MOODLE_INTERNAL') || die();
 
 use moodle_database;
 
-class StatsManager {
+class stats_manager {
     private $db;
 
     /**
-     * Constructeur de la classe StatsManager.
+     * Constructeur de la classe stats_manager.
      *
      * @param moodle_database $db Instance de la base de données Moodle
      */
@@ -39,6 +39,31 @@ class StatsManager {
         $record = $this->db->get_record_sql($sql, $params);
         return $record ? (array)$record : [];
     }
+
+    /**
+     * Get exercice stats to show the stats per exercice
+     * @param int $hippotrackid
+     * @param int $dataset_id
+     * 
+     * @return array containing the stats for this exercice
+     */
+    public function get_exo_stats(int $hippotrackid, int $dataset_id){
+        $sql = "SELECT COUNT(DISTINCT userid) as total_students,
+                        SUM(a.success) as success_rate,
+                        COUNT(a.id) as total_attempts
+                FROM {hippotrack_session} s
+                JOIN {hippotrack_attempt} a ON s.id = a.id_session
+                WHERE s.id_hippotrack = :hippotrackid AND a.id_dataset = :dataset_id";
+
+        $params = ["hippotrackid"=> $hippotrackid,"dataset_id"=> $dataset_id];
+        $record = $this->db->get_record_sql($sql, $params);
+        return $record ? (array)$record : [];
+    }
+
+
+    /* -------------------------------------------------------------------------- */
+    /*                         STUDENT SPECIFIC FUNCTIONS                         */
+    /* -------------------------------------------------------------------------- */
 
     /**
      * Récupère les statistiques d'un étudiant spécifique.

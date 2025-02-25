@@ -21,6 +21,7 @@ $PAGE->set_context($context);
 $PAGE->set_url('/mod/hippotrack/view.php', array('id' => $id));
 $PAGE->set_title(format_string($moduleinstance->name));
 $PAGE->set_heading(format_string($course->fullname));
+$PAGE->requires->css('/mod/hippotrack/styles.css');
 
 echo $OUTPUT->header();
 echo html_writer::tag('h2', format_string($moduleinstance->name), array('class' => 'hippotrack-title'));

@@ -22,6 +22,7 @@ $PAGE->set_context($context);
 $PAGE->set_url('/mod/hippotrack/attempt.php', array('id' => $cmid));
 $PAGE->set_title("Session d'entraînement");
 $PAGE->set_heading("Session d'entraînement");
+$PAGE->requires->css("/mod/hippotrack/styles.css");
 
 echo $OUTPUT->header();
 
@@ -195,7 +196,7 @@ else {
     }
 
     // 📌 Bouton de validation
-    echo html_writer::empty_tag('input', array('type' => 'submit', 'value' => 'Valider'));
+    echo html_writer::empty_tag('input', array('type' => 'submit', 'value' => 'Valider', 'class' => 'btn btn-primary'));
 
     echo html_writer::end_tag('form');
 }

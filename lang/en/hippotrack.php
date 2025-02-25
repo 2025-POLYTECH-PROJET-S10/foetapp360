@@ -40,3 +40,7 @@ $string['studentstats'] = 'Student statistics';
 $string['selectstudent'] = 'Select a student';
 $string['mystats'] = 'My statistics';
 $string['success'] = 'Success';
+$string['student'] = 'Student';
+$string['attempts'] = 'Attempts';
+$string['successrate'] = 'Success rate';
+$string['showstats'] = 'Show statistics';

@@ -41,3 +41,7 @@ $string['studentstats'] = 'Statistiques de l\'étudiant';
 $string['selectstudent'] = 'Sélectionner un étudiant';
 $string['mystats'] = 'Mes statistiques';
 $string['success'] = 'Succès';
+$string['student'] = 'Étudiant';
+$string['attempts'] = 'Tentatives';
+$string['successrate'] = 'Taux de réussite';
+$string['showstats'] = 'Voir les statistiques';

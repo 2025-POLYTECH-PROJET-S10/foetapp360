@@ -2,7 +2,7 @@
 // Fichier : mod/hippotrack/mystats.php
 
 require_once('../../config.php');
-require_once($CFG->dirroot . '/mod/hippotrack/classes/StatsManager.php');
+require_once($CFG->dirroot . '/mod/hippotrack/classes/stats_manager.php');
 
 global $DB, $PAGE, $OUTPUT, $USER;
 
@@ -21,11 +21,11 @@ $PAGE->set_title(get_string('mystats', 'mod_hippotrack'));
 $PAGE->set_heading($course->fullname);
 
 // Instanciation du gestionnaire de statistiques
-$statsmanager = new \mod_hippotrack\StatsManager($DB);
+$stats_manager = new \mod_hippotrack\stats_manager($DB);
 
 // Récupération des données de l'étudiant
-$studentstats = $statsmanager->get_student_stats($cmid, $USER->id);
-$performancedata = $statsmanager->get_student_performance_data($USER->id, $cmid);
+$studentstats = $stats_manager->get_student_stats($cmid, $USER->id);
+$performancedata = $stats_manager->get_student_performance_data($USER->id, $cmid);
 
 // Affichage
 echo $OUTPUT->header();

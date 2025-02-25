@@ -1,0 +1,128 @@
+/* Global Variables using Gray Scale */
+:root {
+    --base-color: #b0b4b7;         /* Primary gray */
+    --base-color-dark: #787c7f;    /* Darker gray for hover/focus */
+    --light-color: #e1e3e5;        /* Light gray for borders/backgrounds */
+    --text-color: #242424;
+    --background-color: #fff;
+    --border-color: #ddd;
+    --border-radius: 4px;
+    --font-family: Arial, sans-serif;
+  }
+  
+  /* Base Styles */
+  body {
+    font-family: var(--font-family);
+    color: var(--text-color);
+    background-color: var(--background-color);
+    margin: 0;
+    padding: 0;
+  }
+  
+  /* Container */
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+  
+  /* Minimalist Card */
+  .card {
+    background-color: var(--background-color);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    padding: 20px;
+    margin-bottom: 20px;
+  }
+  
+  /* Button Base Style */
+  .btn {
+    display: inline-block;
+    padding: 10px 15px;
+    margin: 5px;
+    border: 1px solid transparent;
+    border-radius: var(--border-radius);
+    font-size: 16px;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  /* Secondary Button using Gray Colors */
+  .btn-secondary {
+    background-color: var(--base-color);
+    color: #fff;
+  }
+  
+  .btn-secondary:hover {
+    background-color: var(--base-color-dark);
+  }
+  
+  /* Flex Layout for Button Groups */
+  .button-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+  
+  /* Form Styles */
+  .form-group {
+    margin-bottom: 15px;
+  }
+  
+  label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 5px;
+    color: var(--text-color);
+  }
+  
+  input[type="text"],
+  input[type="email"],
+  input[type="password"],
+  textarea,
+  select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    font-size: 16px;
+    color: var(--text-color);
+    background-color: var(--background-color);
+    box-sizing: border-box;
+  }
+  
+  input[type="text"]:focus,
+  input[type="email"]:focus,
+  input[type="password"]:focus,
+  textarea:focus,
+  select:focus {
+    outline: none;
+    border-color: var(--base-color);
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Example Table Styling (Optional) */
+  .table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+  }
+  
+  .table th,
+  .table td {
+    padding: 10px;
+    border: 1px solid var(--border-color);
+    text-align: left;
+  }
+  
+  /* Responsive Design */
+  @media (max-width: 768px) {
+    .container {
+      padding: 10px;
+    }
+    .button-group {
+      flex-direction: column;
+    }
+  }
