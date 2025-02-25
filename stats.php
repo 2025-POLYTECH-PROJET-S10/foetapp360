@@ -123,7 +123,7 @@ foreach ($students as $student) {
     $totalAttempts = count($performance);
     $successful = 0;
     foreach ($performance as $attempt) {
-        if ($attempt->success) {
+        if ($attempt->is_correct) {
             $successful++;
         }
     }
@@ -166,7 +166,7 @@ if ($userid) {
     $success = [];
     foreach ($performancedata as $attempt) {
         $labels[] = $attempt->attempt_number;
-        $success[] = $attempt->success;
+        $success[] = $attempt->is_correct;
     }
 
     // Graphique avec Chart.js

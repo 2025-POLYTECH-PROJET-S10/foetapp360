@@ -48,7 +48,7 @@ class single_student {
         }
         $total_attempts = count($this->attempts);
         $successful_attempts = count(array_filter($this->attempts, function($attempt) {
-            return $attempt->success == 1;
+            return $attempt->is_correct == 1;
         }));
         return ($successful_attempts / $total_attempts) * 100;
     }

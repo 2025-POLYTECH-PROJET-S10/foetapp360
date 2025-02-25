@@ -44,7 +44,7 @@ $labels = [];
 $success = [];
 foreach ($performancedata as $attempt) {
     $labels[] = $attempt->attempt_number;
-    $success[] = $attempt->success;
+    $success[] = $attempt->is_correct;
 }
 
 // Graphique avec Chart.js

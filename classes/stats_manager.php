@@ -29,7 +29,7 @@ class stats_manager {
         $sql = "SELECT COUNT(DISTINCT userid) as total_students,
                AVG(sumgrades) as average_grade,
                AVG(questionsdone) as average_questions,
-               AVG(a.success) as success_rate,
+               AVG(a.is_correct) as success_rate,
                COUNT(a.id) as total_attempts
             FROM {hippotrack_session} s
             JOIN {hippotrack_attempt} a ON s.id = a.id_session
@@ -49,7 +49,7 @@ class stats_manager {
      */
     public function get_exo_stats(int $hippotrackid, int $dataset_id){
         $sql = "SELECT COUNT(DISTINCT userid) as total_students,
-                        SUM(a.success) as success_rate,
+                        SUM(a.is_correct) as success_rate,
                         COUNT(a.id) as total_attempts
                 FROM {hippotrack_session} s
                 JOIN {hippotrack_attempt} a ON s.id = a.id_session
@@ -90,7 +90,7 @@ class stats_manager {
      * @return array Données pour le graphique
      */
     public function get_student_performance_data(int $userid, int $hippotrackid): array {
-        $sql = "SELECT a.attempt_number, a.success
+        $sql = "SELECT a.attempt_number, a.is_correct
                 FROM {hippotrack_attempt} a
                 JOIN {hippotrack_session} s ON a.id_session = s.id
                 WHERE s.userid = :userid AND s.id_hippotrack = :hippotrackid
