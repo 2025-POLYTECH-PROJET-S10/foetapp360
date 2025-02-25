@@ -32,6 +32,7 @@ $new_question = optional_param('new_question', 0, PARAM_INT);
 $submitted = optional_param('submitted', 0, PARAM_INT);
 $first_time = optional_param('first_time', 0, PARAM_INT);
 $userid = $USER->id;
+$TOLERANCE = 5;
 
 $cm = get_coursemodule_from_id('hippotrack', $cmid, 0, false, MUST_EXIST);
 $course = $DB->get_record('course', array('id' => $cm->course), '*', MUST_EXIST);
@@ -57,8 +58,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['validate'])) {
 
             // Debugging
             error_log("Processing: $field | Rotation: $rotation | Inclinaison: $inclinaison");
-
-
         }
     }
 }
@@ -88,7 +87,7 @@ if (empty($difficulty)) {
 $possible_inputs = ($difficulty === 'easy') ? 
 ['name', 'sigle', 'partogramme', 'schema_simplifie', 'vue_anterieure', 'vue_laterale'] : 
 ['name', 'sigle', 'partogramme', 'schema_simplifie'];
-
+ 
 // 📌 Correction après validation
 if ($submitted) {
     echo html_writer::tag('h3', "Correction :");
@@ -104,9 +103,21 @@ if ($submitted) {
             $correct_inclinaison = $dataset->inclinaison;
             $correct_rotation = $dataset->rotation;
         
-            // Vérification des deux valeurs ensemble
-            if ($student_inclinaison != $correct_inclinaison || $student_rotation != $correct_rotation) {
+            // Vérification de l'inclinaison
+            if (abs($student_inclinaison - $correct_inclinaison) > 5) {
                 $is_correct = false;
+            }
+
+            // Vérification de la rotation. Cas particulier pour les angles perpendiculaires. TODO Mettre tolérance dans DB.
+            if($correct_rotation == 90 || $correct_rotation == 180 || $correct_rotation == 270 || $correct_rotation == 0 || $correct_rotation == 360){
+                if(abs($student_rotation - $correct_rotation) > 5){
+                    $is_correct = false;
+                }
+            }
+            else{
+                if(abs($student_rotation - $correct_rotation) > 40){
+                    $is_correct = false;
+                }
             }
             echo html_writer::tag('p', "<strong>$field :</strong> Votre inclinaison : $student_inclinaison | Rotation : $student_rotation <br>");
         } 
@@ -126,7 +137,7 @@ if ($submitted) {
             WHERE input_dataset = :input_dataset 
             AND expected_dataset = :expected_dataset",
             array(
-                'input_dataset' => $_POST['input_dataset'], // Ajout du paramètre manquant
+                'input_dataset' => $_POST['input'], // Ajout du paramètre manquant
                 'expected_dataset' => $_POST['dataset_id']
             )
         );
@@ -247,10 +258,13 @@ else {
             // Rotation & Inclination Sliders
             echo '<div class="hippotrack_sliders">';
             echo '<label for="rotate-slider">Rotation:</label>';
-            echo '<input type="range" class="rotate-slider" name="rotation_' . $field . '" min="0" max="360" value="' . ($is_given_input ? $random_dataset->inclinaison : 0) . '"><br>';
-    
+            // Si bloqué, on ajoute un input hidden pour transmettre l'information
+            echo '<input type="range" class="rotate-slider" name="rotation_' . $field . '" min="0" max="360" 
+                value="' . ($is_given_input ? $random_dataset->rotation : 0) . '" ' . ($is_given_input ? 'disabled' : '') . '><br>';
+
             echo '<label for="move-axis-slider">Inclinaison:</label>';
-            echo '<input type="range" class="move-axis-slider" name="inclinaison_' . $field . '" min="-50" max="50" value="' . ($is_given_input ? ($random_dataset->inclinaison * 50) : 0) . '"><br>';
+            echo '<input type="range" class="move-axis-slider" name="inclinaison_' . $field . '" min="-50" max="50" 
+                value="' . ($is_given_input ? $random_dataset->inclinaison * 50 : 0) . '" ' . ($is_given_input ? 'disabled' : '') . '><br>';
             echo '</div>';
 
             echo '</div>';  // Close .rotation-hippotrack_container
@@ -271,13 +285,16 @@ else {
             echo '<img class="hippotrack_attempt_cycling-image" src="' . $image_path . '">';
             echo '</div>';
 
+            
             echo '<div class="hippotrack_container button-hippotrack_container">';
-            echo '<button type="button" class="hippotrack_attempt_prev-btn">←</button>';
-            echo '<button type="button" class="hippotrack_attempt_next-btn">→</button>';
-            echo '<button type="button" class="hippotrack_attempt_toggle_btn">🔄 Toggle bf/mf</button>'; // Toggle button
+            if (!$is_given_input) {
+                echo '<button type="button" class="hippotrack_attempt_prev-btn">←</button>';
+                echo '<button type="button" class="hippotrack_attempt_next-btn">→</button>';
+                echo '<button type="button" class="hippotrack_attempt_toggle_btn">🔄 Toggle bf/mf</button>'; // Toggle button
+            }
             echo '<input type="hidden" class="hippotrack_attempt_selected_position" name="' . $field . '" value="' . ($is_given_input ? ($random_dataset->$random_input) : $prefix ) . '">';
             echo '</div>';
-
+        
             echo '</div>';
         } else {
             echo html_writer::tag('label', $label, array('for' => $field));
@@ -287,7 +304,7 @@ else {
                 'id' => $field,
                 'value' => $is_given_input ? $random_dataset->$random_input : '',
                 'required' => true,
-                $readonly => $readonly
+                'readonly' => $is_given_input ? 'readonly' : null // Ajoute readonly si $is_given_input est vrai
             ));
             echo "<br>";
         }
