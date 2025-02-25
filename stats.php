@@ -39,8 +39,9 @@ $students = $DB->get_records_sql(
     ['hippotrackid' => $cmid]
 );
 
-function get_user_fullname($user) {
-    return $user->firstname .' '. $user->lastname;
+function get_user_fullname($user)
+{
+    return $user->firstname . ' ' . $user->lastname;
 }
 
 // Affichage
@@ -56,7 +57,7 @@ echo $OUTPUT->heading(get_string('stats', 'mod_hippotrack'));
 echo html_writer::start_tag('div', ['class' => 'global-stats']);
 echo html_writer::tag('h3', get_string('globalstats', 'mod_hippotrack'));
 echo html_writer::tag('p', 'Nombre total d’étudiants : ' . ($globalstats['total_students'] ?? 0));
-echo html_writer::tag('p', 'Taux de réussite : ' . (($globalstats['success_rate']/$globalstats['total_attempts']) ?? 0)*100 . '%');
+echo html_writer::tag('p', 'Taux de réussite : ' . (($globalstats['success_rate'] / $globalstats['total_attempts']) ?? 0) * 100 . '%');
 echo html_writer::end_tag('div');
 
 /* -------------------------------------------------------------------------- */
@@ -65,7 +66,8 @@ echo html_writer::end_tag('div');
 
 echo html_writer::start_tag('table', array('class' => 'table table-striped'));
 echo html_writer::start_tag('thead');
-echo html_writer::tag('tr',
+echo html_writer::tag(
+    'tr',
     html_writer::tag('th', "Nom") .
     html_writer::tag('th', "Sigle") .
     html_writer::tag('th', get_string('attempts', 'mod_hippotrack')) .
@@ -104,7 +106,8 @@ echo html_writer::end_tag('tbody');
 // Tableau récapitulatif de tous les étudiants avec le nombre d'attempts et leur taux de réussite
 echo html_writer::start_tag('table', array('class' => 'table table-striped'));
 echo html_writer::start_tag('thead');
-echo html_writer::tag('tr',
+echo html_writer::tag(
+    'tr',
     html_writer::tag('th', get_string('student', 'mod_hippotrack')) .
     html_writer::tag('th', get_string('attempts', 'mod_hippotrack')) .
     html_writer::tag('th', get_string('successrate', 'mod_hippotrack')) .
@@ -147,6 +150,86 @@ echo html_writer::end_tag('table');
 /* -------------------------------------------------------------------------- */
 /*                            FIN TABLEAU ÉTUDIANTS                           */
 /* -------------------------------------------------------------------------- */
+
+
+
+//#######################################   ######################
+
+echo "<h3>📊 Statistiques globales</h3>";
+
+// ✅ 1. Success Rate by Difficulty (Bar Chart)
+$sql = "SELECT s.difficulty, AVG(a.is_correct) * 100 AS success_rate 
+            FROM {hippotrack_attempt} a
+            JOIN {hippotrack_session} s ON a.id_session = s.id
+            WHERE s.id_hippotrack = :hippotrackid
+            GROUP BY s.difficulty";
+$params = ['hippotrackid' => $hippotrack->id];
+$results = $DB->get_records_sql($sql, $params);
+$easy_success = round($results['Easy']->success_rate ?? 0, 2);
+$hard_success = round($results['Hard']->success_rate ?? 0, 2);
+
+$chart = new \core\chart_bar();
+$series = new \core\chart_series('Taux de réussite', [$easy_success, $hard_success]);
+$chart->add_series($series);
+$chart->set_labels(['Facile', 'Difficile']);
+
+echo $OUTPUT->render($chart);
+
+// ✅ 2. Success Rate by Visual Representation (Bar Chart)
+$sql = "SELECT d.name, AVG(a.is_correct) * 100 AS success_rate 
+            FROM {hippotrack_attempt} a
+            JOIN {hippotrack_datasets} d ON a.id_dataset = d.id
+            JOIN {hippotrack_session} s ON a.id_session = s.id
+            WHERE s.id_hippotrack = :hippotrackid
+            GROUP BY d.name";
+$results = $DB->get_records_sql($sql, $params);
+
+$labels = [];
+$data = [];
+foreach ($results as $row) {
+    $labels[] = $row->name;
+    $data[] = round($row->success_rate, 2);
+}
+
+$chart = new \core\chart_bar();
+$series = new \core\chart_series('Taux de réussite par représentation', $data);
+$chart->add_series($series);
+$chart->set_labels($labels);
+
+echo $OUTPUT->render($chart);
+
+// ✅ 3. Success Rate by Input Type (Bar Chart)
+$sql = "SELECT a.given_input, AVG(a.is_correct) * 100 AS success_rate 
+            FROM {hippotrack_attempt} a
+            JOIN {hippotrack_session} s ON a.id_session = s.id
+            WHERE s.id_hippotrack = :hippotrackid
+            GROUP BY a.given_input";
+$results = $DB->get_records_sql($sql, $params);
+
+$labels = [];
+$data = [];
+foreach ($results as $row) {
+    $labels[] = $row->given_input;
+    $data[] = round($row->success_rate, 2);
+}
+
+$chart = new \core\chart_bar();
+$series = new \core\chart_series('Taux de réussite par input', $data);
+$chart->add_series($series);
+$chart->set_labels($labels);
+
+echo $OUTPUT->render($chart);
+
+
+
+
+
+//#############################################################
+
+
+
+
+
 
 // Statistiques spécifiques à un étudiant
 if ($userid) {
