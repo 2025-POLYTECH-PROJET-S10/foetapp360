@@ -89,7 +89,7 @@ if ($is_student) {
     // Définir le nouvel ID
     $session_id = ($existingSession && $existingSession->maxid !== null) ? $existingSession->maxid + 1 : 1;
 
-    $attempt_url = new moodle_url('/mod/hippotrack/attempt.php', array('id' => $id, 'session_id' => $session_id));
+    $attempt_url = new moodle_url('/mod/hippotrack/attempt.php', array('id' => $id, 'session_id' => $session_id, 'first_time' => true));
     if (page_exists('attempt.php')) {
         echo $OUTPUT->single_button($attempt_url, '🚀 Lancer une session d\'exercice', 'get');
     } else {
