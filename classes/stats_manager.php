@@ -61,7 +61,28 @@ class stats_manager
 
         $params = ["hippotrackid" => $hippotrackid, "dataset_id" => $dataset_id];
         $record = $this->db->get_record_sql($sql, $params);
-        var_dump($record);
+        return $record ? (array) $record : [];
+    }
+
+    /**
+     * Get exercice stats to show the stats by difficulty
+     * @param int $hippotrackid
+     * @param int $dataset_id
+     * @param string $difficulty
+     * 
+     * @return array containing the stats for this exercice
+     */
+    public function get_exo_stats_by_difficulty(int $hippotrackid, int $dataset_id, string $difficulty)
+    {
+        $sql = "SELECT COUNT(DISTINCT userid) as total_students,
+                        SUM(a.is_correct) as success_rate,
+                        COUNT(a.id) as total_attempts
+                FROM {hippotrack_attempt} a
+                JOIN {hippotrack_session} s ON a.id_session = s.id
+                WHERE s.id_hippotrack = :hippotrackid AND a.id_dataset = :dataset_id AND s.difficulty = :difficulty";
+
+        $params = ["hippotrackid" => $hippotrackid, "dataset_id" => $dataset_id, "difficulty"=> $difficulty];
+        $record = $this->db->get_record_sql($sql, $params);
         return $record ? (array) $record : [];
     }
 

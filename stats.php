@@ -69,7 +69,10 @@ echo html_writer::tag('tr',
     html_writer::tag('th', "Nom") .
     html_writer::tag('th', "Sigle") .
     html_writer::tag('th', get_string('attempts', 'mod_hippotrack')) .
-    html_writer::tag('th', get_string('successrate', 'mod_hippotrack'))
+    html_writer::tag('th', get_string('attempts', 'mod_hippotrack') . " mode facile") .
+    html_writer::tag('th', get_string('attempts', 'mod_hippotrack') . " mode difficile") .
+    html_writer::tag('th', get_string('successrate', 'mod_hippotrack') . " mode facile") .
+    html_writer::tag("th", get_string('successrate', 'mod_hippotrack') . " mode difficile")
 );
 echo html_writer::end_tag('thead');
 
@@ -79,9 +82,16 @@ $correct_datasets = $DB->get_records('hippotrack_datasets', null, '', '*');
 
 foreach ($correct_datasets as $dataset) {
     $exostats = $stats_manager->get_exo_stats($hippotrack->id, $dataset->id);
+    $easystats = $stats_manager->get_exo_stats_by_difficulty($hippotrack->id, $dataset->id, 'easy');
+    $hardstats = $stats_manager->get_exo_stats_by_difficulty($hippotrack->id, $dataset->id, 'hard');
     // var_dump($exostats);
     $attempts = $exostats['total_attempts'] ?? 0;
+    $easyattempts = $easystats['total_attempts'] ?? 0;
+    $hardattempts = $hardstats['total_attempts'] ?? 0;
+
     $successrate = $exostats['success_rate'] ?? 0;
+    $easysuccessrate = $easystats['success_rate'] ?? 0;
+    $hardsuccessrate = $hardstats['success_rate'] ?? 0;
 
     debugging("hipp id :" . $hippotrack->id . " - ID dataset : " . $dataset->id);
 
@@ -89,7 +99,10 @@ foreach ($correct_datasets as $dataset) {
     echo html_writer::tag('td', $dataset->name);
     echo html_writer::tag('td', $dataset->sigle);
     echo html_writer::tag('td', $attempts);
-    echo html_writer::tag('td', $successrate . '%');
+    echo html_writer::tag('td', $easyattempts);
+    echo html_writer::tag('td', $hardattempts);
+    echo html_writer::tag('td', $easysuccessrate . '%');
+    echo html_writer::tag('td', $hardsuccessrate . '%');
     echo html_writer::end_tag('tr');
 }
 
@@ -151,6 +164,7 @@ echo html_writer::end_tag('table');
 /*                            FIN TABLEAU ÉTUDIANTS                           */
 /* -------------------------------------------------------------------------- */
 
+// ! TO BE REMOVED
 // Statistiques spécifiques à un étudiant
 if ($userid) {
     $studentstats = $stats_manager->get_student_stats($cmid, $userid);
