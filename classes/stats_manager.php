@@ -218,34 +218,46 @@ class stats_manager
 
 
     /**
-     * Récupère le taux de réussite par type de représentation visuelle pour un étudiant.
+     * Récupère le taux de réussite pour chaque type de représentation visuelle, 
+     * séparé en trois catégories : Correct, OK, Mauvais.
      *
      * @param int $hippotrackid ID de l'instance hippotrack
      * @param int $userid ID de l'utilisateur
-     * @return array Clés = types de représentation, Valeurs = taux de réussite (%)
+     * @return array Un tableau contenant trois sous-tableaux : Correct, OK et Mauvais
      */
     public function get_success_rate_by_representation(int $hippotrackid, int $userid): array
     {
         global $DB;
 
-        $success_rates = [];
+        $success_rates = [
+            'correct' => [],
+            'ok' => [],
+            'bad' => []
+        ];
 
-        $sql = "SELECT 
-                d.name AS representation,
-                COUNT(CASE WHEN a.is_correct = 1 THEN 1 END) * 100.0 / COUNT(*) AS success_ratio
-            FROM {hippotrack_attempt} a
-            JOIN {hippotrack_datasets} d ON a.id_dataset = d.id
-            JOIN {hippotrack_session} s ON a.id_session = s.id
-            WHERE s.userid = :userid AND s.id_hippotrack = :hippotrackid
-            GROUP BY d.name
-            ORDER BY success_ratio DESC";
+        // Base SQL query
+        $base_sql = "SELECT 
+                    d.name AS representation,
+                    COUNT(CASE WHEN a.is_correct = 1 THEN 1 END) * 100.0 / COUNT(*) AS success_ratio
+                FROM {hippotrack_attempt} a
+                JOIN {hippotrack_datasets} d ON a.id_dataset = d.id
+                JOIN {hippotrack_session} s ON a.id_session = s.id
+                WHERE d.inclinaison = :inclinaison 
+                  AND s.userid = :userid 
+                  AND s.id_hippotrack = :hippotrackid
+                GROUP BY d.name
+                ORDER BY success_ratio DESC";
 
         $params = ['userid' => $userid, 'hippotrackid' => $hippotrackid];
-        $results = $DB->get_records_sql($sql, $params);
 
-        // Stocker les résultats sous forme d'un tableau associatif
-        foreach ($results as $result) {
-            $success_rates[$result->representation] = round($result->success_ratio, 2);
+        // Execute queries for each position type
+        foreach (['correct' => 1, 'ok' => 0, 'bad' => -1] as $key => $inclinaison) {
+            $params['inclinaison'] = $inclinaison;
+            $results = $DB->get_records_sql($base_sql, $params);
+
+            foreach ($results as $result) {
+                $success_rates[$key][$result->representation] = round($result->success_ratio, 2);
+            }
         }
 
         return $success_rates;

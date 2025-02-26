@@ -78,15 +78,28 @@ echo $OUTPUT->render($chart);
 // Get success rates by representation type
 $success_rates = $stats_manager->get_success_rate_by_representation($cmid, $USER->id);
 
-$labels = array_keys($success_rates);
-$values = array_values($success_rates);
+// Extract labels and values for the chart
+$labels = array_keys(array_merge($success_rates['correct'], $success_rates['ok'], $success_rates['bad']));
+$correct_values = [];
+$ok_values = [];
+$bad_values = [];
 
+// Populate values while ensuring all labels exist in each category
+foreach ($labels as $label) {
+    $correct_values[] = $success_rates['correct'][$label] ?? 0;
+    $ok_values[] = $success_rates['ok'][$label] ?? 0;
+    $bad_values[] = $success_rates['bad'][$label] ?? 0;
+}
+
+// Render bar chart
 $chart = new \core\chart_bar();
-$series = new \core\chart_series('Taux de réussite par représentation visuelle', $values);
-$chart->add_series($series);
+$chart->add_series(new \core\chart_series('Correcte', $correct_values));
+$chart->add_series(new \core\chart_series('OK', $ok_values));
+$chart->add_series(new \core\chart_series('Mauvaise', $bad_values));
 $chart->set_labels($labels);
 
 echo $OUTPUT->render($chart);
+
 
 #################################################################################
 echo html_writer::end_tag('div');
