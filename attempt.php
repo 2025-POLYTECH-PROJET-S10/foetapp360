@@ -24,6 +24,7 @@
  */
 require(__DIR__ . '/../../config.php');
 require_once($CFG->libdir . '/sessionlib.php');
+require_once(__DIR__ . '/locallib.php');
 
 $cmid = required_param('id', PARAM_INT);
 $session_id = required_param('session_id', PARAM_INT);
@@ -98,28 +99,35 @@ if ($submitted) {
         if ($field === 'partogramme' || $field === 'schema_simplifie') {
             // 🔥 Correction spéciale pour partogramme et schéma simplifié (ils utilisent rotation + inclinaison)
             $student_inclinaison = required_param("inclinaison_$field", PARAM_RAW);
+            $student_inclinaison = get_correct_inclinaison($student_inclinaison);
             $student_rotation = required_param("rotation_$field", PARAM_RAW);
-            
-            $correct_inclinaison = $dataset->inclinaison;
-            $correct_rotation = $dataset->rotation;
-        
-            // Vérification de l'inclinaison
-            if (abs($student_inclinaison - $correct_inclinaison) > 5) {
-                $is_correct = false;
-            }
 
-            // Vérification de la rotation. Cas particulier pour les angles perpendiculaires. TODO Mettre tolérance dans DB.
-            if($correct_rotation == 90 || $correct_rotation == 180 || $correct_rotation == 270 || $correct_rotation == 0 || $correct_rotation == 360){
-                if(abs($student_rotation - $correct_rotation) > 5){
-                    $is_correct = false;
-                }
+            $input_dataset = get_dataset_from_inclinaison_rotation($student_inclinaison, $student_rotation);
+            $is_correct = datasets_equals($input_dataset, $dataset);
+            if($input_dataset == null){
+                $input_dataset_name = get_dataset_name_from_inclinaison_rotation($student_inclinaison, $student_rotation);
             }
             else{
-                if(abs($student_rotation - $correct_rotation) > 40){
-                    $is_correct = false;
-                }
+                $input_dataset_name = $input_dataset->name;
             }
+
+            // Feedback
             echo html_writer::tag('p', "<strong>$field :</strong> Votre inclinaison : $student_inclinaison | Rotation : $student_rotation <br>");
+            $feedback = $DB->get_record_sql(
+                "SELECT * FROM {hippotrack_feedback} 
+                WHERE input_dataset = :input_dataset 
+                AND expected_dataset = :expected_dataset
+                AND input_inclinaison = :input_inclinaison
+                AND expected_inclinaison = :expected_inclinaison",
+                array(
+                    'input_dataset' => $input_dataset_name,
+                    'expected_dataset' => $dataset->name,
+                    'input_inclinaison' => $student_inclinaison,
+                    'expected_inclinaison' => $dataset->inclinaison
+                )
+            );
+            $feedback_data = $DB->get_record_sql("SELECT * FROM {hippotrack_feedback_data} WHERE id = :id", array('id' => $feedback->id_feedback));
+            echo html_writer::tag('p', $feedback_data->feedback);
         } 
         else {
             // 🔥 Cas normal (name, sigle, vue_anterieure, vue_laterale)
@@ -131,20 +139,8 @@ if ($submitted) {
             }
             echo html_writer::tag('p', "<strong>$field :</strong> Votre réponse : $student_answer");
         }
-
-        $feedback_data_id = $DB->get_record_sql(
-            "SELECT id_feedback_data FROM {hippotrack_feedback} 
-            WHERE input_dataset = :input_dataset 
-            AND expected_dataset = :expected_dataset",
-            array(
-                'input_dataset' => $_POST['input'], // Ajout du paramètre manquant
-                'expected_dataset' => $_POST['dataset_id']
-            )
-        );
-        $feedback_string = $DB->get_record_sql("SELECT id_feedback_data FROM {hippotrack_feedback} WHERE id = :id", array('id' => $feedback_data_id));
-        echo html_writer::tag('p', $feedback_string);
     }
-    echo html_writer::tag('p', array('class' => $is_correct ? 'correct' : 'incorrect'));
+    echo html_writer::tag('p', $is_correct ? 'Correct' : 'Incorrect', array('class' => $is_correct ? 'correct' : 'incorrect'));
 
     // 📌 Enregistrer les réponses de l'étudiant dans la base de données
     // Vérifier si une tentative existe déjà, sinon l'initialiser
@@ -274,6 +270,12 @@ else {
             echo '<label for="move-axis-slider">Inclinaison:</label>';
             echo '<input type="range" class="move-axis-slider" name="inclinaison_' . $field . '" min="-50" max="50" 
                 value="' . ($is_given_input ? $random_dataset->inclinaison * 50 : 0) . '" ' . ($is_given_input ? 'disabled' : '') . '><br>';
+
+            // Mandory. If not, will not send values with POST.
+            if ($is_given_input) {
+                echo '<input type="hidden" name="rotation_' . $field . '" value="' . ($is_given_input ? $random_dataset->rotation : 0) . '">';
+                echo '<input type="hidden" name="inclinaison_' . $field . '" value="' . ($random_dataset->inclinaison * 50) . '">';
+            }
             echo '</div>';
 
             echo '</div>';  // Close .rotation-hippotrack_container
