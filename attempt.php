@@ -222,7 +222,7 @@ else {
 
     echo html_writer::tag('h3', "Trouvez les bonnes correspondances pour :");
 
-    echo html_writer::start_tag('form', array('method' => 'post', 'action' => 'attempt.php'));
+    echo html_writer::start_tag('form', array('method' => 'post', 'action' => 'attempt.php', 'id' => 'attempt_form'));
     echo html_writer::empty_tag('input', array('type' => 'hidden', 'name' => 'id', 'value' => $cmid));
     echo html_writer::empty_tag('input', array('type' => 'hidden', 'name' => 'session_id', 'value' => $session_id));
     echo html_writer::empty_tag('input', array('type' => 'hidden', 'name' => 'difficulty', 'value' => $difficulty));
@@ -232,19 +232,28 @@ else {
 
     $PAGE->requires->js_call_amd('mod_hippotrack/attempt', 'init');
 
+    // List Selector
+    echo '<div class="hippotrack-tabs">';
+    echo '<ul class="hippotrack-tab-list">';
+    foreach ($possible_inputs as $field) {
+        echo '<li class="hippotrack-tab ' . ($random_input === $field ? 'active' : '') . '" data-target="#' . $field . '_container">' . $field . '</li>';
+    }
+    echo '</ul">';
+    echo '</div>';
+
     foreach ($possible_inputs as $field) {
         $label = ucfirst(str_replace('_', ' ', $field));
         $is_given_input = ($field === $random_input);
         $readonly = $is_given_input ? 'readonly' : '';
     
         if ($field === 'partogramme' || $field === 'schema_simplifie') {
-            echo html_writer::tag('h4', $label);
     
             $interior_image = ($field === 'partogramme') ? 'partogramme_interieur' : 'schema_simplifie_interieur';
             $background_image = ($field === 'partogramme') ? 'bassin' : 'null';
             $contour_class = ($field === 'partogramme') ? 'partogramme_contour' : 'schema_simplifie_contour';
     
-            echo '<div class="rotation_hippotrack_container">';
+            echo '<div class="rotation_hippotrack_container attempt_container" id="' . $field . '_container">';
+            echo html_writer::tag('h4', $label);
             echo '<div class="hippotrack_container" data-schema-type="' . $field . '">';
     
             if ($background_image !== 'null') {
@@ -269,7 +278,6 @@ else {
 
             echo '</div>';  // Close .rotation-hippotrack_container
         } elseif ($field === 'vue_anterieure' || $field === 'vue_laterale') {
-            echo html_writer::tag('h4', $label);
     
             $prefix = ($field === 'vue_anterieure') ? 'bb_vue_ante_bf_' : 'bb_vue_lat_bf_';
             $image_path = new moodle_url('/mod/hippotrack/pix/' . ($is_given_input ? ($random_dataset->$random_input) : ($prefix . '1.png')));
@@ -277,7 +285,8 @@ else {
             // **🆕 Select Background Image Based on $field**
             $background_image = ($field === 'vue_anterieure') ? 'bassin_anterieur.png' : 'bassin_laterale.png';
 
-            echo '<div class="image_cycling_hippotrack_container" data-schema-type="' . $field . '" data-prefix="' . $prefix . '">';
+            echo '<div class="image_cycling_hippotrack_container attempt_container" data-schema-type="' . $field . '" data-prefix="' . $prefix . '" id="' . $field . '_container">';
+            echo html_writer::tag('h4', $label);
 
             echo '<div class="hippotrack_container">';
             // 🆕 Dynamically set background image
@@ -297,6 +306,7 @@ else {
         
             echo '</div>';
         } else {
+            echo '<div class="attempt_container attempt_form_group" id="' . $field . '_container">';
             echo html_writer::tag('label', $label, array('for' => $field));
             echo html_writer::empty_tag('input', array(
                 'type' => 'text',
@@ -306,7 +316,7 @@ else {
                 'required' => true,
                 'readonly' => $is_given_input ? 'readonly' : null // Ajoute readonly si $is_given_input est vrai
             ));
-            echo "<br>";
+            echo '</div>';
         }
     }
 
@@ -323,7 +333,7 @@ else {
     echo '<input type="hidden" name="debug_submission" value="1">';
 
     // 📌 Bouton de validation
-    echo html_writer::empty_tag('input', array('type' => 'submit', 'value' => 'Valider'));
+    echo html_writer::empty_tag('input', array('type' => 'submit', 'value' => 'Terminer la session', 'id' => 'submit_attempt'));
     echo html_writer::end_tag('form');
 }
 

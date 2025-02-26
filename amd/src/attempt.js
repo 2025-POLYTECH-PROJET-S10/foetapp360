@@ -85,6 +85,52 @@ define(['jquery'], function($) {
                     updateImage();
                 });
             });
+
+            // Gestion des onglets et du contenu affiché
+            $(".attempt_container").hide();
+            $(".hippotrack-tab.active").each(function() {
+                $($(this).data("target")).show();
+                $(this).addClass("hippotrack_given_tab_input");
+            });
+
+            $(".hippotrack-tab").click(function() {
+                $(".hippotrack-tab").removeClass("active");
+                $(this).addClass("active");
+
+                $(".attempt_container").hide();
+                $($(this).data("target")).show();
+            });
+
+            // Gestion message lorsque inputs manquants.
+            document.getElementById("submit_attempt").addEventListener("click", function(event) {
+                let inputs = document.querySelectorAll("#attempt_form input[type='text']");
+                // Vérifier si l'overlay existe déjà
+                let overlay = document.getElementById('attempt_error_overlay');
+                if (!overlay) {
+                    // Créer l'élément overlay si il n'existe pas
+                    overlay = document.createElement('div');
+                    overlay.id = 'attempt_error_overlay';
+                    overlay.innerHTML = `
+                        <p>Veuillez remplir tous les champs.</p>
+                        <button id="attempt_close_overlay">Fermer</button>
+                    `;
+                    document.body.appendChild(overlay);
+                    // Ajouter un gestionnaire d'événements pour fermer l'overlay
+                    document.getElementById("attempt_close_overlay").addEventListener("click", function() {
+                        overlay.style.display = 'none'; // Cache l'overlay
+                    });
+                }
+                // Vérifier si un champ est vide
+                for (let input of inputs) {
+                    if (input.value.trim() === "") {
+                        overlay.style.display = 'flex';  // Affiche l'overlay
+                        event.preventDefault(); // Empêche l'envoi du formulaire
+                        return;
+                    }
+                }
+                // Si tout est validé, on cache l'overlay
+                overlay.style.display = 'none';
+            });
         }
     };
 });
