@@ -93,9 +93,9 @@ foreach ($labels as $label) {
 
 // Render bar chart
 $chart = new \core\chart_bar();
-$chart->add_series(new \core\chart_series('Correcte', $correct_values));
-$chart->add_series(new \core\chart_series('OK', $ok_values));
-$chart->add_series(new \core\chart_series('Mauvaise', $bad_values));
+$chart->add_series(new \core\chart_series('Bien Fléchie', $correct_values));
+$chart->add_series(new \core\chart_series('Peu Fléchie', $ok_values));
+$chart->add_series(new \core\chart_series('Mal Fléchie', $bad_values));
 $chart->set_labels($labels);
 
 echo $OUTPUT->render($chart);
