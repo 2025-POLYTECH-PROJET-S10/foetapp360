@@ -33,10 +33,9 @@ echo $OUTPUT->heading(get_string('mystats', 'mod_hippotrack'));
 
 
 
-#################################################################################
-
 echo "<h3>📊 Statistiques personnelles</h3>";
 
+##########
 //Time passed
 $total_time = $stats_manager->get_student_time_passed($cmid, $USER->id);
 // Now, convert total time to hours and minutes
@@ -44,7 +43,7 @@ $hours = floor($total_time / 3600); // Calculate total hours
 $minutes = floor(($total_time % 3600) / 60); // Calculate remaining minutes
 
 echo "<p><strong>Temps total passé :</strong> {$hours}h{$minutes}</p>";
-
+##########
 
 //Difficulties ammount
 $difficulties_amount = $stats_manager->get_student_difficulties_amount($cmid, $USER->id);
@@ -59,7 +58,7 @@ $chart->add_series($series);
 $chart->set_labels(['Facile', 'Difficile']);
 
 echo $OUTPUT->render($chart);
-
+##########
 
 //Success rate per difficulties
 $success_rates = $stats_manager->get_success_rate_by_input($cmid, $USER->id);
@@ -74,6 +73,7 @@ $chart->set_labels($labels);
 
 echo $OUTPUT->render($chart);
 
+##########
 
 // Get success rates by representation type
 $success_rates = $stats_manager->get_success_rate_by_representation($cmid, $USER->id);
@@ -99,9 +99,8 @@ $chart->add_series(new \core\chart_series('Mal Fléchie', $bad_values));
 $chart->set_labels($labels);
 
 echo $OUTPUT->render($chart);
+##########
 
-
-#################################################################################
 echo html_writer::end_tag('div');
 
 echo $OUTPUT->footer();
