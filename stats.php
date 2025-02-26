@@ -62,51 +62,98 @@ echo html_writer::end_tag('div');
 /* -------------------------------------------------------------------------- */
 /*                             DEBUT TABLEAU EXOS                             */
 /* -------------------------------------------------------------------------- */
-
-echo html_writer::start_tag('table', array('class' => 'table table-striped'));
-echo html_writer::start_tag('thead');
-echo html_writer::tag('tr',
-    html_writer::tag('th', "Nom") .
-    html_writer::tag('th', "Sigle") .
-    html_writer::tag('th', get_string('attempts', 'mod_hippotrack')) .
-    html_writer::tag('th', get_string('attempts', 'mod_hippotrack') . " mode facile") .
-    html_writer::tag('th', get_string('attempts', 'mod_hippotrack') . " mode difficile") .
-    html_writer::tag('th', get_string('successrate', 'mod_hippotrack') . " mode facile") .
-    html_writer::tag("th", get_string('successrate', 'mod_hippotrack') . " mode difficile")
-);
-echo html_writer::end_tag('thead');
-
-echo html_writer::start_tag('tbody');
-
+// Récupérer les jeux de données corrects
 $correct_datasets = $DB->get_records('hippotrack_datasets', null, '', '*');
 
+/* -------------------------------------------------------------------------- */
+/*                           GRAPHIQUE MODE FACILE                            */
+/* -------------------------------------------------------------------------- */
+
+echo html_writer::tag('h2', "Graphique des Tentatives Mode Facile");
+
+// Création du graphique
+$chart_easy = new \core\chart_bar();
+
+// Tableaux de données pour le mode facile
+$labels_easy = [];
+$easy_attempts_data = [];
+$easy_success_data = [];
+$easy_fail_data = [];
+
+// Récupération des données
 foreach ($correct_datasets as $dataset) {
-    $exostats = $stats_manager->get_exo_stats($hippotrack->id, $dataset->id);
     $easystats = $stats_manager->get_exo_stats_by_difficulty($hippotrack->id, $dataset->id, 'easy');
-    $hardstats = $stats_manager->get_exo_stats_by_difficulty($hippotrack->id, $dataset->id, 'hard');
-    // var_dump($exostats);
-    $attempts = $exostats['total_attempts'] ?? 0;
-    $easyattempts = $easystats['total_attempts'] ?? 0;
-    $hardattempts = $hardstats['total_attempts'] ?? 0;
 
-    $successrate = $exostats['success_rate'] ?? 0;
-    $easysuccessrate = $easystats['success_rate'] ?? 0;
-    $hardsuccessrate = $hardstats['success_rate'] ?? 0;
+    // Labels
+    $labels_easy[] = $dataset->name;
 
-    debugging("hipp id :" . $hippotrack->id . " - ID dataset : " . $dataset->id);
+    // Calcul des tentatives et du taux de succès
+    $easy_attempts = $easystats['total_attempts'] ?? 0;
+    $easy_success = ($easystats['success_rate'] ?? 0);
+    $easy_fail = $easy_attempts - $easy_success;
 
-    echo html_writer::start_tag('tr');
-    echo html_writer::tag('td', $dataset->name);
-    echo html_writer::tag('td', $dataset->sigle);
-    echo html_writer::tag('td', $attempts);
-    echo html_writer::tag('td', $easyattempts);
-    echo html_writer::tag('td', $hardattempts);
-    echo html_writer::tag('td', $easysuccessrate . '%');
-    echo html_writer::tag('td', $hardsuccessrate . '%');
-    echo html_writer::end_tag('tr');
+    $easy_attempts_data[] = $easy_attempts;
+    $easy_success_data[] = $easy_success;
+    $easy_fail_data[] = $easy_fail;
 }
 
-echo html_writer::end_tag('tbody');
+// Création des séries pour le mode facile
+$series_easy_success = new \core\chart_series("Succès", $easy_success_data);
+$series_easy_fail = new \core\chart_series("Échec", $easy_fail_data);
+
+// Ajout des séries au graphique
+$chart_easy->add_series($series_easy_success);
+$chart_easy->add_series($series_easy_fail);
+$chart_easy->set_labels($labels_easy);
+$chart_easy->set_stacked(true); // Empilement pour visualiser le pourcentage
+
+// Affichage du graphique
+echo $OUTPUT->render($chart_easy);
+
+/* -------------------------------------------------------------------------- */
+/*                          GRAPHIQUE MODE DIFFICILE                          */
+/* -------------------------------------------------------------------------- */
+
+echo html_writer::tag('h2', "Graphique des Tentatives Mode Difficile");
+
+// Création du graphique
+$chart_hard = new \core\chart_bar();
+
+// Tableaux de données pour le mode difficile
+$labels_hard = [];
+$hard_attempts_data = [];
+$hard_success_data = [];
+$hard_fail_data = [];
+
+// Récupération des données
+foreach ($correct_datasets as $dataset) {
+    $hardstats = $stats_manager->get_exo_stats_by_difficulty($hippotrack->id, $dataset->id, 'hard');
+
+    // Labels
+    $labels_hard[] = $dataset->name;
+
+    // Calcul des tentatives et du taux de succès
+    $hard_attempts = $hardstats['total_attempts'] ?? 0;
+    $hard_success = ($hardstats['success_rate'] ?? 0);
+    $hard_fail = $hard_attempts - $hard_success;
+
+    $hard_attempts_data[] = $hard_attempts;
+    $hard_success_data[] = $hard_success;
+    $hard_fail_data[] = $hard_fail;
+}
+
+// Création des séries pour le mode difficile
+$series_hard_success = new \core\chart_series("Succès", $hard_success_data);
+$series_hard_fail = new \core\chart_series("Échec", $hard_fail_data);
+
+// Ajout des séries au graphique
+$chart_hard->add_series($series_hard_success);
+$chart_hard->add_series($series_hard_fail);
+$chart_hard->set_labels($labels_hard);
+$chart_hard->set_stacked(true); // Empilement pour visualiser le pourcentage
+
+// Affichage du graphique
+echo $OUTPUT->render($chart_hard);
 
 
 /* -------------------------------------------------------------------------- */
@@ -131,19 +178,16 @@ echo html_writer::start_tag('tbody');
 
 foreach ($students as $student) {
     // Récupération des statistiques de l'étudiant
-    $studentstats = $stats_manager->get_student_stats($cmid, $student->id);
-    $attempts = count($studentstats);
-
+    $studentstats = $stats_manager->get_student_stats( $hippotrack->id, $student->id);
+    $attempts = $studentstats['total_attempts'] ?? 0;
+    
+    var_dump($studentstats);
     // Récupération des données de performance pour calculer le taux de réussite
-    $performance = $stats_manager->get_student_performance_data($student->id, $cmid);
-    $totalAttempts = count($performance);
-    $successful = 0;
-    foreach ($performance as $attempt) {
-        if ($attempt->is_correct) {
-            $successful++;
-        }
+    if ($attempts > 0) {
+        $rate = ($studentstats['success_total'] ?? 0) / $attempts * 100;
+    } else {
+        $rate = 0;
     }
-    $rate = $totalAttempts > 0 ? round(($successful / $totalAttempts) * 100, 2) : 0;
 
     // Création d'un bouton pour afficher les statistiques complètes de l'étudiant
     $url = new moodle_url('/mod/hippotrack/stats.php', ['id' => $cmid, 'userid' => $student->id]);

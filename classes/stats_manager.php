@@ -119,13 +119,15 @@ class stats_manager
      */
     public function get_student_stats(int $hippotrackid, int $userid): array
     {
-        $sql = "SELECT id, sumgrades, questionsdone, timestart
-                FROM {hippotrack_session}
-                WHERE id_hippotrack = :hippotrackid AND userid = :userid
-                ORDER BY timestart ASC";
+        $sql = "SELECT COUNT(a.id) as total_attempts,
+                        SUM(a.is_correct) as success_total
+                FROM {hippotrack_attempt} a
+                JOIN {hippotrack_session} s ON a.id_session = s.id
+                WHERE s.id_hippotrack = :hippotrackid AND s.userid = :userid";
 
         $params = ['hippotrackid' => $hippotrackid, 'userid' => $userid];
-        return $this->db->get_records_sql($sql, $params);
+        $record = $this->db->get_record_sql($sql, $params);
+        return $record ? (array) $record : [];
     }
 
     /**
