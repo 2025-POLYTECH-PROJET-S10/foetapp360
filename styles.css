@@ -203,6 +203,17 @@
     border-radius: 4px;          /* Coins arrondis pour l'input */
 }
 
+.readonly-text {
+    position: absolute;
+    top: 50%;
+    left: 100%; /* Positionne le texte après l'input */
+    transform: translateY(-50%);
+    margin-left: 5px; /* Ajuste l'espace entre le texte et l'input */
+    color: rgba(0, 0, 0, 0.5); /* Gris clair pour ne pas perturber l'input */
+    pointer-events: none; /* Empêche l'interaction avec le texte, pour que l'input reste accessible */
+    white-space: nowrap; /* Evite que le texte soit coupé ou chevauché */
+}
+
 /* Optionnel : ajout d'un focus sur l'input */
 .attempt_form_group input:focus {
     border-color: #0073e6;       /* Changer la couleur de la bordure au focus */

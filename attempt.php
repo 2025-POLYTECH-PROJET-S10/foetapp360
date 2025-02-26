@@ -103,7 +103,10 @@ if ($submitted) {
             $student_rotation = required_param("rotation_$field", PARAM_RAW);
 
             $input_dataset = get_dataset_from_inclinaison_rotation($student_inclinaison, $student_rotation);
-            $is_correct = datasets_equals($input_dataset, $dataset);
+            if($student_inclinaison != $dataset->inclinaison || get_correct_rotation($student_rotation) != $dataset->rotation){
+                $is_correct = false;
+            }
+
             if($input_dataset == null){
                 $input_dataset_name = get_dataset_name_from_inclinaison_rotation($student_inclinaison, $student_rotation);
             }
@@ -133,8 +136,8 @@ if ($submitted) {
             // 🔥 Cas normal (name, sigle, vue_anterieure, vue_laterale)
             $student_answer = required_param($field, PARAM_RAW);
             $correct_answer = $dataset->$field;
-        
-            if ($student_answer != $correct_answer) {
+            var_dump($student_answer);
+            if (format_answer_string($student_answer) != format_answer_string($correct_answer)) {
                 $is_correct = false;
             }
             echo html_writer::tag('p', "<strong>$field :</strong> Votre réponse : $student_answer");
@@ -194,8 +197,6 @@ if ($submitted) {
     $student_data = array_filter($_POST, function ($key) {
         return preg_match('/^(inclinaison|rotation)_(\d+)$/', $key);
     }, ARRAY_FILTER_USE_KEY);
-    
-    print_r($student_data);
 
     // 📌 Boutons "Nouvelle Question" et "Terminer"
     $new_question_url = new moodle_url('/mod/hippotrack/attempt.php', array('id' => $cmid, 'session_id' => $session_id, 'difficulty' => $difficulty, 'new_question' => 1));
@@ -309,7 +310,12 @@ else {
             echo '</div>';
         } else {
             echo '<div class="attempt_container attempt_form_group" id="' . $field . '_container">';
-            echo html_writer::tag('label', $label, array('for' => $field));
+            if ($is_given_input) {
+                echo html_writer::tag('label', $label . ' - ' . (($random_dataset->inclinaison == 1) ? "Bien fléchis" : "Mal fléchis"), array('for' => $field));
+            }
+            else{
+                echo html_writer::tag('label', $label, array('for' => $field));
+            }
             echo html_writer::empty_tag('input', array(
                 'type' => 'text',
                 'name' => $field,
@@ -318,6 +324,7 @@ else {
                 'required' => true,
                 'readonly' => $is_given_input ? 'readonly' : null // Ajoute readonly si $is_given_input est vrai
             ));
+            // Si readonly, ajouter un texte supplémentaire visible
             echo '</div>';
         }
     }

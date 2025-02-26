@@ -47,16 +47,17 @@ function get_correct_inclinaison(int $input_inclinaison){
 }
 
 /*
+* Besoin d'apeler get_correct_inclinaison en premier.
 * Retourne null, si l'inclinaison = 0 (peu fléchie)
 */
 function get_dataset_from_inclinaison_rotation(int $input_inclinaison, int $input_rotation) {
     global $DB; // Assurez-vous que $DB est bien défini pour la requête.
 
     // Vérification de l'inclinaison
-    $inclinaison = get_correct_inclinaison($input_inclinaison);
+    $inclinaison = $input_inclinaison;
     $rotation = get_correct_rotation($input_rotation);
     // Récupérer le dataset correspondant
-    if($inclinaison == 0){
+    if($inclinaison != 0){
         $dataset = $DB->get_record_sql(
             "SELECT * FROM {hippotrack_datasets} WHERE inclinaison = :inclinaison AND rotation = :rotation",
             array('inclinaison' => $inclinaison, 'rotation' => $rotation)
@@ -81,16 +82,22 @@ function get_dataset_name_from_inclinaison_rotation(int $input_inclinaison, int 
     return $dataset->name;
 }
 
-function datasets_equals($dataset1, $dataset2) {
-    // Vérifier si les deux objets sont bien définis
-    if (!is_object($dataset1) || !is_object($dataset2)) {
-        return false;
-    }
+function format_answer_string(string $input_answer): string {
+    // Supprimer les espaces avant/après et remplacer plusieurs espaces par un seul
+    $formatted = trim(preg_replace('/\s+/', ' ', $input_answer));
+    
+    // Enlever les _ et -
+    $formatted = str_replace(['_', '-'], ' ', $formatted);
+    
+    // Remplacement des caractères accentués par leurs équivalents sans accent
+    $formatted = strtr($formatted, [
+        'é' => 'e', 'è' => 'e', 'ê' => 'e', 'ë' => 'e',
+        'à' => 'a', 'â' => 'a',
+        'ù' => 'u', 'û' => 'u',
+        'ô' => 'o', 'ö' => 'o',
+        'ç' => 'c',
+        'ï' => 'i', 'î' => 'i'
+    ]);
 
-    // Convertir les objets en tableaux associatifs pour comparer les valeurs
-    $array1 = (array) $dataset1;
-    $array2 = (array) $dataset2;
-
-    // Comparer les tableaux résultants
-    return $array1 == $array2; // Compare les valeurs mais pas les types strictement
+    return $formatted;
 }

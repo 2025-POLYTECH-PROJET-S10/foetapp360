@@ -63,7 +63,7 @@ define(['jquery'], function($) {
                 function updateImage() {
                     let imagePath = `/mod/hippotrack/pix/${basePrefix}_${variation}_${currentPosition}.png`;
                     cyclingImage.attr("src", imagePath);
-                    let imageName = `${basePrefix}_${variation}_${currentPosition}`;
+                    let imageName = `${basePrefix}_${variation}_${currentPosition}.png`;
                     hiddenInput.val(imageName);
                 }
 
