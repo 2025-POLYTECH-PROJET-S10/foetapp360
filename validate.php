@@ -8,6 +8,10 @@ $id = required_param('id', PARAM_INT); // Hippotrack instance id
 $session_id = required_param('session_id', PARAM_INT);
 $timefinish = time();
 
+$cm = get_coursemodule_from_id('hippotrack', $id, 0, false, MUST_EXIST);
+$course = $DB->get_record('course', array('id' => $cm->course), '*', MUST_EXIST);
+$hippotrack = $DB->get_record('hippotrack', array('id' => $cm->instance), '*', MUST_EXIST);
+
 // Vérifier si la session contient des réponses
 if (!isset($_SESSION['hippotrack_session_' . $session_id]) || empty($_SESSION['hippotrack_session_' . $session_id])) {
     throw new moodle_exception('noanswers', 'mod_hippotrack');
@@ -15,7 +19,7 @@ if (!isset($_SESSION['hippotrack_session_' . $session_id]) || empty($_SESSION['h
 
 // Sauvegarde en base de données la session en cours
 $session = new stdClass();
-$session->id_hippotrack = $id;
+$session->id_hippotrack = $hippotrack->id;
 $session->userid = $USER->id;
 $session->timestart = $_SESSION['hippotrack_session_' . $session_id]['_time_start'];
 $session->timefinish = $timefinish;

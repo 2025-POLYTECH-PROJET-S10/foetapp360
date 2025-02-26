@@ -57,9 +57,9 @@ class image_manager {
         $record = $DB->get_record("hippotrack_datasets" , ["id"=> $itemid]);
 
         if ($this->filearea == "vue_anterieure") {
-            $filename = $record->nom_vue_anterieure;
+            $filename = $record->vue_anterieure;
         } else {
-            $filename = $record->nom_vue_laterale;
+            $filename = $record->vue_laterale;
         }
 
         $fs = get_file_storage();
@@ -77,14 +77,14 @@ class image_manager {
         return false;
     }
 
-    public function updateImageFromContent($itemid, $filename, $filecontent) {
+    public function updateImageFromContent($itemid, $elem, $mform) {
         $fs = get_file_storage();
 
         // remove the old file with this itemid
         $this->deleteImage($itemid);
 
         // add the new image
-        $this->addImageFromContent($itemid, $filename, $filecontent);
+        $this->addImageFromForm($itemid, $mform, $elem);
     }
 
     /**

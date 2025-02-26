@@ -55,8 +55,28 @@ class stats_manager
         $sql = "SELECT COUNT(DISTINCT userid) as total_students,
                         SUM(a.is_correct) as success_rate,
                         COUNT(a.id) as total_attempts
-                FROM {hippotrack_session} s
-                JOIN {hippotrack_attempt} a ON s.id = a.id_session
+                FROM {hippotrack_attempt} a
+                JOIN {hippotrack_session} s ON a.id_session = s.id
+                WHERE s.id_hippotrack = :hippotrackid AND a.id_dataset = :dataset_id";
+
+        $params = ["hippotrackid" => $hippotrackid, "dataset_id" => $dataset_id];
+        $record = $this->db->get_record_sql($sql, $params);
+        var_dump($record);
+        return $record ? (array) $record : [];
+    }
+
+        /**
+     * Get exercice stats to show the stats per exercice
+     * @param int $hippotrackid
+     * @param int $dataset_id
+     * 
+     * @return array containing the stats for this exercice
+     */
+    public function get_exos(int $hippotrackid, int $dataset_id)
+    {
+        $sql = "SELECT *
+                FROM {hippotrack_attempt} a
+                JOIN {hippotrack_session} s ON a.id_session = s.id
                 WHERE s.id_hippotrack = :hippotrackid AND a.id_dataset = :dataset_id";
 
         $params = ["hippotrackid" => $hippotrackid, "dataset_id" => $dataset_id];

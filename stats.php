@@ -78,9 +78,12 @@ echo html_writer::start_tag('tbody');
 $correct_datasets = $DB->get_records('hippotrack_datasets', null, '', '*');
 
 foreach ($correct_datasets as $dataset) {
-    $exostats = $stats_manager->get_exo_stats($cm->instance, $dataset->id);
+    $exostats = $stats_manager->get_exo_stats($hippotrack->id, $dataset->id);
+    // var_dump($exostats);
     $attempts = $exostats['total_attempts'] ?? 0;
     $successrate = $exostats['success_rate'] ?? 0;
+
+    debugging("hipp id :" . $hippotrack->id . " - ID dataset : " . $dataset->id);
 
     echo html_writer::start_tag('tr');
     echo html_writer::tag('td', $dataset->name);

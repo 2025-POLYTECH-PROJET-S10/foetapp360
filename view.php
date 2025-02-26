@@ -83,7 +83,7 @@ if ($is_student) {
     // Vérifier si une session existe pour cet utilisateur et cet id_hippotrack
     $existingSession = $DB->get_record_sql(
         "SELECT MAX(id) as maxid FROM {hippotrack_session} WHERE id_hippotrack = ? AND userid = ?",
-        [$id, $USER->id]
+        [$moduleinstance->id, $USER->id]
     );
 
     // Définir le nouvel ID

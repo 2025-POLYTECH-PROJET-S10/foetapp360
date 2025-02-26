@@ -67,11 +67,11 @@ if ($mform->is_cancelled()) {
             // Upload new images
             if (!empty($vue_anterieure)) {
                 $image_manager_anterieure->updateImageFromForm($editing, $mform, 'vue_anterieure');
-                $record->vue_anterieure = $mform->get_new_filename('vue_anterieure');
+                $dataset->vue_anterieure = $mform->get_new_filename('vue_anterieure');
             }
             if (!empty($vue_laterale)) {
                 $image_manager_laterale->updateImageFromForm($editing, $mform, 'vue_laterale');
-                $record->vue_laterale = $mform->get_new_filename('vue_laterale');
+                $dataset->vue_laterale = $mform->get_new_filename('vue_laterale');
             }
             
             $DB->update_record('hippotrack_datasets', $dataset);
