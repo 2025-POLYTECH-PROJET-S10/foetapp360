@@ -24,6 +24,7 @@
  */
 require(__DIR__ . '/../../config.php');
 require_once($CFG->libdir . '/sessionlib.php');
+require_once(__DIR__ . '/locallib.php');
 
 $cmid = required_param('id', PARAM_INT);
 $session_id = required_param('session_id', PARAM_INT);
@@ -32,6 +33,7 @@ $new_question = optional_param('new_question', 0, PARAM_INT);
 $submitted = optional_param('submitted', 0, PARAM_INT);
 $first_time = optional_param('first_time', 0, PARAM_INT);
 $userid = $USER->id;
+$TOLERANCE = 5;
 
 $cm = get_coursemodule_from_id('hippotrack', $cmid, 0, false, MUST_EXIST);
 $course = $DB->get_record('course', array('id' => $cm->course), '*', MUST_EXIST);
@@ -58,8 +60,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['validate'])) {
 
             // Debugging
             error_log("Processing: $field | Rotation: $rotation | Inclinaison: $inclinaison");
-
-
         }
     }
 }
@@ -89,44 +89,65 @@ if (empty($difficulty)) {
 $possible_inputs = ($difficulty === 'easy') ? 
 ['name', 'sigle', 'partogramme', 'schema_simplifie', 'vue_anterieure', 'vue_laterale'] : 
 ['name', 'sigle', 'partogramme', 'schema_simplifie'];
-
+ 
 // 📌 Correction après validation
 if ($submitted) {
     echo html_writer::tag('h3', "Correction :");
     $is_correct = true;
-    $feedback = "Bravo ! Toutes les réponses sont correctes.";
     $dataset = $DB->get_record_sql("SELECT * FROM {hippotrack_datasets} WHERE id = :dataset_id", array('dataset_id' => $_POST['dataset_id']));
 
     foreach ($possible_inputs as $field) {
+        $is_current_correct = true;
         if ($field === 'partogramme' || $field === 'schema_simplifie') {
             // 🔥 Correction spéciale pour partogramme et schéma simplifié (ils utilisent rotation + inclinaison)
             $student_inclinaison = required_param("inclinaison_$field", PARAM_RAW);
+            $student_inclinaison = get_correct_inclinaison($student_inclinaison);
             $student_rotation = required_param("rotation_$field", PARAM_RAW);
-            
-            $correct_inclinaison = $dataset->inclinaison;
-            $correct_rotation = $dataset->rotation;
-        
-            // Vérification des deux valeurs ensemble
-            if ($student_inclinaison != $correct_inclinaison || $student_rotation != $correct_rotation) {
-                $is_correct = false;
-                $feedback = "Oops, certaines réponses sont incorrectes. Vérifiez et essayez encore !";
+
+            $input_dataset = get_dataset_from_inclinaison_rotation($student_inclinaison, $student_rotation);
+            if($student_inclinaison != $dataset->inclinaison || get_correct_rotation($student_rotation) != $dataset->rotation){
+                $is_current_correct = false;
             }
 
-            echo html_writer::tag('p', "<strong>$field :</strong> Votre inclinaison : $student_inclinaison | Rotation : $student_rotation <br> Réponse correcte : Inclinaison $correct_inclinaison | Rotation $correct_rotation");
-        } else {
+            if($input_dataset == null){
+                $input_dataset_name = get_dataset_name_from_inclinaison_rotation($student_inclinaison, $student_rotation);
+            }
+            else{
+                $input_dataset_name = $input_dataset->name;
+            }
+
+            // Feedback
+            echo html_writer::tag('p', "<strong>$field :</strong> Votre inclinaison : $student_inclinaison | Rotation : $student_rotation <br>" . ($is_current_correct ? ' ✅' : ' ❌'));
+            $feedback = $DB->get_record_sql(
+                "SELECT * FROM {hippotrack_feedback} 
+                WHERE input_dataset = :input_dataset 
+                AND expected_dataset = :expected_dataset
+                AND input_inclinaison = :input_inclinaison
+                AND expected_inclinaison = :expected_inclinaison",
+                array(
+                    'input_dataset' => $input_dataset_name,
+                    'expected_dataset' => $dataset->name,
+                    'input_inclinaison' => $student_inclinaison,
+                    'expected_inclinaison' => $dataset->inclinaison
+                )
+            );
+            $feedback_data = $DB->get_record_sql("SELECT * FROM {hippotrack_feedback_data} WHERE id = :id", array('id' => $feedback->id_feedback));
+            echo html_writer::tag('p', $feedback_data->feedback);
+            $is_correct = false;
+        } 
+        else {
             // 🔥 Cas normal (name, sigle, vue_anterieure, vue_laterale)
             $student_answer = required_param($field, PARAM_RAW);
             $correct_answer = $dataset->$field;
-        
-            if ($student_answer != $correct_answer) {
-                $is_correct = false;
-                $feedback = "Oops, certaines réponses sont incorrectes. Vérifiez et essayez encore !";
+            var_dump($student_answer);
+            if (format_answer_string($student_answer) != format_answer_string($correct_answer)) {
+                $is_current_correct = false;
             }
-
-            echo html_writer::tag('p', "<strong>$field :</strong> Votre réponse : $student_answer | Réponse correcte : $correct_answer");
+            echo html_writer::tag('p', "<strong>$field :</strong> Votre réponse : $student_answer" . ($is_current_correct ? ' ✅' : ' ❌'));
+            $is_correct = false;
         }
     }
-    echo html_writer::tag('p', $feedback, array('class' => $is_correct ? 'correct' : 'incorrect'));
+    echo html_writer::tag('p', $is_correct ? 'Correct' : 'Incorrect', array('class' => $is_correct ? 'correct' : 'incorrect'));
 
     // 📌 Enregistrer les réponses de l'étudiant dans la base de données
     // Vérifier si une tentative existe déjà, sinon l'initialiser
@@ -180,8 +201,6 @@ if ($submitted) {
     $student_data = array_filter($_POST, function ($key) {
         return preg_match('/^(inclinaison|rotation)_(\d+)$/', $key);
     }, ARRAY_FILTER_USE_KEY);
-    
-    print_r($student_data);
 
     // 📌 Boutons "Nouvelle Question" et "Terminer"
     $new_question_url = new moodle_url('/mod/hippotrack/attempt.php', array('id' => $cmid, 'session_id' => $session_id, 'difficulty' => $difficulty, 'new_question' => 1));
@@ -204,7 +223,7 @@ else {
 
     echo html_writer::tag('h3', "Trouvez les bonnes correspondances pour :");
 
-    echo html_writer::start_tag('form', array('method' => 'post', 'action' => 'attempt.php'));
+    echo html_writer::start_tag('form', array('method' => 'post', 'action' => 'attempt.php', 'id' => 'attempt_form'));
     echo html_writer::empty_tag('input', array('type' => 'hidden', 'name' => 'id', 'value' => $cmid));
     echo html_writer::empty_tag('input', array('type' => 'hidden', 'name' => 'session_id', 'value' => $session_id));
     echo html_writer::empty_tag('input', array('type' => 'hidden', 'name' => 'difficulty', 'value' => $difficulty));
@@ -214,19 +233,28 @@ else {
 
     $PAGE->requires->js_call_amd('mod_hippotrack/attempt', 'init');
 
+    // List Selector
+    echo '<div class="hippotrack-tabs">';
+    echo '<ul class="hippotrack-tab-list">';
+    foreach ($possible_inputs as $field) {
+        echo '<li class="hippotrack-tab ' . ($random_input === $field ? 'active' : '') . '" data-target="#' . $field . '_container">' . $field . '</li>';
+    }
+    echo '</ul">';
+    echo '</div>';
+
     foreach ($possible_inputs as $field) {
         $label = ucfirst(str_replace('_', ' ', $field));
         $is_given_input = ($field === $random_input);
         $readonly = $is_given_input ? 'readonly' : '';
     
         if ($field === 'partogramme' || $field === 'schema_simplifie') {
-            echo html_writer::tag('h4', $label);
     
             $interior_image = ($field === 'partogramme') ? 'partogramme_interieur' : 'schema_simplifie_interieur';
             $background_image = ($field === 'partogramme') ? 'bassin' : 'null';
             $contour_class = ($field === 'partogramme') ? 'partogramme_contour' : 'schema_simplifie_contour';
     
-            echo '<div class="rotation_hippotrack_container">';
+            echo '<div class="rotation_hippotrack_container attempt_container" id="' . $field . '_container">';
+            echo html_writer::tag('h4', $label);
             echo '<div class="hippotrack_container" data-schema-type="' . $field . '">';
     
             if ($background_image !== 'null') {
@@ -240,15 +268,23 @@ else {
             // Rotation & Inclination Sliders
             echo '<div class="hippotrack_sliders">';
             echo '<label for="rotate-slider">Rotation:</label>';
-            echo '<input type="range" class="rotate-slider" name="rotation_' . $field . '" min="0" max="360" value="' . ($is_given_input ? $random_dataset->inclinaison : 0) . '"><br>';
-    
+            // Si bloqué, on ajoute un input hidden pour transmettre l'information
+            echo '<input type="range" class="rotate-slider" name="rotation_' . $field . '" min="0" max="360" 
+                value="' . ($is_given_input ? $random_dataset->rotation : 0) . '" ' . ($is_given_input ? 'disabled' : '') . '><br>';
+
             echo '<label for="move-axis-slider">Inclinaison:</label>';
-            echo '<input type="range" class="move-axis-slider" name="inclinaison_' . $field . '" min="-50" max="50" value="' . ($is_given_input ? ($random_dataset->inclinaison * 50) : 0) . '"><br>';
+            echo '<input type="range" class="move-axis-slider" name="inclinaison_' . $field . '" min="-50" max="50" 
+                value="' . ($is_given_input ? $random_dataset->inclinaison * 50 : 0) . '" ' . ($is_given_input ? 'disabled' : '') . '><br>';
+
+            // Mandory. If not, will not send values with POST.
+            if ($is_given_input) {
+                echo '<input type="hidden" name="rotation_' . $field . '" value="' . ($is_given_input ? $random_dataset->rotation : 0) . '">';
+                echo '<input type="hidden" name="inclinaison_' . $field . '" value="' . ($random_dataset->inclinaison * 50) . '">';
+            }
             echo '</div>';
 
             echo '</div>';  // Close .rotation-hippotrack_container
         } elseif ($field === 'vue_anterieure' || $field === 'vue_laterale') {
-            echo html_writer::tag('h4', $label);
     
             $prefix = ($field === 'vue_anterieure') ? 'bb_vue_ante_bf_' : 'bb_vue_lat_bf_';
             $image_path = new moodle_url('/mod/hippotrack/pix/' . ($is_given_input ? ($random_dataset->$random_input) : ($prefix . '1.png')));
@@ -256,7 +292,8 @@ else {
             // **🆕 Select Background Image Based on $field**
             $background_image = ($field === 'vue_anterieure') ? 'bassin_anterieur.png' : 'bassin_laterale.png';
 
-            echo '<div class="image_cycling_hippotrack_container" data-schema-type="' . $field . '" data-prefix="' . $prefix . '">';
+            echo '<div class="image_cycling_hippotrack_container attempt_container" data-schema-type="' . $field . '" data-prefix="' . $prefix . '" id="' . $field . '_container">';
+            echo html_writer::tag('h4', $label);
 
             echo '<div class="hippotrack_container">';
             // 🆕 Dynamically set background image
@@ -264,25 +301,35 @@ else {
             echo '<img class="hippotrack_attempt_cycling-image" src="' . $image_path . '">';
             echo '</div>';
 
+            
             echo '<div class="hippotrack_container button-hippotrack_container">';
-            echo '<button type="button" class="hippotrack_attempt_prev-btn">←</button>';
-            echo '<button type="button" class="hippotrack_attempt_next-btn">→</button>';
-            echo '<button type="button" class="hippotrack_attempt_toggle_btn">🔄 Toggle bf/mf</button>'; // Toggle button
-            echo '<input type="hidden" class="hippotrack_attempt_selected_position" name="' . $field . '" value="' . ($is_given_input ? ($random_dataset->$random_input) : $prefix ) . '">';
+            if (!$is_given_input) {
+                echo '<button type="button" class="hippotrack_attempt_prev-btn">←</button>';
+                echo '<button type="button" class="hippotrack_attempt_next-btn">→</button>';
+                echo '<button type="button" class="hippotrack_attempt_toggle_btn">🔄 Toggle bf/mf</button>'; // Toggle button
+            }
+            echo '<input type="hidden" class="hippotrack_attempt_selected_position" name="' . $field . '" value="' . ($is_given_input ? ($random_dataset->$random_input) : ($prefix . '1.png')) . '">';
             echo '</div>';
-
+        
             echo '</div>';
         } else {
-            echo html_writer::tag('label', $label, array('for' => $field));
+            echo '<div class="attempt_container attempt_form_group" id="' . $field . '_container">';
+            if ($is_given_input) {
+                echo html_writer::tag('label', $label . ' - ' . (($random_dataset->inclinaison == 1) ? "Bien fléchis" : "Mal fléchis"), array('for' => $field));
+            }
+            else{
+                echo html_writer::tag('label', $label, array('for' => $field));
+            }
             echo html_writer::empty_tag('input', array(
                 'type' => 'text',
                 'name' => $field,
                 'id' => $field,
                 'value' => $is_given_input ? $random_dataset->$random_input : '',
                 'required' => true,
-                $readonly => $readonly
+                'readonly' => $is_given_input ? 'readonly' : null // Ajoute readonly si $is_given_input est vrai
             ));
-            echo "<br>";
+            // Si readonly, ajouter un texte supplémentaire visible
+            echo '</div>';
         }
     }
 

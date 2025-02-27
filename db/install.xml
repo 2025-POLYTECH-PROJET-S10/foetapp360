@@ -80,18 +80,21 @@
       </KEYS>
     </TABLE>
 
-    <TABLE NAME="hippotrack_feedback" COMMENT="Stock les feedback à renvoyer pour un dataset">
-      <FIELDS>
-        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" COMMENT="Standard Moodle primary key."/>
-        <FIELD NAME="input_dataset" TYPE="text" NOTNULL="false" COMMENT="Nom du dataset entrée par l'étudiant"/>
-        <FIELD NAME="expected_dataset" TYPE="text" NOTNULL="false" COMMENT="Nom du dataset entrée par l'étudiant"/>
-        <FIELD NAME="id_feedback" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="ID of the feedback data."/>
-      </FIELDS>
-      <KEYS>
-        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
-        <KEY NAME="fk_id_feedback" TYPE="foreign" FIELDS="id_feedback" REFTABLE="hippotrack_feedback_data" REFFIELDS="id"/>
-      </KEYS>
-    </TABLE>
+    <TABLE NAME="hippotrack_feedback" COMMENT="Stocke les feedbacks en fonction des réponses données et attendues">
+  <FIELDS>
+    <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" COMMENT="Standard Moodle primary key."/>
+    <FIELD NAME="input_dataset" TYPE="text" NOTNULL="false" COMMENT="Nom du dataset entré par l'étudiant"/>
+    <FIELD NAME="expected_dataset" TYPE="text" NOTNULL="false" COMMENT="Nom du dataset attendu"/>
+    <FIELD NAME="input_inclinaison" TYPE="int" LENGTH="2" NOTNULL="true" COMMENT="Inclinaison donnée (-1, 0, 1)"/>
+    <FIELD NAME="expected_inclinaison" TYPE="int" LENGTH="2" NOTNULL="true" COMMENT="Inclinaison attendue (-1, 0, 1)"/>
+    <FIELD NAME="id_feedback" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="ID du feedback correspondant"/>
+  </FIELDS>
+  <KEYS>
+    <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+    <KEY NAME="fk_id_feedback" TYPE="foreign" FIELDS="id_feedback" REFTABLE="hippotrack_feedback_data" REFFIELDS="id"/>
+  </KEYS>
+</TABLE>
+
 
     <TABLE NAME="hippotrack_feedback_data" COMMENT="Stock les feedback à renvoyer pour un dataset">
       <FIELDS>

@@ -266,3 +266,127 @@
 .button-hippotrack_container {
     height: 100px;
 }
+
+/* Attempt view */
+
+.hippotrack-tab-list {
+    display: flex;
+    list-style: none;
+    padding: 0;
+    border-bottom: 2px solid #ccc;
+}
+
+.hippotrack-tab {
+    padding: 10px 20px;
+    cursor: pointer;
+    border: 1px solid #ccc;
+    border-bottom: none;
+    background: #f9f9f9;
+}
+
+.hippotrack-tab.active {
+    font-weight: bold;
+    border-top: 2px solid #0073e6;
+}
+
+.hippotrack_given_tab_input {
+    background-color: yellowgreen;
+}
+
+.hippotrack-section {
+    display: none;
+    padding: 20px;
+    border: 1px solid #ccc;
+    background: #fff;
+}
+
+.hippotrack-section.active {
+    display: block;
+}
+
+/* Name + Sigle Label */
+/* Conteneur principal pour le label et l'input */
+.attempt_form_group {
+    display: flex;               /* Utilisation de Flexbox pour aligner les éléments */
+    flex-direction: column;      /* Aligner le label au-dessus de l'input */
+    gap: 5px;                    /* Espace entre le label et l'input */
+    margin-bottom: 15px;         /* Espace sous chaque champ */
+}
+
+/* Style du label */
+.attempt_form_group label {
+    font-size: 14px;             /* Taille de police du label */
+    font-weight: normal;         /* Poids de la police du label */
+    margin-bottom: 5px;          /* Un petit espace sous le label */
+    color: #333;                 /* Couleur du texte du label */
+}
+
+/* Style de l'input */
+.attempt_form_group input {
+    padding: 8px;                /* Espacement intérieur pour l'input */
+    font-size: 14px;             /* Taille de police de l'input */
+    width: 100%;                 /* L'input occupe toute la largeur disponible */
+    box-sizing: border-box;      /* Inclure les bordures et le padding dans la largeur totale */
+    border: 1px solid #ccc;      /* Bordure légère pour l'input */
+    border-radius: 4px;          /* Coins arrondis pour l'input */
+}
+
+.readonly-text {
+    position: absolute;
+    top: 50%;
+    left: 100%; /* Positionne le texte après l'input */
+    transform: translateY(-50%);
+    margin-left: 5px; /* Ajuste l'espace entre le texte et l'input */
+    color: rgba(0, 0, 0, 0.5); /* Gris clair pour ne pas perturber l'input */
+    pointer-events: none; /* Empêche l'interaction avec le texte, pour que l'input reste accessible */
+    white-space: nowrap; /* Evite que le texte soit coupé ou chevauché */
+}
+
+/* Optionnel : ajout d'un focus sur l'input */
+.attempt_form_group input:focus {
+    border-color: #0073e6;       /* Changer la couleur de la bordure au focus */
+    outline: none;               /* Retirer le contour par défaut */
+}
+
+.attempt_missing_inputs {
+    color: red !important; /* Texte rouge pour les onglets des inputs manquants */
+    font-weight: bold; /* Rendre le texte plus visible */
+}
+
+#attempt_error_overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    color: white;
+    font-size: 30px;
+    text-align: center;
+    justify-content: flex-start; /* Aligner les éléments en haut */
+    align-items: center;
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+}
+
+#attempt_error_overlay p {
+    margin-top: 20%; /* Marge au sommet pour centrer le message */
+}
+
+#attempt_close_overlay {
+    background-color: #f44336; /* Couleur rouge pour le bouton */
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 5px;
+    margin-top: auto; /* Place le bouton en bas */
+    margin-bottom: 30px; /* Un petit espace au bas */
+}
+
+#attempt_close_overlay:hover {
+    background-color: #d32f2f; /* Effet au survol */
+}

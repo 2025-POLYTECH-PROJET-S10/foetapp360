@@ -4,6 +4,8 @@ require_login();
 
 global $DB, $USER;
 
+$STRING_FOR_HARD_DIFFICULTY = "HARD_DIFFICULTY";
+
 $id = required_param('id', PARAM_INT); // Hippotrack instance id
 $session_id = required_param('session_id', PARAM_INT);
 $timefinish = time();
@@ -42,12 +44,12 @@ foreach ($_SESSION['hippotrack_session_' . $session_id]['attempts'] as $response
     if (isset($response['vue_anterieure'])) {
         $record->vue_anterieure = $response['vue_anterieure'];
     } else {
-        $record->vue_anterieure = "";
+        $record->vue_anterieure = $STRING_FOR_HARD_DIFFICULTY;
     }
     if (isset($response['vue_laterale'])) {
         $record->vue_laterale = $response['vue_laterale'];
     } else {
-        $record->vue_laterale = "";
+        $record->vue_laterale = $STRING_FOR_HARD_DIFFICULTY;
     }
     $record->given_input = $response['given_input'];
     $record->is_correct = $response['is_correct'];
