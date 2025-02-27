@@ -47,42 +47,54 @@ define(['jquery'], function($) {
                 });
             });
 
+            let imageDatabase = JSON.parse(document.getElementById("image_database").dataset.values);
             $(".image_cycling_hippotrack_container").each(function() {
                 let hippotrack_container = $(this);
-                let fullPrefix = hippotrack_container.data("prefix") || "";
                 let cyclingImage = hippotrack_container.find(".hippotrack_attempt_cycling-image");
                 let hiddenInput = hippotrack_container.find(".hippotrack_attempt_selected_position");
-
-                let currentPosition = parseInt(cyclingImage.data("current"), 10) || 1;
-                let variation = fullPrefix.includes("_bf") ? "bf" : "mf";
-                let basePrefix = fullPrefix.replace(/_(bf_|mf_)$/, "");
-
                 /**
                  * Met à jour l'image affichée en fonction de la position et de la variation.
                  */
-                function updateImage() {
-                    let imagePath = `/mod/hippotrack/pix/${basePrefix}_${variation}_${currentPosition}.png`;
-                    cyclingImage.attr("src", imagePath);
-                    let imageName = `${basePrefix}_${variation}_${currentPosition}.png`;
-                    hiddenInput.val(imageName);
+                function increaseImage() {
+                    let field = hippotrack_container.find(".hippotrack_field");
+                    let images = Object.values(imageDatabase[field[0].dataset.values]); // Convertir en tableau indexé
+                    let imageActuelle = cyclingImage.attr("src");
+                    let currentIndex = images.indexOf(imageActuelle);
+                    if (currentIndex === -1) {
+                        currentIndex = 0; // Sécurité : si l’image actuelle n’existe pas dans la liste, commencer à 0
+                    }
+                    currentIndex = currentIndex + 1;
+                    if(currentIndex == images.length){
+                        currentIndex = 0;
+                    }
+                    cyclingImage.attr("src", images[currentIndex]);
+                    hiddenInput.val(images[currentIndex]);
+                }
+                /**
+                 * Met à jour l'image affichée en fonction de la position et de la variation.
+                 */
+                function decreaseImage() {
+                    let field = hippotrack_container.find(".hippotrack_field");
+                    let images = Object.values(imageDatabase[field[0].dataset.values]); // Convertir en tableau indexé
+                    let imageActuelle = cyclingImage.attr("src");
+                    let currentIndex = images.indexOf(imageActuelle);
+                    if (currentIndex === -1) {
+                        currentIndex = 0; // Sécurité : si l’image actuelle n’existe pas dans la liste, commencer à 0
+                    }
+                    currentIndex = currentIndex - 1;
+                    if(currentIndex < 0){
+                        currentIndex = images.length-1;
+                    }
+                    cyclingImage.attr("src", images[currentIndex]);
+                    hiddenInput.val(images[currentIndex]);
                 }
 
-                let max_image = 8;
-                let min_image = 1;
-
                 hippotrack_container.find(".hippotrack_attempt_prev-btn").on("click", function() {
-                    currentPosition = currentPosition > min_image ? currentPosition - 1 : max_image;
-                    updateImage();
+                    decreaseImage();
                 });
 
                 hippotrack_container.find(".hippotrack_attempt_next-btn").on("click", function() {
-                    currentPosition = currentPosition < max_image ? currentPosition + 1 : min_image;
-                    updateImage();
-                });
-
-                hippotrack_container.find(".hippotrack_attempt_toggle_btn").on("click", function() {
-                    variation = (variation === "bf") ? "mf" : "bf";
-                    updateImage();
+                    increaseImage();
                 });
             });
 

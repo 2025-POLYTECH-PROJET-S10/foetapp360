@@ -16,7 +16,7 @@ $hippotrack = $DB->get_record('hippotrack', array('id' => $cm->instance), '*', M
 
 // Vérifier si la session contient des réponses
 if (!isset($_SESSION['hippotrack_session_' . $session_id]) || empty($_SESSION['hippotrack_session_' . $session_id])) {
-    throw new moodle_exception('noanswers', 'mod_hippotrack');
+    throw new \moodle_exception('noanswers', 'mod_hippotrack');
 }
 
 // Sauvegarde en base de données la session en cours

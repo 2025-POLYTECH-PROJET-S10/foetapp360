@@ -149,7 +149,7 @@ class image_manager {
         $file = $mform->save_stored_file($elem, $this->contextid, $this->component, $this->filearea, $itemid, "/", $newfilename); // the last one is filepath, true is to and store the images overwrite
 
         if (!$file) {
-            throw new moodle_exception("Couldn't Save File, error in Database","","", $file->get_context()->id);
+            throw new \moodle_exception("Couldn't Save File, error in Database","","", $file->get_context()->id);
         }
     }
 
@@ -167,5 +167,32 @@ class image_manager {
 
         // add the new image
         $this->addImageFromForm($itemid, $mform, $elem);
+    }
+
+    /**
+     * Get image URL by filename only (without itemid).
+     */
+    public function getImageUrlByName($filename)
+    {
+        global $DB;
+
+        // Search in the database for the itemid
+        $filearea_name = $this->filearea;
+        if ($this->filearea === 'vue_anterieure') {
+            $sql = 'SELECT id FROM {hippotrack_datasets} WHERE vue_anterieure = :filename';
+        } else if ($this->filearea === 'vue_laterale') {
+            $sql = 'SELECT id FROM {hippotrack_datasets} WHERE vue_laterale = :filename';
+        } else {
+            throw new \moodle_exception("Invalid file area");
+        }
+
+        $params = array("filename" => $filename);
+
+        $itemid = $DB->get_field_sql($sql, $params);
+        if ($itemid === false) {
+            throw new \moodle_exception("File not found in database");
+        }
+
+        return $this->getImageUrl($itemid, $filename);
     }
 }

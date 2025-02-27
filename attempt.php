@@ -25,6 +25,7 @@
 require(__DIR__ . '/../../config.php');
 require_once($CFG->libdir . '/sessionlib.php');
 require_once(__DIR__ . '/locallib.php');
+use mod_hippotrack\image_manager;
 
 $cmid = required_param('id', PARAM_INT);
 $session_id = required_param('session_id', PARAM_INT);
@@ -66,12 +67,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['validate'])) {
 
 echo $OUTPUT->header();
 
-if (empty($difficulty)) {
-    $_SESSION['hippotrack_session_' . $session_id]['_time_start'] = time();
-}
-
 // 📌 Étape 1 : Sélection de la difficulté
 if (empty($difficulty)) {
+    $_SESSION['hippotrack_session_' . $session_id]['_time_start'] = time();
     echo '<div class="foetapp360-info">
     <p><strong>FOETAPP360</strong> est un outil interactif conçu pour vous aider à mieux comprendre les positions fœtales. 
     En vous entraînant ici, vous pourrez suivre vos statistiques personnelles pour identifier vos points forts et les notions à améliorer, 
@@ -126,8 +124,45 @@ $possible_inputs = ($difficulty === 'easy') ?
 ['name', 'sigle', 'partogramme', 'schema_simplifie', 'vue_anterieure', 'vue_laterale'] : 
 ['name', 'sigle', 'partogramme', 'schema_simplifie'];
 
+// GET toutes les vue antérieures
+$image_manager_anterieur = new image_manager('vue_anterieure');
+$sql = "SELECT vue_anterieure 
+        FROM {hippotrack_datasets} 
+        ORDER BY inclinaison ASC, rotation ASC";
+$vue_anterieur_img_names = $DB->get_records_sql($sql);
+$image_database_vue_anterieur = [];
+foreach ($vue_anterieur_img_names as $img_name) {
+    $filename = $img_name->vue_anterieure; // Récupération du nom de fichier correct
+    $image_database_vue_anterieur[$filename] = ($image_manager_anterieur->getImageUrlByName($filename))->out(); // Append à $image_database
+}
+$nb_vue_anterieur = max(0, count($image_database_vue_anterieur) - 1);
+var_dump($image_database_vue_anterieur);
+
+// GET toutes les vue latérales
+$image_manager_laterale = new image_manager('vue_laterale');
+$sql = "SELECT vue_laterale 
+        FROM {hippotrack_datasets} 
+        ORDER BY inclinaison ASC, rotation ASC";
+$vue_laterale_img_names = $DB->get_records_sql($sql);
+$image_database_vue_laterale = [];
+foreach ($vue_laterale_img_names as $img_name) {
+    $filename = $img_name->vue_laterale; // Récupération du nom de fichier correct
+    $image_database_vue_laterale[$filename] = ($image_manager_laterale->getImageUrlByName($filename))->out(); // Append à $image_database
+}
+$nb_vue_laterale = max(0, count($image_database_vue_laterale)-1);
+
+$image_database = [
+    "vue_anterieure" => $image_database_vue_anterieur,
+    "vue_laterale" => $image_database_vue_laterale
+];
+
 $PAGE->requires->js_call_amd('mod_hippotrack/attempt', 'init');
- 
+
+// Champ index pour images.
+echo '<input type="hidden" name="max_vue_anterieur" data-values="' . $nb_vue_anterieur . '">';
+echo '<input type="hidden" name="max_vue_laterale" data-values="' . $nb_vue_laterale . '">';
+echo '<div id="image_database" data-values="' . htmlspecialchars(json_encode($image_database), ENT_QUOTES, 'UTF-8') . '"></div>';
+
 // 📌 Correction après validation
 if ($submitted) {
     echo html_writer::tag('h3', "Revue de l'exercice :");
@@ -225,7 +260,7 @@ if ($submitted) {
             if ($field === 'vue_anterieure' || $field === 'vue_laterale') {
     
                 $prefix = ($field === 'vue_anterieure') ? 'bb_vue_ante_bf_' : 'bb_vue_lat_bf_';
-                $image_path = new moodle_url('/mod/hippotrack/pix/' . $student_answer);
+                $image_path = $image_database[$field][$student_answer];
     
                 // **🆕 Select Background Image Based on $field**
                 $background_image = ($field === 'vue_anterieure') ? 'bassin_anterieur.png' : 'bassin_laterale.png';
@@ -340,8 +375,6 @@ else {
     echo html_writer::empty_tag('input', array('type' => 'hidden', 'name' => 'dataset_id', 'value' => $random_dataset->id));
     echo html_writer::empty_tag('input', array('type' => 'hidden', 'name' => 'submitted', 'value' => '1'));
 
-    $PAGE->requires->js_call_amd('mod_hippotrack/attempt', 'init');
-
     // List Selector
     echo '<div class="hippotrack-tabs">';
     echo '<ul class="hippotrack-tab-list">';
@@ -400,12 +433,13 @@ else {
         } elseif ($field === 'vue_anterieure' || $field === 'vue_laterale') {
     
             $prefix = ($field === 'vue_anterieure') ? 'bb_vue_ante_bf_' : 'bb_vue_lat_bf_';
-            $image_path = new moodle_url('/mod/hippotrack/pix/' . ($is_given_input ? ($random_dataset->$random_input) : ($prefix . '1.png')));
+            $image_path = ($is_given_input ? ($image_database[$field][$random_dataset->$random_input]) : (array_values($image_database[$field])[0]));
 
             // **🆕 Select Background Image Based on $field**
             $background_image = ($field === 'vue_anterieure') ? 'bassin_anterieur.png' : 'bassin_laterale.png';
 
             echo '<div class="image_cycling_hippotrack_container attempt_container" data-schema-type="' . $field . '" data-prefix="' . $prefix . '" id="' . $field . '_container">';
+            echo '<input type="hidden" class="hippotrack_field" data-values="' . $field . '">';
             echo html_writer::tag('h4', $label);
 
             echo '<div class="hippotrack_container">';
@@ -421,7 +455,7 @@ else {
                 echo '<button type="button" class="hippotrack_attempt_next-btn">→</button>';
                 echo '<button type="button" class="hippotrack_attempt_toggle_btn">🔄 Toggle bf/mf</button>'; // Toggle button
             }
-            echo '<input type="hidden" class="hippotrack_attempt_selected_position" name="' . $field . '" value="' . ($is_given_input ? ($random_dataset->$random_input) : ($prefix . '1.png')) . '">';
+            echo '<input type="hidden" class="hippotrack_attempt_selected_position" name="' . $field . '" value="' . $image_path . '">';
             echo '</div>';
         
             echo '</div>';
