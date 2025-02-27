@@ -161,22 +161,22 @@ textarea:focus, select:focus {
     z-index: 4;
 }
 
-.partogramme_interieur {
-    height: 90%;
-    z-index: 1;
-}
-
-.partogramme_contour {
-    height: 100%;
-    z-index: 2;
-}
-
 .schema_simplifie_interieur {
     height: 90%;
     z-index: 1;
 }
 
 .schema_simplifie_contour {
+    height: 100%;
+    z-index: 2;
+}
+
+.partogramme_interieur {
+    height: 90%;
+    z-index: 1;
+}
+
+.partogramme_contour {
     z-index: 2;
 }
 

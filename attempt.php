@@ -149,7 +149,7 @@ if ($submitted) {
 
             // Affichage
             $interior_image = ($field === 'partogramme') ? 'partogramme_interieur' : 'schema_simplifie_interieur';
-            $background_image = ($field === 'partogramme') ? 'bassin' : 'null';
+            $background_image = ($field === 'partogramme') ? 'null' : 'bassin';
             $contour_class = ($field === 'partogramme') ? 'partogramme_contour' : 'schema_simplifie_contour';
     
             echo '<div class="rotation_hippotrack_container attempt_container" id="' . $field . '_container">';
@@ -325,7 +325,7 @@ else {
         if ($field === 'partogramme' || $field === 'schema_simplifie') {
     
             $interior_image = ($field === 'partogramme') ? 'partogramme_interieur' : 'schema_simplifie_interieur';
-            $background_image = ($field === 'partogramme') ? 'bassin' : 'null';
+            $background_image = ($field === 'partogramme') ? 'null' : 'bassin';
             $contour_class = ($field === 'partogramme') ? 'partogramme_contour' : 'schema_simplifie_contour';
     
             echo '<div class="rotation_hippotrack_container attempt_container" id="' . $field . '_container">';
