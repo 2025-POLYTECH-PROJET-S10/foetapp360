@@ -204,14 +204,12 @@ if ($submitted) {
     
             // Rotation & Inclination Sliders
             echo '<div class="hippotrack_sliders">';
-            echo '<label for="rotate-slider">Rotation:</label>';
             // Si bloqué, on ajoute un input hidden pour transmettre l'information
             echo '<input type="range" class="rotate-slider" name="rotation_' . $field . '" min="0" max="360" 
-                value="' . $student_rotation . '"disabled><br>';
+                value="' . $student_rotation . '"style="display: none;"><br>';
 
-            echo '<label for="move-axis-slider">Inclinaison:</label>';
             echo '<input type="range" class="move-axis-slider" name="inclinaison_' . $field . '" min="-50" max="50" 
-                value="' . $student_inclinaison_raw . '"disabled><br>';
+                value="' . $student_inclinaison_raw . '"style="display: none;"><br>';
             echo '</div>';
 
             echo '</div>';  // Close .rotation-hippotrack_container
@@ -378,14 +376,18 @@ else {
     
             // Rotation & Inclination Sliders
             echo '<div class="hippotrack_sliders">';
-            echo '<label for="rotate-slider">Rotation:</label>';
+            if(!$is_given_input){
+                echo '<label for="rotate-slider">Rotation:</label>';
+            }
             // Si bloqué, on ajoute un input hidden pour transmettre l'information
             echo '<input type="range" class="rotate-slider" name="rotation_' . $field . '" min="0" max="360" 
-                value="' . ($is_given_input ? $random_dataset->rotation : 0) . '" ' . ($is_given_input ? 'disabled' : '') . '><br>';
+                value="' . ($is_given_input ? $random_dataset->rotation : 0) . '" ' . ($is_given_input ? 'style="display: none;"' : '') . '><br>';
 
-            echo '<label for="move-axis-slider">Inclinaison:</label>';
+            if(!$is_given_input){
+                echo '<label for="move-axis-slider">Inclinaison:</label>';
+            }
             echo '<input type="range" class="move-axis-slider" name="inclinaison_' . $field . '" min="-50" max="50" 
-                value="' . ($is_given_input ? $random_dataset->inclinaison * 50 : 0) . '" ' . ($is_given_input ? 'disabled' : '') . '><br>';
+                value="' . ($is_given_input ? $random_dataset->inclinaison * 50 : 0) . '" ' . ($is_given_input ? 'style="display: none;"' : '') . '><br>';
 
             // Mandory. If not, will not send values with POST.
             if ($is_given_input) {
