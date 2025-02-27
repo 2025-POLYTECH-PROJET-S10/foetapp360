@@ -136,7 +136,6 @@ foreach ($vue_anterieur_img_names as $img_name) {
     $image_database_vue_anterieur[$filename] = ($image_manager_anterieur->getImageUrlByName($filename))->out(); // Append à $image_database
 }
 $nb_vue_anterieur = max(0, count($image_database_vue_anterieur) - 1);
-var_dump($image_database_vue_anterieur);
 
 // GET toutes les vue latérales
 $image_manager_laterale = new image_manager('vue_laterale');
@@ -258,7 +257,8 @@ if ($submitted) {
                 $is_correct = false;
             }
             if ($field === 'vue_anterieure' || $field === 'vue_laterale') {
-    
+                $elements = explode("/", $student_answer);
+                $student_answer = end($elements);
                 $prefix = ($field === 'vue_anterieure') ? 'bb_vue_ante_bf_' : 'bb_vue_lat_bf_';
                 $image_path = $image_database[$field][$student_answer];
     
