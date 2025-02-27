@@ -134,14 +134,14 @@ foreach ($inclinaison_types as $inclinaison_key => $inclinaison_name) {
         echo $OUTPUT->render($chart_easy);
         
         // Affichage des taux de réussite
-        echo html_writer::start_tag('div', ['class' => 'success-rates']);
-        foreach ($labels_easy as $index => $dataset_name) {
-            $total = $success_data_easy[$index] + $failure_data_easy[$index];
-            $rate = $total > 0 ? round(($success_data_easy[$index] / $total) * 100, 2) : 0;
+        // echo html_writer::start_tag('div', ['class' => 'success-rates']);
+        // foreach ($labels_easy as $index => $dataset_name) {
+        //     $total = $success_data_easy[$index] + $failure_data_easy[$index];
+        //     $rate = $total > 0 ? round(($success_data_easy[$index] / $total) * 100, 2) : 0;
             
-            echo html_writer::tag('p', "$dataset_name: $rate% ({$success_data_easy[$index]}/$total)");
-        }
-        echo html_writer::end_tag('div');
+        //     echo html_writer::tag('p', "$dataset_name: $rate% ({$success_data_easy[$index]}/$total)");
+        // }
+        // echo html_writer::end_tag('div');
     } else {
         echo html_writer::tag('p', "Aucune donnée disponible pour ce type d'inclinaison en mode facile.");
     }
@@ -193,14 +193,14 @@ foreach ($inclinaison_types as $inclinaison_key => $inclinaison_name) {
         echo $OUTPUT->render($chart_hard);
         
         // Affichage des taux de réussite
-        echo html_writer::start_tag('div', ['class' => 'success-rates']);
-        foreach ($labels_hard as $index => $dataset_name) {
-            $total = $success_data_hard[$index] + $failure_data_hard[$index];
-            $rate = $total > 0 ? round(($success_data_hard[$index] / $total) * 100, 2) : 0;
+        // echo html_writer::start_tag('div', ['class' => 'success-rates']);
+        // foreach ($labels_hard as $index => $dataset_name) {
+        //     $total = $success_data_hard[$index] + $failure_data_hard[$index];
+        //     $rate = $total > 0 ? round(($success_data_hard[$index] / $total) * 100, 2) : 0;
             
-            echo html_writer::tag('p', "$dataset_name: $rate% ({$success_data_hard[$index]}/$total)");
-        }
-        echo html_writer::end_tag('div');
+        //     echo html_writer::tag('p', "$dataset_name: $rate% ({$success_data_hard[$index]}/$total)");
+        // }
+        // echo html_writer::end_tag('div');
     } else {
         echo html_writer::tag('p', "Aucune donnée disponible pour ce type d'inclinaison en mode difficile.");
     }
