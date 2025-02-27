@@ -65,48 +65,86 @@ class stats_manager
     }
 
     /**
-     * Get exercise statistics by difficulty level
-     * @param int $hippotrackid The hippotrack activity instance ID
-     * @param string $difficulty The difficulty level (easy/hard)
+     * Récupère les statistiques des exercices regroupées par nom de dataset et type d'inclinaison
+     * pour une difficulté donnée
      * 
-     * @return array Statistics grouped by inclination types (bien/mal/peu)
+     * @param int $hippotrackid ID de l'instance hippotrack
+     * @param string $difficulty Niveau de difficulté ('easy' ou 'hard')
+     * @return array Statistiques groupées par nom de dataset et type d'inclinaison
      */
-    public function get_exo_stats_by_difficulty(int $hippotrackid, string $difficulty) {
-        // Base SQL for all three inclination types
-        $sql_base = "SELECT 
-                        COUNT(DISTINCT s.userid) as total_students,
-                        SUM(a.is_correct) as correct_attempts,
-                        COUNT(a.id) as total_attempts,
-                        ROUND((SUM(a.is_correct) * 100.0 / COUNT(a.id)), 2) as success_rate
-                    FROM {hippotrack_attempt} a
-                    JOIN {hippotrack_session} s ON a.id_session = s.id
-                    JOIN {hippotrack_datasets} d ON a.id_dataset = d.id
-                    WHERE s.id_hippotrack = :hippotrackid AND s.difficulty = :difficulty";
-
-        // Specific SQL for each inclination type
-        $sql_bien_flechi = $sql_base . " AND d.inclinaison = 1
-        GROUP BY d.name";
-        $sql_mal_flechi = $sql_base . " AND d.inclinaison = -1
-        GROUP BY d.name";
-        $sql_peu_flechi = $sql_base . " AND d.inclinaison <> -1 AND d.inclinaison <> 1
-        GROUP BY d.name";
+    public function get_dataset_stats_by_difficulty(int $hippotrackid, string $difficulty): array {
+        // SQL pour récupérer les statistiques par dataset et inclinaison
+        $sql = "SELECT 
+                    d.name as dataset_name,
+                    d.inclinaison,
+                    COUNT(DISTINCT s.userid) as total_students,
+                    SUM(a.is_correct) as correct_attempts,
+                    COUNT(a.id) as total_attempts,
+                    CAST(SUM(a.is_correct) AS FLOAT) / NULLIF(COUNT(a.id), 0) * 100 as success_rate
+                FROM {hippotrack_attempt} a
+                JOIN {hippotrack_session} s ON a.id_session = s.id
+                JOIN {hippotrack_datasets} d ON a.id_dataset = d.id
+                WHERE s.id_hippotrack = :hippotrackid 
+                    AND s.difficulty = :difficulty
+                GROUP BY d.name, d.inclinaison
+                ORDER BY d.name, d.inclinaison";
 
         $params = ["hippotrackid" => $hippotrackid, "difficulty" => $difficulty];
         
-        // Get records for each inclination type
-        $record_bien_flechi = $this->db->get_record_sql($sql_bien_flechi, $params);
-        $record_mal_flechi = $this->db->get_record_sql($sql_mal_flechi, $params);
-        $record_peu_flechi = $this->db->get_record_sql($sql_peu_flechi, $params);
+        // Exécuter la requête
+        $records = $this->db->get_records_sql($sql, $params);
 
-        // Create an array containing the stats for this exercise
-        $record_final = [
-            "bien" => $record_bien_flechi ? (array)$record_bien_flechi : [],
-            "mal" => $record_mal_flechi ? (array)$record_mal_flechi : [],
-            "peu" => $record_peu_flechi ? (array)$record_peu_flechi : []
-        ];
-
-        return $record_final;
+        // Organiser les résultats par nom de dataset et type d'inclinaison
+        $results = [];
+        
+        foreach ($records as $record) {
+            $dataset_name = $record->dataset_name;
+            
+            if (!isset($results[$dataset_name])) {
+                $results[$dataset_name] = [
+                    'bien' => [
+                        'total_students' => 0, 
+                        'correct_attempts' => 0, 
+                        'total_attempts' => 0, 
+                        'success_rate' => 0
+                    ],
+                    'mal' => [
+                        'total_students' => 0, 
+                        'correct_attempts' => 0, 
+                        'total_attempts' => 0, 
+                        'success_rate' => 0
+                    ],
+                    'peu' => [
+                        'total_students' => 0, 
+                        'correct_attempts' => 0, 
+                        'total_attempts' => 0, 
+                        'success_rate' => 0
+                    ]
+                ];
+            }
+            
+            // Déterminer le type d'inclinaison
+            $inclinaison_type = '';
+            if ($record->inclinaison == 1) {
+                $inclinaison_type = 'bien';
+            } else if ($record->inclinaison == -1) {
+                $inclinaison_type = 'mal';
+            } else {
+                $inclinaison_type = 'peu';
+            }
+            
+            // Stocker les statistiques
+            $results[$dataset_name][$inclinaison_type] = [
+                'total_students' => $record->total_students,
+                'correct_attempts' => $record->correct_attempts,
+                'total_attempts' => $record->total_attempts,
+                'success_rate' => $record->success_rate
+            ];
+        }
+        
+        return $results;
     }
+
 
 
         /**
