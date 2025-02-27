@@ -72,6 +72,42 @@ if (empty($difficulty)) {
 
 // 📌 Étape 1 : Sélection de la difficulté
 if (empty($difficulty)) {
+    echo '<div class="foetapp360-info">
+    <p><strong>FOETAPP360</strong> est un outil interactif conçu pour vous aider à mieux comprendre les positions fœtales. 
+    En vous entraînant ici, vous pourrez suivre vos statistiques personnelles pour identifier vos points forts et les notions à améliorer, 
+    et recevrez des feedbacks après chaque exercice.</p>
+
+    <p>Vous pouvez choisir entre deux modes d\'entraînement adaptés à votre niveau :</p>
+
+    <ul>
+        <li><strong>🔹 Mode Facile :</strong> Vous devrez identifier l’ensemble d’une représentation en utilisant un des éléments suivants :
+            <ul>
+                <li>Nom</li>
+                <li>Sigle</li>
+                <li>Partogramme</li>
+                <li>Schéma simplifié</li>
+                <li>Vue antérieure</li>
+                <li>Vue latérale</li>
+            </ul>
+        </li>
+        <li><strong>🔹 Mode Difficile :</strong> L’ensemble devra être identifié uniquement à partir de :
+            <ul>
+                <li>Nom</li>
+                <li>Sigle</li>
+                <li>Schéma simplifié</li>
+                <li>Partogramme</li>
+            </ul>
+        </li>
+    </ul>
+
+    <p><strong>📌 Règles générales :</strong></p>
+    <ul>
+        <li>Pour le nom, vous n’êtes pas obligé de respecter les majuscules ou les tirets.</li>
+        <li>Pour le partogramme et le schéma simplifié, la rotation doit être précise, mais une tolérance de 5° est appliquée sur les axes perpendiculaires.</li>
+    </ul>
+
+    <p>Lancez-vous et entraînez-vous librement pour améliorer votre compréhension des positions fœtales !</p>
+</div>';
     echo html_writer::tag('h3', "Choisissez votre niveau de difficulté");
 
     $easy_url = new moodle_url('/mod/hippotrack/attempt.php', array('id' => $cmid, 'session_id' => $session_id, 'difficulty' => 'easy'));
@@ -89,24 +125,39 @@ if (empty($difficulty)) {
 $possible_inputs = ($difficulty === 'easy') ? 
 ['name', 'sigle', 'partogramme', 'schema_simplifie', 'vue_anterieure', 'vue_laterale'] : 
 ['name', 'sigle', 'partogramme', 'schema_simplifie'];
+
+$PAGE->requires->js_call_amd('mod_hippotrack/attempt', 'init');
  
 // 📌 Correction après validation
 if ($submitted) {
-    echo html_writer::tag('h3', "Correction :");
+    echo html_writer::tag('h3', "Revue de l'exercice :");
     $is_correct = true;
     $dataset = $DB->get_record_sql("SELECT * FROM {hippotrack_datasets} WHERE id = :dataset_id", array('dataset_id' => $_POST['dataset_id']));
 
+    // List Selector
+    echo '<div class="hippotrack-tabs">';
+    echo '<ul class="hippotrack-tab-list">';
+    $is_first = true;
+    foreach ($possible_inputs as $field) {
+        echo '<li class="hippotrack-tab ' . ($is_first ? 'active' : '') . '" data-target="#' . $field . '_container">' . $field . '</li>';
+        $is_first = false;
+    }
+    echo '</ul">';
+    echo '</div>';
+
     foreach ($possible_inputs as $field) {
         $is_current_correct = true;
+        $label = ucfirst(str_replace('_', ' ', $field));
         if ($field === 'partogramme' || $field === 'schema_simplifie') {
             // 🔥 Correction spéciale pour partogramme et schéma simplifié (ils utilisent rotation + inclinaison)
-            $student_inclinaison = required_param("inclinaison_$field", PARAM_RAW);
-            $student_inclinaison = get_correct_inclinaison($student_inclinaison);
+            $student_inclinaison_raw = required_param("inclinaison_$field", PARAM_RAW);
+            $student_inclinaison = get_correct_inclinaison($student_inclinaison_raw);
             $student_rotation = required_param("rotation_$field", PARAM_RAW);
 
             $input_dataset = get_dataset_from_inclinaison_rotation($student_inclinaison, $student_rotation);
             if($student_inclinaison != $dataset->inclinaison || get_correct_rotation($student_rotation) != $dataset->rotation){
                 $is_current_correct = false;
+                $is_correct = false;
             }
 
             if($input_dataset == null){
@@ -117,7 +168,6 @@ if ($submitted) {
             }
 
             // Feedback
-            echo html_writer::tag('p', "<strong>$field :</strong> Votre inclinaison : $student_inclinaison | Rotation : $student_rotation <br>" . ($is_current_correct ? ' ✅' : ' ❌'));
             $feedback = $DB->get_record_sql(
                 "SELECT * FROM {hippotrack_feedback} 
                 WHERE input_dataset = :input_dataset 
@@ -132,22 +182,81 @@ if ($submitted) {
                 )
             );
             $feedback_data = $DB->get_record_sql("SELECT * FROM {hippotrack_feedback_data} WHERE id = :id", array('id' => $feedback->id_feedback));
+
+            // Affichage
+            $interior_image = ($field === 'partogramme') ? 'partogramme_interieur' : 'schema_simplifie_interieur';
+            $background_image = ($field === 'partogramme') ? 'null' : 'bassin';
+            $contour_class = ($field === 'partogramme') ? 'partogramme_contour' : 'schema_simplifie_contour';
+    
+            echo '<div class="rotation_hippotrack_container attempt_container" id="' . $field . '_container">';
+            echo html_writer::tag('h4', $label);
+            echo html_writer::tag('p', ($is_current_correct ? ' La réponse est correcte. ✅' : ' La réponse est incorrecte. ❌'));
             echo html_writer::tag('p', $feedback_data->feedback);
-            $is_correct = false;
+            echo '<div class="hippotrack_container" data-schema-type="' . $field . '">';
+    
+            if ($background_image !== 'null') {
+                echo '<img class="' . $background_image . '" src="' . new moodle_url('/mod/hippotrack/pix/' . $background_image . '.png') . '">';
+            }
+    
+            echo '<img class="' . $contour_class . '" src="' . new moodle_url('/mod/hippotrack/pix/' . $contour_class . '.png') . '">';
+            echo '<img class="' . $interior_image . '" src="' . new moodle_url('/mod/hippotrack/pix/' . $interior_image . '.png') . '">';
+            echo '</div>';  // Close .hippotrack_container
+    
+            // Rotation & Inclination Sliders
+            echo '<div class="hippotrack_sliders">';
+            // Si bloqué, on ajoute un input hidden pour transmettre l'information
+            echo '<input type="range" class="rotate-slider" name="rotation_' . $field . '" min="0" max="360" 
+                value="' . $student_rotation . '"style="display: none;"><br>';
+
+            echo '<input type="range" class="move-axis-slider" name="inclinaison_' . $field . '" min="-50" max="50" 
+                value="' . $student_inclinaison_raw . '"style="display: none;"><br>';
+            echo '</div>';
+
+            echo '</div>';  // Close .rotation-hippotrack_container
         } 
         else {
             // 🔥 Cas normal (name, sigle, vue_anterieure, vue_laterale)
             $student_answer = required_param($field, PARAM_RAW);
             $correct_answer = $dataset->$field;
-            var_dump($student_answer);
             if (format_answer_string($student_answer) != format_answer_string($correct_answer)) {
                 $is_current_correct = false;
+                $is_correct = false;
             }
-            echo html_writer::tag('p', "<strong>$field :</strong> Votre réponse : $student_answer" . ($is_current_correct ? ' ✅' : ' ❌'));
-            $is_correct = false;
+            if ($field === 'vue_anterieure' || $field === 'vue_laterale') {
+    
+                $prefix = ($field === 'vue_anterieure') ? 'bb_vue_ante_bf_' : 'bb_vue_lat_bf_';
+                $image_path = new moodle_url('/mod/hippotrack/pix/' . $student_answer);
+    
+                // **🆕 Select Background Image Based on $field**
+                $background_image = ($field === 'vue_anterieure') ? 'bassin_anterieur.png' : 'bassin_laterale.png';
+    
+                echo '<div class="image_cycling_hippotrack_container attempt_container" data-schema-type="' . $field . '" data-prefix="' . $prefix . '" id="' . $field . '_container">';
+                echo html_writer::tag('h4', $label);
+                echo html_writer::tag('p', ($is_current_correct ? ' La réponse est correcte. ✅' : ' La réponse est incorrecte. ❌'));
+                echo '<div class="hippotrack_container">';
+                // 🆕 Dynamically set background image
+                echo '<img class="hippotrack_background-image" src="' . new moodle_url('/mod/hippotrack/pix/' . $background_image) . '">';
+                echo '<img class="hippotrack_attempt_cycling-image" src="' . $image_path . '">';
+                echo '</div>';
+                echo '</div>';
+            }
+            else{
+                echo '<div class="attempt_container attempt_form_group" id="' . $field . '_container">';
+                echo html_writer::tag('label', $label . ' - ' . (($dataset->inclinaison == 1) ? "Bien fléchis" : "Mal fléchis"), array('for' => $field));
+                echo html_writer::tag('p', ($is_current_correct ? ' La réponse est correcte. ✅' : ' La réponse est incorrecte. ❌'));
+                echo html_writer::empty_tag('input', array(
+                    'type' => 'text',
+                    'name' => $field,
+                    'id' => $field,
+                    'value' => $student_answer,
+                    'readonly' => 'readonly'
+                ));
+                // Si readonly, ajouter un texte supplémentaire visible
+                echo '</div>';
+            }
         }
     }
-    echo html_writer::tag('p', $is_correct ? 'Correct' : 'Incorrect', array('class' => $is_correct ? 'correct' : 'incorrect'));
+    echo html_writer::tag('p', $is_correct ? 'Exercice Correct ✅' : 'Exercice Incorrect ❌');
 
     // 📌 Enregistrer les réponses de l'étudiant dans la base de données
     // Vérifier si une tentative existe déjà, sinon l'initialiser
@@ -250,7 +359,7 @@ else {
         if ($field === 'partogramme' || $field === 'schema_simplifie') {
     
             $interior_image = ($field === 'partogramme') ? 'partogramme_interieur' : 'schema_simplifie_interieur';
-            $background_image = ($field === 'partogramme') ? 'bassin' : 'null';
+            $background_image = ($field === 'partogramme') ? 'null' : 'bassin';
             $contour_class = ($field === 'partogramme') ? 'partogramme_contour' : 'schema_simplifie_contour';
     
             echo '<div class="rotation_hippotrack_container attempt_container" id="' . $field . '_container">';
@@ -267,14 +376,18 @@ else {
     
             // Rotation & Inclination Sliders
             echo '<div class="hippotrack_sliders">';
-            echo '<label for="rotate-slider">Rotation:</label>';
+            if(!$is_given_input){
+                echo '<label for="rotate-slider">Rotation:</label>';
+            }
             // Si bloqué, on ajoute un input hidden pour transmettre l'information
             echo '<input type="range" class="rotate-slider" name="rotation_' . $field . '" min="0" max="360" 
-                value="' . ($is_given_input ? $random_dataset->rotation : 0) . '" ' . ($is_given_input ? 'disabled' : '') . '><br>';
+                value="' . ($is_given_input ? $random_dataset->rotation : 0) . '" ' . ($is_given_input ? 'style="display: none;"' : '') . '><br>';
 
-            echo '<label for="move-axis-slider">Inclinaison:</label>';
+            if(!$is_given_input){
+                echo '<label for="move-axis-slider">Inclinaison:</label>';
+            }
             echo '<input type="range" class="move-axis-slider" name="inclinaison_' . $field . '" min="-50" max="50" 
-                value="' . ($is_given_input ? $random_dataset->inclinaison * 50 : 0) . '" ' . ($is_given_input ? 'disabled' : '') . '><br>';
+                value="' . ($is_given_input ? $random_dataset->inclinaison * 50 : 0) . '" ' . ($is_given_input ? 'style="display: none;"' : '') . '><br>';
 
             // Mandory. If not, will not send values with POST.
             if ($is_given_input) {
@@ -346,7 +459,7 @@ else {
     echo '<input type="hidden" name="debug_submission" value="1">';
 
     // 📌 Bouton de validation
-    echo html_writer::empty_tag('input', array('type' => 'submit', 'value' => 'Valider', 'class' => 'btn btn-primary'));
+    echo html_writer::empty_tag('input', array('type' => 'submit', 'value' => 'Terminer la session', 'id' => 'submit_attempt'));
 
     echo html_writer::end_tag('form');
 }
