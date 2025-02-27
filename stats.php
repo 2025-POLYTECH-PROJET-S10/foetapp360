@@ -28,7 +28,7 @@ $PAGE->set_heading($course->fullname);
 $stats_manager = new \mod_hippotrack\stats_manager($DB);
 
 // Récupération des statistiques globales
-$globalstats = $stats_manager->get_global_stats($cmid);
+$globalstats = $stats_manager->get_global_stats($hippotrack->id);
 
 // Récupération de la liste des étudiants pour le menu déroulant
 $students = $DB->get_records_sql(
@@ -36,7 +36,7 @@ $students = $DB->get_records_sql(
      FROM {user} u
      JOIN {hippotrack_session} s ON u.id = s.userid
      WHERE s.id_hippotrack = :hippotrackid",
-    ['hippotrackid' => $cmid]
+    ['hippotrackid' => $hippotrack->id]
 );
 
 function get_user_fullname($user) {
@@ -428,7 +428,8 @@ foreach ($students as $student) {
     }
 
     // Création d'un bouton pour afficher les statistiques complètes de l'étudiant
-    $url = new moodle_url('/mod/hippotrack/stats.php', ['id' => $cmid, 'userid' => $student->id]);
+    // Redirection vers la page "mystats.php" avec l'ID de l'étudiant passé en paramètre
+    $url = new moodle_url('/mod/hippotrack/mystats.php', ['id' => $cmid, 'userid' => $student->id]);
     $button = html_writer::link($url, get_string('showstats', 'mod_hippotrack'), ['class' => 'btn btn-primary']);
 
     echo html_writer::start_tag('tr');
@@ -445,51 +446,5 @@ echo html_writer::end_tag('table');
 /* -------------------------------------------------------------------------- */
 /*                            FIN TABLEAU ÉTUDIANTS                           */
 /* -------------------------------------------------------------------------- */
-
-// ! TO BE REMOVED
-// Statistiques spécifiques à un étudiant
-if ($userid) {
-    $studentstats = $stats_manager->get_student_stats($cmid, $userid);
-    $performancedata = $stats_manager->get_student_performance_data($userid, $cmid);
-
-    echo html_writer::start_tag('div', ['class' => 'student-stats']);
-    echo html_writer::tag('h3', get_string('studentstats', 'mod_hippotrack') . ' : ' . get_user_fullname($students[$userid]));
-    echo '<ul>';
-    foreach ($studentstats as $session) {
-        echo html_writer::tag('li', 'Session #' . $session->id . ' - Note : ' . $session->sumgrades . ' - Questions : ' . $session->questionsdone);
-    }
-    echo '</ul>';
-
-    // Préparation des données pour le graphique
-    $labels = [];
-    $success = [];
-    foreach ($performancedata as $attempt) {
-        $labels[] = $attempt->attempt_number;
-        $success[] = $attempt->is_correct;
-    }
-
-    // Graphique avec Chart.js
-    echo '<canvas id="performanceChart" width="400" height="200"></canvas>';
-    echo '<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>';
-    echo '<script>
-        var ctx = document.getElementById("performanceChart").getContext("2d");
-        new Chart(ctx, {
-            type: "line",
-            data: {
-                labels: ' . json_encode($labels) . ',
-                datasets: [{
-                    label: "' . get_string('success', 'mod_hippotrack') . '",
-                    data: ' . json_encode($success) . ',
-                    borderColor: "rgba(75, 192, 192, 1)",
-                    fill: false
-                }]
-            },
-            options: {
-                scales: { y: { beginAtZero: true, max: 1 } }
-            }
-        });
-    </script>';
-    echo html_writer::end_tag('div');
-}
 
 echo $OUTPUT->footer();
