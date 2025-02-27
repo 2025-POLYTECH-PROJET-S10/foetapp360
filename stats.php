@@ -66,49 +66,55 @@ echo html_writer::end_tag('div');
 $correct_datasets = $DB->get_records('hippotrack_datasets', null, '', '*');
 
 /* -------------------------------------------------------------------------- */
-/*                           GRAPHIQUE MODE FACILE                            */
+/*                           GRAPHIQUES MODE FACILE                           */
 /* -------------------------------------------------------------------------- */
 
-echo html_writer::tag('h2', "Graphique des Tentatives Mode Facile");
+// Tableaux pour stocker les noms uniques de positions
+$unique_positions = [];
 
-// Création du graphique
-$chart_easy = new \core\chart_bar();
-
-// Tableaux de données pour le mode facile
-$labels_easy = [];
-$easy_attempts_data = [];
-$easy_success_data = [];
-$easy_fail_data = [];
-
-// Récupération des données
+// Identifier les noms uniques
 foreach ($correct_datasets as $dataset) {
-    $easystats = $stats_manager->get_exo_stats_by_difficulty($hippotrack->id, $dataset->id, 'easy');
-
-    // Labels
-    $labels_easy[] = $dataset->name;
-
-    // Calcul des tentatives et du taux de succès
-    $easy_attempts = $easystats['total_attempts'] ?? 0;
-    $easy_success = ($easystats['success_rate'] ?? 0);
-    $easy_fail = $easy_attempts - $easy_success;
-
-    $easy_attempts_data[] = $easy_attempts;
-    $easy_success_data[] = $easy_success;
-    $easy_fail_data[] = $easy_fail;
+    if (!in_array($dataset->name, $unique_positions)) {
+        $unique_positions[] = $dataset->name;
+    }
 }
 
-// Création des séries pour le mode facile
-$series_easy_success = new \core\chart_series("Succès", $easy_success_data);
-$series_easy_fail = new \core\chart_series("Échec", $easy_fail_data);
+// Récupérer les statistiques pour le mode facile
+$stats_easy = $stats_manager->get_exo_stats_by_difficulty($hippotrack->id, 'easy');
 
-// Ajout des séries au graphique
-$chart_easy->add_series($series_easy_success);
-$chart_easy->add_series($series_easy_fail);
-$chart_easy->set_labels($labels_easy);
-$chart_easy->set_stacked(true); // Empilement pour visualiser le pourcentage
-
-// Affichage du graphique
-echo $OUTPUT->render($chart_easy);
+// Pour chaque type d'inclinaison, créer un graphique
+foreach (['bien', 'mal', 'peu'] as $inclinaison_type) {
+    $inclinaison_label = ucfirst($inclinaison_type) . " Fléchi";
+    echo html_writer::tag('h3', "Graphique des Tentatives - $inclinaison_label - Mode Facile");
+    
+    $chart = new \core\chart_bar();
+    $success_data = [];
+    $fail_data = [];
+    
+    // Récupérer les données pour chaque position
+    foreach ($unique_positions as $position_name) {
+        $attempts = isset($stats_easy[$inclinaison_type]['total_attempts']) ? 
+                    $stats_easy[$inclinaison_type]['total_attempts'] : 0;
+        $correct = isset($stats_easy[$inclinaison_type]['correct_attempts']) ? 
+                  $stats_easy[$inclinaison_type]['correct_attempts'] : 0;
+        
+        $success_data[] = $correct;
+        $fail_data[] = $attempts - $correct;
+    }
+    
+    // Création des séries
+    $series_success = new \core\chart_series("Succès", $success_data);
+    $series_fail = new \core\chart_series("Échec", $fail_data);
+    
+    // Ajout des séries au graphique
+    $chart->add_series($series_success);
+    $chart->add_series($series_fail);
+    $chart->set_labels($unique_positions);
+    $chart->set_stacked(true);
+    
+    // Affichage du graphique
+    echo $OUTPUT->render($chart);
+}
 
 /* -------------------------------------------------------------------------- */
 /*                          GRAPHIQUE MODE DIFFICILE                          */
@@ -125,9 +131,11 @@ $hard_attempts_data = [];
 $hard_success_data = [];
 $hard_fail_data = [];
 
+$hardstats = $stats_manager->get_exo_stats_by_difficulty($hippotrack->id, 'hard');
+var_dump($hardstats);
+
 // Récupération des données
 foreach ($correct_datasets as $dataset) {
-    $hardstats = $stats_manager->get_exo_stats_by_difficulty($hippotrack->id, $dataset->id, 'hard');
 
     // Labels
     $labels_hard[] = $dataset->name;

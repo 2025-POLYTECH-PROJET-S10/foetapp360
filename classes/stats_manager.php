@@ -65,26 +65,49 @@ class stats_manager
     }
 
     /**
-     * Get exercice stats to show the stats by difficulty
-     * @param int $hippotrackid
-     * @param int $dataset_id
-     * @param string $difficulty
+     * Get exercise statistics by difficulty level
+     * @param int $hippotrackid The hippotrack activity instance ID
+     * @param string $difficulty The difficulty level (easy/hard)
      * 
-     * @return array containing the stats for this exercice
+     * @return array Statistics grouped by inclination types (bien/mal/peu)
      */
-    public function get_exo_stats_by_difficulty(int $hippotrackid, int $dataset_id, string $difficulty)
-    {
-        $sql = "SELECT COUNT(DISTINCT userid) as total_students,
-                        SUM(a.is_correct) as success_rate,
-                        COUNT(a.id) as total_attempts
-                FROM {hippotrack_attempt} a
-                JOIN {hippotrack_session} s ON a.id_session = s.id
-                WHERE s.id_hippotrack = :hippotrackid AND a.id_dataset = :dataset_id AND s.difficulty = :difficulty";
+    public function get_exo_stats_by_difficulty(int $hippotrackid, string $difficulty) {
+        // Base SQL for all three inclination types
+        $sql_base = "SELECT 
+                        COUNT(DISTINCT s.userid) as total_students,
+                        SUM(a.is_correct) as correct_attempts,
+                        COUNT(a.id) as total_attempts,
+                        ROUND((SUM(a.is_correct) * 100.0 / COUNT(a.id)), 2) as success_rate
+                    FROM {hippotrack_attempt} a
+                    JOIN {hippotrack_session} s ON a.id_session = s.id
+                    JOIN {hippotrack_datasets} d ON a.id_dataset = d.id
+                    WHERE s.id_hippotrack = :hippotrackid AND s.difficulty = :difficulty";
 
-        $params = ["hippotrackid" => $hippotrackid, "dataset_id" => $dataset_id, "difficulty"=> $difficulty];
-        $record = $this->db->get_record_sql($sql, $params);
-        return $record ? (array) $record : [];
+        // Specific SQL for each inclination type
+        $sql_bien_flechi = $sql_base . " AND d.inclinaison = 1
+        GROUP BY d.name";
+        $sql_mal_flechi = $sql_base . " AND d.inclinaison = -1
+        GROUP BY d.name";
+        $sql_peu_flechi = $sql_base . " AND d.inclinaison <> -1 AND d.inclinaison <> 1
+        GROUP BY d.name";
+
+        $params = ["hippotrackid" => $hippotrackid, "difficulty" => $difficulty];
+        
+        // Get records for each inclination type
+        $record_bien_flechi = $this->db->get_record_sql($sql_bien_flechi, $params);
+        $record_mal_flechi = $this->db->get_record_sql($sql_mal_flechi, $params);
+        $record_peu_flechi = $this->db->get_record_sql($sql_peu_flechi, $params);
+
+        // Create an array containing the stats for this exercise
+        $record_final = [
+            "bien" => $record_bien_flechi ? (array)$record_bien_flechi : [],
+            "mal" => $record_mal_flechi ? (array)$record_mal_flechi : [],
+            "peu" => $record_peu_flechi ? (array)$record_peu_flechi : []
+        ];
+
+        return $record_final;
     }
+
 
         /**
      * Get exercice stats to show the stats per exercice
@@ -233,10 +256,6 @@ class stats_manager
 
         return $success_rates;
     }
-
-
-
-
 
 
     /**
