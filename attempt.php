@@ -96,6 +96,7 @@ if ($submitted) {
     $dataset = $DB->get_record_sql("SELECT * FROM {hippotrack_datasets} WHERE id = :dataset_id", array('dataset_id' => $_POST['dataset_id']));
 
     foreach ($possible_inputs as $field) {
+        $is_current_correct = true;
         if ($field === 'partogramme' || $field === 'schema_simplifie') {
             // 🔥 Correction spéciale pour partogramme et schéma simplifié (ils utilisent rotation + inclinaison)
             $student_inclinaison = required_param("inclinaison_$field", PARAM_RAW);
@@ -104,7 +105,7 @@ if ($submitted) {
 
             $input_dataset = get_dataset_from_inclinaison_rotation($student_inclinaison, $student_rotation);
             if($student_inclinaison != $dataset->inclinaison || get_correct_rotation($student_rotation) != $dataset->rotation){
-                $is_correct = false;
+                $is_current_correct = false;
             }
 
             if($input_dataset == null){
@@ -115,7 +116,7 @@ if ($submitted) {
             }
 
             // Feedback
-            echo html_writer::tag('p', "<strong>$field :</strong> Votre inclinaison : $student_inclinaison | Rotation : $student_rotation <br>");
+            echo html_writer::tag('p', "<strong>$field :</strong> Votre inclinaison : $student_inclinaison | Rotation : $student_rotation <br>" . ($is_current_correct ? ' ✅' : ' ❌'));
             $feedback = $DB->get_record_sql(
                 "SELECT * FROM {hippotrack_feedback} 
                 WHERE input_dataset = :input_dataset 
@@ -131,6 +132,7 @@ if ($submitted) {
             );
             $feedback_data = $DB->get_record_sql("SELECT * FROM {hippotrack_feedback_data} WHERE id = :id", array('id' => $feedback->id_feedback));
             echo html_writer::tag('p', $feedback_data->feedback);
+            $is_correct = false;
         } 
         else {
             // 🔥 Cas normal (name, sigle, vue_anterieure, vue_laterale)
@@ -138,9 +140,10 @@ if ($submitted) {
             $correct_answer = $dataset->$field;
             var_dump($student_answer);
             if (format_answer_string($student_answer) != format_answer_string($correct_answer)) {
-                $is_correct = false;
+                $is_current_correct = false;
             }
-            echo html_writer::tag('p', "<strong>$field :</strong> Votre réponse : $student_answer");
+            echo html_writer::tag('p', "<strong>$field :</strong> Votre réponse : $student_answer" . ($is_current_correct ? ' ✅' : ' ❌'));
+            $is_correct = false;
         }
     }
     echo html_writer::tag('p', $is_correct ? 'Correct' : 'Incorrect', array('class' => $is_correct ? 'correct' : 'incorrect'));
@@ -304,7 +307,7 @@ else {
                 echo '<button type="button" class="hippotrack_attempt_next-btn">→</button>';
                 echo '<button type="button" class="hippotrack_attempt_toggle_btn">🔄 Toggle bf/mf</button>'; // Toggle button
             }
-            echo '<input type="hidden" class="hippotrack_attempt_selected_position" name="' . $field . '" value="' . ($is_given_input ? ($random_dataset->$random_input) : $prefix ) . '">';
+            echo '<input type="hidden" class="hippotrack_attempt_selected_position" name="' . $field . '" value="' . ($is_given_input ? ($random_dataset->$random_input) : ($prefix . '1.png')) . '">';
             echo '</div>';
         
             echo '</div>';
