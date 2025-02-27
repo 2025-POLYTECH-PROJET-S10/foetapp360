@@ -72,6 +72,42 @@ if (empty($difficulty)) {
 
 // 📌 Étape 1 : Sélection de la difficulté
 if (empty($difficulty)) {
+    echo '<div class="foetapp360-info">
+    <p><strong>FOETAPP360</strong> est un outil interactif conçu pour vous aider à mieux comprendre les positions fœtales. 
+    En vous entraînant ici, vous pourrez suivre vos statistiques personnelles pour identifier vos points forts et les notions à améliorer, 
+    et recevrez des feedbacks après chaque exercice.</p>
+
+    <p>Vous pouvez choisir entre deux modes d\'entraînement adaptés à votre niveau :</p>
+
+    <ul>
+        <li><strong>🔹 Mode Facile :</strong> Vous devrez identifier l’ensemble d’une représentation en utilisant un des éléments suivants :
+            <ul>
+                <li>Nom</li>
+                <li>Sigle</li>
+                <li>Partogramme</li>
+                <li>Schéma simplifié</li>
+                <li>Vue antérieure</li>
+                <li>Vue latérale</li>
+            </ul>
+        </li>
+        <li><strong>🔹 Mode Difficile :</strong> L’ensemble devra être identifié uniquement à partir de :
+            <ul>
+                <li>Nom</li>
+                <li>Sigle</li>
+                <li>Schéma simplifié</li>
+                <li>Partogramme</li>
+            </ul>
+        </li>
+    </ul>
+
+    <p><strong>📌 Règles générales :</strong></p>
+    <ul>
+        <li>Pour le nom, vous n’êtes pas obligé de respecter les majuscules ou les tirets.</li>
+        <li>Pour le partogramme et le schéma simplifié, la rotation doit être précise, mais une tolérance de 5° est appliquée sur les axes perpendiculaires.</li>
+    </ul>
+
+    <p>Lancez-vous et entraînez-vous librement pour améliorer votre compréhension des positions fœtales !</p>
+</div>';
     echo html_writer::tag('h3', "Choisissez votre niveau de difficulté");
 
     $easy_url = new moodle_url('/mod/hippotrack/attempt.php', array('id' => $cmid, 'session_id' => $session_id, 'difficulty' => 'easy'));
