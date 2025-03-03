@@ -60,6 +60,7 @@ class manage_datasets_form extends moodleform {
                 'accepted_types' => 'image',
             ]
         );
+        $mform->addRule('vue_anterieure', 'Vue Antérieure requise', 'required');
 
         $mform->addElement(
             'filepicker',
@@ -71,6 +72,7 @@ class manage_datasets_form extends moodleform {
                 'accepted_types' => 'image',
             ]
         );
+        $mform->addRule('vue_laterale', 'Vue Latérale requise', 'required');
 
         // Add hidden field for dataset_id (used for editing)
         $mform->addElement('hidden', 'id');
