@@ -44,3 +44,13 @@ $string['student'] = 'Student';
 $string['attempts'] = 'Attempts';
 $string['successrate'] = 'Success rate';
 $string['showstats'] = 'Show statistics';
+
+
+// Error messages
+$string['nodataavailabletitle'] = 'No Data Available';
+$string['nodataavailabletext'] = 'It seems that no attempts have been made yet.';
+$string['nodataavailablehelp'] = 'Statistics will be updated as students complete attempts.';
+
+// for students
+$string['nostatsavailabletitle'] = 'No Personal Statistics Available';
+$string['nostatsavailabletext'] = 'You have not yet completed any attempts.';

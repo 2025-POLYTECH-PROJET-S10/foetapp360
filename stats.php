@@ -52,6 +52,20 @@ echo $OUTPUT->heading(get_string('stats', 'mod_hippotrack'));
 /*                            STATISTIQUES GLOBALES                           */
 /* -------------------------------------------------------------------------- */
 
+// Check for attempts
+if (empty($globalstats) || $globalstats['total_attempts'] <= 0) {
+    // Display informative message instead of throwing an exception
+    echo html_writer::start_tag('div', ['class' => 'no-data-message alert alert-info']); //  Using Moodle's alert styling
+    echo html_writer::tag('h4', get_string('nodataavailabletitle', 'mod_hippotrack')); // Use a language string
+    echo html_writer::tag('p', get_string('nodataavailabletext', 'mod_hippotrack')); // Use a language string
+    echo html_writer::tag('p', get_string('nodataavailablehelp', 'mod_hippotrack')); // Use a language string, optional.
+    echo html_writer::end_tag('div');
+
+    echo $OUTPUT->footer();
+    exit; // Stop further processing
+}
+
+
 // Statistiques globales
 echo html_writer::start_tag('div', ['class' => 'global-stats']);
 echo html_writer::tag('h3', get_string('globalstats', 'mod_hippotrack'));

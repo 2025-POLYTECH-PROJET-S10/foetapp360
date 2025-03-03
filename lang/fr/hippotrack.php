@@ -45,3 +45,13 @@ $string['student'] = 'Étudiant';
 $string['attempts'] = 'Tentatives';
 $string['successrate'] = 'Taux de réussite';
 $string['showstats'] = 'Voir les statistiques';
+
+
+// Les messages d'erreur
+$string['nodataavailabletitle'] = 'Aucune donnée disponible';
+$string['nodataavailabletext'] = 'Il semble qu\'aucun essai n\'a été effectué pour le moment.';
+$string['nodataavailablehelp'] = 'Les statistiques seront mises à jour au fur et à mesure des essais réalisés par les étudiants.';
+
+// pour les étudiants
+$string['nostatsavailabletitle'] = 'Aucune statistique personnelle disponible';
+$string['nostatsavailabletext'] = 'Vous n\'avez pas encore effectué aucun essai.';
