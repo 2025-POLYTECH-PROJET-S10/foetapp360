@@ -104,13 +104,15 @@ class manage_datasets_form extends moodleform {
         $rotation = $data["rotation"];
         $inclinaison = $data["inclinaison"];
 
-        // Check if name and sigle are only alphabetic text
-        if (!preg_match('/^[a-zA-Z\s]+$/', $name)) {
-            $errors["name"] = "Le nom ne doit contenir que des lettres et des espaces.";
+        // Ensure that $name contains at least one letter (a-z or A-Z)
+        // and allow any other character
+        if (!preg_match('/^(?=.*[A-Za-z]).+$/', $name)) {
+            $errors["name"] = "Le nom doit contenir au moins une lettre.";
         }
 
-        if (!preg_match('/^[a-zA-Z\s]+$/', $sigle)) {
-            $errors["sigle"] = "Le sigle ne doit contenir que des lettres et des espaces.";
+        // Similarly, ensure that $sigle contains at least one letter
+        if (!preg_match('/^(?=.*[A-Za-z]).+$/', $sigle)) {
+            $errors["sigle"] = "Le sigle doit contenir au moins une lettre.";
         }
 
         // Check if rotation and inclinaison are integers
