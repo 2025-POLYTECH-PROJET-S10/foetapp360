@@ -81,4 +81,46 @@ class manage_datasets_form extends moodleform {
         // Add submit and cancel buttons
         $this->add_action_buttons(true, "Enregistrer");
     }
+
+
+    /**
+     * If there are errors return array of errors ("fieldname"=>"error message"),
+     * otherwise true if ok.
+     *
+     * Server side rules do not work for uploaded files, implement serverside rules here if needed.
+     *
+     * @param array $data array of ("fieldname"=>value) of submitted data
+     * @param array $files array of uploaded files "element_name"=>tmp_file_path
+     * @return array of "element_name"=>"error_description" if there are errors,
+     *         or an empty array if everything is OK (true allowed for backwards compatibility too).
+     */
+    function validation($data, $files) {
+        global $CFG, $DB;
+        $errors = parent::validation($data, $files);
+
+        // Get the datas
+        $name = $data["name"];
+        $sigle = $data["sigle"];
+        $rotation = $data["rotation"];
+        $inclinaison = $data["inclinaison"];
+
+        // Check if name and sigle are only alphabetic text
+        if (!preg_match('/^[a-zA-Z\s]+$/', $name)) {
+            $errors["name"] = "Le nom ne doit contenir que des lettres et des espaces.";
+        }
+
+        if (!preg_match('/^[a-zA-Z\s]+$/', $sigle)) {
+            $errors["sigle"] = "Le sigle ne doit contenir que des lettres et des espaces.";
+        }
+
+        // Check if rotation and inclinaison are integers
+        if (!is_numeric($rotation) || $rotation < 0 || $rotation > 360) {
+            $errors["rotation"] = "La rotation doit être un entier entre 0 et 360.";
+        }
+
+        if (!is_numeric($inclinaison) || !in_array($inclinaison, [-1, 0, 1], true)) { //Use in_array for checking valid array of values
+            $errors["inclinaison"] = "L'inclinaison doit être un entier de -1 , 0 ou 1.";
+        }
+        return $errors;
+    }
 }
