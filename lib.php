@@ -83,20 +83,38 @@ function hippotrack_update_instance($moduleinstance)
 }
 
 /**
- * Removes an instance of the hippotrack from the database.
+ * Delete an instance of the hippotrack activity.
  *
- * @param int $id Id of the module instance.
- * @return bool True if successful, false on failure.
+ * This function is called when a hippotrack instance is deleted. It will
+ * remove any dependent data (such as sessions and attempts) linked to the instance.
+ *
+ * @param int $id The ID of the hippotrack instance to delete.
+ * @return bool True if deletion was successful, false otherwise.
  */
-function hippotrack_delete_instance($id)
-{
+function hippotrack_delete_instance($id) {
     global $DB;
 
-    $exists = $DB->get_record('hippotrack', array('id' => $id));
-    if (!$exists) {
+    // Ensure the instance exists.
+    if (!$DB->get_record('hippotrack', array('id' => $id))) {
         return false;
     }
 
+    // Delete all attempts linked to sessions of this instance.
+    // This SQL deletes records from hippotrack_attempt whose session is linked to the instance.
+    $sql = "DELETE FROM {hippotrack_attempt}
+            WHERE id_session IN (
+                SELECT id FROM {hippotrack_session} WHERE id_hippotrack = ?
+            )";
+    $DB->execute($sql, array($id));
+
+    // Delete all session records for this instance.
+    $DB->delete_records('hippotrack_session', array('id_hippotrack' => $id));
+
+    // Optionally: if your design requires cleaning up other tables (e.g. feedback data), add similar deletions.
+    // Note: The hippotrack_datasets table does not include a direct reference to an instance.
+    // If you ever add an instance foreign key, be sure to delete those records here.
+
+    // Finally, delete the hippotrack instance itself.
     $DB->delete_records('hippotrack', array('id' => $id));
 
     return true;
