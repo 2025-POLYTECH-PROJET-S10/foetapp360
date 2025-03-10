@@ -357,7 +357,7 @@ if ($submitted) {
     exit;
 } 
 else {
-    $random_dataset = $DB->get_record_sql("SELECT * FROM {hippotrack_datasets} ORDER BY RAND() LIMIT 1"); // TODO A regarder pk random un peu bizarre
+    $random_dataset = $DB->get_record_sql("SELECT * FROM {hippotrack_datasets} WHERE inclinaison=-1 ORDER BY RAND() LIMIT 1"); // TODO A regarder pk random un peu bizarre
     $random_input = $possible_inputs[array_rand($possible_inputs)]; // get random input from dataset
 
     // Enregistre la difficulté dans la session.

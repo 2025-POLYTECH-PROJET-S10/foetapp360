@@ -200,3 +200,36 @@ function mod_hippotrack_pluginfile(
     // Return true to indicate that the file has been served.
     return true;
 }
+
+/**
+ * Starts a new session for a given instance and user.
+ *
+ * This function checks if there is an existing active session for the given instance and user.
+ * If an active session is found, it returns the session ID. Otherwise, it creates a new session
+ * with the current timestamp and a default difficulty level of 'medium', and returns the new session ID.
+ *
+ * @param int $instanceid The ID of the hippotrack instance.
+ * @param int $userid The ID of the user.
+ * @return int The ID of the existing or newly created session.
+ */
+function hippotrack_start_new_session($instanceid, $userid) {
+    global $DB;
+    
+    // Check for existing active session
+    if ($existingsession = $DB->get_record('hippotrack_session', [
+        'id_hippotrack' => $instanceid,
+        'userid' => $userid,
+        'timefinish' => 0,
+    ])) {
+        return $existingsession->id;
+    }
+
+    $newsession = (object)[
+        'id_hippotrack' => $instanceid,
+        'userid' => $userid,
+        'timestart' => time(),
+        'timefinish' => 0,
+    ];
+    
+    return $DB->insert_record('hippotrack_session', $newsession);
+}

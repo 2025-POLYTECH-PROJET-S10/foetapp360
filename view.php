@@ -79,21 +79,24 @@ if ($is_student) {
     }
 
 
-    // ▶️ Lancer une session d'exercice
-    // Vérifier si une session existe pour cet utilisateur et cet id_hippotrack
-    $existingSession = $DB->get_record_sql(
-        "SELECT MAX(id) as maxid FROM {hippotrack_session} WHERE id_hippotrack = ? AND userid = ?",
-        [$moduleinstance->id, $USER->id]
-    );
-
-    // Définir le nouvel ID
-    $session_id = ($existingSession && $existingSession->maxid !== null) ? $existingSession->maxid + 1 : 1;
-
-    $attempt_url = new moodle_url('/mod/hippotrack/attempt.php', array('id' => $id, 'session_id' => $session_id, 'first_time' => true));
-    if (page_exists('attempt.php')) {
-        echo $OUTPUT->single_button($attempt_url, '🚀 Lancer une session d\'exercice', 'get');
-    } else {
-        echo html_writer::tag('button', '🚀 Lancer une session d\'exercice (Bientôt dispo)', array('disabled' => 'disabled', 'class' => 'btn btn-secondary'));
+   // 🆕 Improved session handling
+    try {
+        $session_id = hippotrack_start_new_session($moduleinstance->id, $USER->id);
+        
+        $attempt_url = new moodle_url('/mod/hippotrack/attempt.php', [
+            'id' => $id,
+            'session_id' => $session_id
+        ]);
+        
+        if (page_exists('attempt.php')) {
+            echo $OUTPUT->single_button($attempt_url, '🚀 Lancer une session d\'exercice', 'get');
+        } else {
+            echo html_writer::tag('button', '🚀 Lancer une session (Bientôt dispo)', 
+                ['disabled' => 'disabled', 'class' => 'btn btn-secondary']);
+        }
+    } catch (dml_exception $e) {
+        debugging('Failed to create session: '.$e->getMessage(), DEBUG_DEVELOPER);
+        echo $OUTPUT->notification(get_string('sessionerror', 'hippotrack'));
     }
 
     echo html_writer::end_div();
