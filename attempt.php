@@ -126,33 +126,54 @@ $possible_inputs = ($difficulty === 'easy') ?
 
 // GET toutes les vue antérieures
 $image_manager_anterieur = new image_manager('vue_anterieure');
-$sql = "SELECT vue_anterieure 
+$sql = "SELECT id, inclinaison, vue_anterieure 
         FROM {hippotrack_datasets} 
         ORDER BY inclinaison ASC, rotation ASC";
 $vue_anterieur_img_names = $DB->get_records_sql($sql);
 $image_database_vue_anterieur = [];
 foreach ($vue_anterieur_img_names as $img_name) {
+    $inclinaison = $img_name->inclinaison;       // Recupération de l'inclinaison
     $filename = $img_name->vue_anterieure; // Récupération du nom de fichier correct
-    $image_database_vue_anterieur[$filename] = ($image_manager_anterieur->getImageUrlByName($filename))->out(); // Append à $image_database
+    $imgURL = ($image_manager_anterieur->getImageUrlByName($filename))->out();
+    $image_database_vue_anterieur_review[$filename] = $imgURL; // Append à $image_database
+
+    // Ajouter l'image au bon groupe d'inclinaison
+    if (!isset($image_database_vue_anterieur[$inclinaison])) {
+        $image_database_vue_anterieur[$inclinaison] = [];
+    }
+    $image_database_vue_anterieur[$inclinaison][$filename] = $imgURL; // Append à $image_database
 }
 $nb_vue_anterieur = max(0, count($image_database_vue_anterieur) - 1);
 
 // GET toutes les vue latérales
 $image_manager_laterale = new image_manager('vue_laterale');
-$sql = "SELECT vue_laterale 
+$sql = "SELECT id, inclinaison, vue_laterale 
         FROM {hippotrack_datasets} 
         ORDER BY inclinaison ASC, rotation ASC";
 $vue_laterale_img_names = $DB->get_records_sql($sql);
 $image_database_vue_laterale = [];
 foreach ($vue_laterale_img_names as $img_name) {
+    $inclinaison = strval($img_name->inclinaison);       // Recupération de l'inclinaison
     $filename = $img_name->vue_laterale; // Récupération du nom de fichier correct
-    $image_database_vue_laterale[$filename] = ($image_manager_laterale->getImageUrlByName($filename))->out(); // Append à $image_database
+    $imgURL = ($image_manager_laterale->getImageUrlByName($filename))->out();
+    $image_database_vue_laterale_review[$filename] = $imgURL; // Append à $image_database
+
+    // Ajouter l'image au bon groupe d'inclinaison
+    if (!isset($image_database_vue_laterale[$inclinaison])) {
+        $image_database_vue_laterale[$inclinaison] = [];
+    }
+    $image_database_vue_laterale[$inclinaison][$filename] = $imgURL; // Append à $image_database
 }
 $nb_vue_laterale = max(0, count($image_database_vue_laterale)-1);
 
 $image_database = [
     "vue_anterieure" => $image_database_vue_anterieur,
     "vue_laterale" => $image_database_vue_laterale
+];
+
+$image_database_review = [
+    "vue_anterieure" => $image_database_vue_anterieur_review,
+    "vue_laterale" => $image_database_vue_laterale_review
 ];
 
 $PAGE->requires->js_call_amd('mod_hippotrack/attempt', 'init');
@@ -171,10 +192,8 @@ if ($submitted) {
     // List Selector
     echo '<div class="hippotrack-tabs">';
     echo '<ul class="hippotrack-tab-list">';
-    $is_first = true;
     foreach ($possible_inputs as $field) {
-        echo '<li class="hippotrack-tab ' . ($is_first ? 'active' : '') . '" data-target="#' . $field . '_container">' . $field . '</li>';
-        $is_first = false;
+        echo '<li class="hippotrack-tab ' . ($_POST['input'] === $field ? 'active' : '') . '" data-target="#' . $field . '_container">' . ucfirst(strtolower(str_replace('_', ' ', $field))) . '</li>';
     }
     echo '</ul">';
     echo '</div>';
@@ -252,15 +271,15 @@ if ($submitted) {
             // 🔥 Cas normal (name, sigle, vue_anterieure, vue_laterale)
             $student_answer = required_param($field, PARAM_RAW);
             $correct_answer = $dataset->$field;
-            if (format_answer_string($student_answer) != format_answer_string($correct_answer)) {
-                $is_current_correct = false;
-                $is_correct = false;
-            }
             if ($field === 'vue_anterieure' || $field === 'vue_laterale') {
                 $elements = explode("/", $student_answer);
                 $student_answer = end($elements);
+                if (format_answer_string($student_answer) != format_answer_string($correct_answer)) {
+                    $is_current_correct = false;
+                    $is_correct = false;
+                }
                 $prefix = ($field === 'vue_anterieure') ? 'bb_vue_ante_bf_' : 'bb_vue_lat_bf_';
-                $image_path = $image_database[$field][$student_answer];
+                $image_path = $image_database_review[$field][$student_answer];
     
                 // **🆕 Select Background Image Based on $field**
                 $background_image = ($field === 'vue_anterieure') ? 'bassin_anterieur.png' : 'bassin_laterale.png';
@@ -276,6 +295,10 @@ if ($submitted) {
                 echo '</div>';
             }
             else{
+                if (format_answer_string($student_answer) != format_answer_string($correct_answer)) {
+                    $is_current_correct = false;
+                    $is_correct = false;
+                }
                 echo '<div class="attempt_container attempt_form_group" id="' . $field . '_container">';
                 echo html_writer::tag('label', $label . ' - ' . (($dataset->inclinaison == 1) ? "Bien fléchis" : "Mal fléchis"), array('for' => $field));
                 echo html_writer::tag('p', ($is_current_correct ? ' La réponse est correcte. ✅' : ' La réponse est incorrecte. ❌'));
@@ -379,7 +402,7 @@ else {
     echo '<div class="hippotrack-tabs">';
     echo '<ul class="hippotrack-tab-list">';
     foreach ($possible_inputs as $field) {
-        echo '<li class="hippotrack-tab ' . ($random_input === $field ? 'active' : '') . '" data-target="#' . $field . '_container">' . $field . '</li>';
+        echo '<li class="hippotrack-tab ' . ($random_input === $field ? 'active' : '') . '" data-target="#' . $field . '_container">' . ucfirst(strtolower(str_replace('_', ' ', $field))) . '</li>';
     }
     echo '</ul">';
     echo '</div>';
@@ -431,9 +454,13 @@ else {
 
             echo '</div>';  // Close .rotation-hippotrack_container
         } elseif ($field === 'vue_anterieure' || $field === 'vue_laterale') {
+            $random_inclinaison_index = rand(0, count($image_database[$field])-1); // TODO
+            $inclinaison_keys = array_keys($image_database[$field]);
+            $random_inclinaison = $inclinaison_keys[$random_inclinaison_index];
+            $random_index = rand(0, ((count($image_database[$field][$random_inclinaison])-1)));
     
             $prefix = ($field === 'vue_anterieure') ? 'bb_vue_ante_bf_' : 'bb_vue_lat_bf_';
-            $image_path = ($is_given_input ? ($image_database[$field][$random_dataset->$random_input]) : (array_values($image_database[$field])[0]));
+            $image_path = ($is_given_input ? ($image_database[$field][$random_dataset->inclinaison][$random_dataset->$random_input]) : (array_values($image_database[$field][$random_inclinaison])[$random_index]));
 
             // **🆕 Select Background Image Based on $field**
             $background_image = ($field === 'vue_anterieure') ? 'bassin_anterieur.png' : 'bassin_laterale.png';
@@ -456,6 +483,7 @@ else {
                 echo '<button type="button" class="hippotrack_attempt_toggle_btn">🔄 Toggle bf/mf</button>'; // Toggle button
             }
             echo '<input type="hidden" class="hippotrack_attempt_selected_position" name="' . $field . '" value="' . $image_path . '">';
+            echo '<input type="hidden" class="hippotrack_attempt_toggle_btn_value" name="' . $field . '" value="' . $inclinaison . '">';
             echo '</div>';
         
             echo '</div>';

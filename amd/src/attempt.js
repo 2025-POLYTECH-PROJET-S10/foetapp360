@@ -52,12 +52,14 @@ define(['jquery'], function($) {
                 let hippotrack_container = $(this);
                 let cyclingImage = hippotrack_container.find(".hippotrack_attempt_cycling-image");
                 let hiddenInput = hippotrack_container.find(".hippotrack_attempt_selected_position");
+                let toggleButtonHiddenInput = hippotrack_container.find(".hippotrack_attempt_toggle_btn_value");
                 /**
                  * Met à jour l'image affichée en fonction de la position et de la variation.
                  */
                 function increaseImage() {
                     let field = hippotrack_container.find(".hippotrack_field");
-                    let images = Object.values(imageDatabase[field[0].dataset.values]); // Convertir en tableau indexé
+                    let inclinaison = toggleButtonHiddenInput.attr("value");
+                    let images = Object.values(imageDatabase[field[0].dataset.values][inclinaison]); // Convertir en tableau indexé
                     let imageActuelle = cyclingImage.attr("src");
                     let currentIndex = images.indexOf(imageActuelle);
                     if (currentIndex === -1) {
@@ -75,7 +77,8 @@ define(['jquery'], function($) {
                  */
                 function decreaseImage() {
                     let field = hippotrack_container.find(".hippotrack_field");
-                    let images = Object.values(imageDatabase[field[0].dataset.values]); // Convertir en tableau indexé
+                    let inclinaison = toggleButtonHiddenInput.attr("value");
+                    let images = Object.values(imageDatabase[field[0].dataset.values][inclinaison]); // Convertir en tableau indexé
                     let imageActuelle = cyclingImage.attr("src");
                     let currentIndex = images.indexOf(imageActuelle);
                     if (currentIndex === -1) {
@@ -88,6 +91,38 @@ define(['jquery'], function($) {
                     cyclingImage.attr("src", images[currentIndex]);
                     hiddenInput.val(images[currentIndex]);
                 }
+                /**
+                 * Update the image when toggling.
+                 * @param {string} previousInclinaison - La clé de l'inclinaison précédente.
+                 */
+                function updateImage(previousInclinaison){
+                    let field = hippotrack_container.find(".hippotrack_field");
+                    let images = Object.values(imageDatabase[field[0].dataset.values][previousInclinaison]);
+                    let imageActuelle = cyclingImage.attr("src");
+                    let currentIndex = images.indexOf(imageActuelle);
+                    let correctInclinaison = toggleButtonHiddenInput.attr("value");
+                    let imagesBonInclinaison = Object.values(imageDatabase[field[0].dataset.values][correctInclinaison]);
+                    cyclingImage.attr("src", imagesBonInclinaison[currentIndex]);
+                    hiddenInput.val(imagesBonInclinaison[currentIndex]);
+                }
+                /**
+                 * Met à jour l'inclinaison de l'image.
+                 */
+                function toggleView(){
+                    let inclinaison = toggleButtonHiddenInput.attr("value");
+                    let field = hippotrack_container.find(".hippotrack_field");
+                    let images = imageDatabase[field[0].dataset.values];
+                    let inclinaisonKeys = Object.keys(images);
+                    let currentIndex = inclinaisonKeys.indexOf(inclinaison); // Trouver son index
+                    let nextKey;
+                    if (currentIndex !== -1 && currentIndex < Object.keys(images).length - 1) {
+                        nextKey = inclinaisonKeys[currentIndex + 1]; // Clé suivante
+                    } else {
+                        nextKey = inclinaisonKeys[0]; // Clé suivante
+                    }
+                    toggleButtonHiddenInput.attr("value", nextKey);
+                    return inclinaison;
+                }
 
                 hippotrack_container.find(".hippotrack_attempt_prev-btn").on("click", function() {
                     decreaseImage();
@@ -95,6 +130,11 @@ define(['jquery'], function($) {
 
                 hippotrack_container.find(".hippotrack_attempt_next-btn").on("click", function() {
                     increaseImage();
+                });
+
+                hippotrack_container.find(".hippotrack_attempt_toggle_btn").on("click", function() {
+                    let previousInclinaison = toggleView();
+                    updateImage(previousInclinaison);
                 });
             });
 

@@ -88,16 +88,17 @@ function format_answer_string(string $input_answer): string {
     
     // Enlever les _ et -
     $formatted = str_replace(['_', '-'], ' ', $formatted);
-    
-    // Remplacement des caractères accentués par leurs équivalents sans accent
+
+    // Remplacement des caractères accentués (minuscules et majuscules) par leurs équivalents sans accent
     $formatted = strtr($formatted, [
-        'é' => 'e', 'è' => 'e', 'ê' => 'e', 'ë' => 'e',
-        'à' => 'a', 'â' => 'a',
-        'ù' => 'u', 'û' => 'u',
-        'ô' => 'o', 'ö' => 'o',
-        'ç' => 'c',
-        'ï' => 'i', 'î' => 'i'
+        'é' => 'e', 'è' => 'e', 'ê' => 'e', 'ë' => 'e', 'É' => 'e', 'È' => 'e', 'Ê' => 'e', 'Ë' => 'e',
+        'à' => 'a', 'â' => 'a', 'À' => 'a', 'Â' => 'a',
+        'ù' => 'u', 'û' => 'u', 'Ù' => 'u', 'Û' => 'u',
+        'ô' => 'o', 'ö' => 'o', 'Ô' => 'o', 'Ö' => 'o',
+        'ç' => 'c', 'Ç' => 'c',
+        'ï' => 'i', 'î' => 'i', 'Ï' => 'i', 'Î' => 'i'
     ]);
 
-    return $formatted;
+    // Convertir tout en minuscules
+    return strtolower($formatted);
 }
