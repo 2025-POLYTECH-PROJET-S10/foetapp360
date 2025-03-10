@@ -163,6 +163,14 @@ function render_datasets_table($datasets, $context, $cmid, $OUTPUT)
 // 📌 Main Output
 echo $OUTPUT->header();
 
+echo '<div class="hippotrack-license-notice">
+ <img src="' . new moodle_url('/mod/hippotrack/pix/licence-cc-by-nc.png') . '" alt="CC BY-NC License">
+ <br>
+ FoetApp360\'s images © 2024 by Pierre-Yves Rabattu is licensed under CC BY-NC 4.0. 
+ To view a copy of this license, visit 
+ <a href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">here</a>.
+</div>';
+
 if (!$showform && !$editing) {
     // Display datasets table
     echo html_writer::tag('h2', "Liste des ensembles de données");
@@ -179,12 +187,4 @@ if (!$showform && !$editing) {
         redirect(new moodle_url('/mod/hippotrack/db_form_submission.php', array('cmid' => $cmid, 'addnew' => 1)));
     }
 }
-echo '<div class="hippotrack-license-notice">
- <img src="' . new moodle_url('/mod/hippotrack/pix/licence-cc-by-nc.png') . '" alt="CC BY-NC License">
- <br>
- FoetApp360\'s images © 2024 by Pierre-Yves Rabattu is licensed under CC BY-NC 4.0. 
- To view a copy of this license, visit 
- <a href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">here</a>.
-</div>';
-
 echo $OUTPUT->footer();
