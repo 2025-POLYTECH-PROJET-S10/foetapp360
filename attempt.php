@@ -71,41 +71,24 @@ echo $OUTPUT->header();
 if (empty($difficulty)) {
     $_SESSION['hippotrack_session_' . $session_id]['_time_start'] = time();
     echo '<div class="foetapp360-info">
-    <p><strong>FOETAPP360</strong> est un outil interactif conçu pour vous aider à mieux comprendre les positions fœtales. 
-    En vous entraînant ici, vous pourrez suivre vos statistiques personnelles pour identifier vos points forts et les notions à améliorer, 
-    et recevrez des feedbacks après chaque exercice.</p>
+        <p><strong>FoetApp360 est un outil interactif conçu pour vous aider à mieux comprendre les positions variétés de présentations fœtales</strong>. En vous entraînant ici, vous pourrez suivre <strong>vos statistiques personnelles</strong> pour identifier vos points forts et les notions à améliorer et recevrez des feedbacks après chaque exercice.</p>
 
-    <p>Vous pouvez choisir entre deux modes d\'entraînement adaptés à votre niveau :</p>
+        <p>Vous pouvez choisir entre <strong>deux modes</strong> d\'entraînement adaptés à votre niveau :</p>
 
-    <ul>
-        <li><strong>🔹 Mode Facile :</strong> Vous devrez identifier l’ensemble d’une représentation en utilisant un des éléments suivants :
-            <ul>
-                <li>Nom</li>
-                <li>Sigle</li>
-                <li>Partogramme</li>
-                <li>Schéma simplifié</li>
-                <li>Vue antérieure</li>
-                <li>Vue latérale</li>
-            </ul>
-        </li>
-        <li><strong>🔹 Mode Difficile :</strong> L’ensemble devra être identifié uniquement à partir de :
-            <ul>
-                <li>Nom</li>
-                <li>Sigle</li>
-                <li>Schéma simplifié</li>
-                <li>Partogramme</li>
-            </ul>
-        </li>
-    </ul>
+        <ul>
+            <li>🔹 <strong>Mode Facile</strong> : Vous devrez, à partir d’un des éléments donné, identifier l’ensemble des représentations d’une variété de présentation en vous aidant des représentations anatomiques les plus complètes.</li>
 
-    <p><strong>📌 Règles générales :</strong></p>
-    <ul>
-        <li>Pour le nom, vous n’êtes pas obligé de respecter les majuscules ou les tirets.</li>
-        <li>Pour le partogramme et le schéma simplifié, la rotation doit être précise, mais une tolérance de 5° est appliquée sur les axes perpendiculaires.</li>
-    </ul>
+            <li>🔹 <strong>Mode Difficile</strong> : Vous devrez, à partir d’un des éléments donné, identifier l’ensemble des représentations d’une variété de présentation sans l’aide des représentations anatomiques les plus complètes.</li>
+        </ul>
 
-    <p>Lancez-vous et entraînez-vous librement pour améliorer votre compréhension des positions fœtales !</p>
-</div>';
+        <p>📌 <strong>Règles générales</strong> :</p>
+
+        <ul>
+            <li>· Pour le <strong>nom</strong>, vous <strong>n’êtes pas obligé</strong> de respecter les majuscules ou les tirets.</li>
+            <li>· Pour le <strong>partogramme</strong> et le <strong>schéma simplifié</strong>, la <strong>rotation doit être précise</strong>, mais une tolérance de <strong>5°</strong> est appliquée sur les axes perpendiculaires.</li>
+        </ul>
+      </div>';
+
     echo html_writer::tag('h3', "Choisissez votre niveau de difficulté");
 
     $easy_url = new moodle_url('/mod/hippotrack/attempt.php', array('id' => $cmid, 'session_id' => $session_id, 'difficulty' => 'easy'));

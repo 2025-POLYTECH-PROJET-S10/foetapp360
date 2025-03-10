@@ -163,6 +163,57 @@ function render_datasets_table($datasets, $context, $cmid, $OUTPUT)
 // 📌 Main Output
 echo $OUTPUT->header();
 
+
+
+echo '<div class="dataset-management">
+        <p>Dans cette interface, vous pouvez <strong>gérer les ensembles de données</strong> qui seront utilisés par les étudiants. Vous avez la possibilité <strong>d\'ajouter, modifier ou supprimer</strong> des ensembles.</p>
+        
+        <p>Chaque ensemble comprend plusieurs éléments :</p>
+
+        <ul>
+            <li><strong>Nom</strong> : L\'étudiant devra indiquer le nom de la variété de présentation la position, sans avoir à respecter les majuscules ou les tirets.</li>
+            <li><strong>Sigle</strong> : le sigle représentant la variété de présentation.</li>
+            <li><strong>Rotation</strong> : Correspond à l’angle d’orientation du fœtus, utilisé dans le <strong>partogramme</strong> et le <strong>schéma simplifié</strong>.</li>
+        </ul>
+
+        <ul>
+            <li>L’angle <strong>0° Occipito-Sacrée (OS)</strong>.</li>
+            <li>Les rotations sont définies en <strong>sens horaire</strong> :
+                <ul>
+                    <li><strong>Occipito-Iliaque Droite Postérieure (OIDP) = 45°</strong></li>
+                    <li><strong>Occipito-Iliaque Droite Transverse (OIDT) = 90°</strong></li>
+                </ul>
+            </li>
+            <li>Les étudiants devront mettre la <strong>bonne rotation du fœtus en déplaçant un curseur</strong>.</li>
+            <li>Une <strong>tolérance de 5°</strong> est accordée pour les axes perpendiculaires (<strong>OS, OP, OIDT, OIGT</strong>). Sinon, l\'angle pris en compte sera la <strong>diagonale la plus proche</strong>.</li>
+        </ul>
+
+        <ul>
+            <li><strong>Inclinaison</strong> : Valeur comprise entre <strong>-1 et 1</strong> :
+                <ul>
+                    <li><strong>1 = Bien fléchi</strong></li>
+                    <li><strong>-1 = Mal fléchi</strong></li>
+                    <li><strong>Tout le reste = Peu fléchi</strong></li>
+                    <li>Une tolérance de <strong>5 degrés</strong> est appliquée pour la classification.</li>
+                </ul>
+            </li>
+        </ul>
+
+        <ul>
+            <li><strong>Images associées :</strong>
+                <ul>
+                    <li><strong>Vue antérieure</strong></li>
+                    <li><strong>Vue latérale</strong></li>
+                </ul>
+            </li>
+        </ul>
+
+        <p>Les étudiants recevront un <strong>feedback personnalisé</strong> pour les <strong>16 positions initiales</strong> afin de les guider dans leur apprentissage.</p>
+      </div>';
+
+
+
+
 echo '<div class="hippotrack-license-notice">
  <img src="' . new moodle_url('/mod/hippotrack/pix/licence-cc-by-nc.png') . '" alt="CC BY-NC License">
  <br>
@@ -170,6 +221,7 @@ echo '<div class="hippotrack-license-notice">
  To view a copy of this license, visit 
  <a href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">here</a>.
 </div>';
+
 
 if (!$showform && !$editing) {
     // Display datasets table
