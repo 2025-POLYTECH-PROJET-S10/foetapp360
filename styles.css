@@ -131,6 +131,30 @@ select:focus {
     }
 }
 
+.hippotrack-license-notice {
+    font-size: 10px;
+    /* Small text */
+    color: #777;
+    /* Light gray text */
+    position: absolute;
+    right: 10px;
+    /* Push to the right */
+    /* bottom: 10px; */
+    /* Position near the bottom */
+    text-align: right;
+    opacity: 0.6;
+    /* Make it less noticeable */
+}
+
+.hippotrack-license-notice img {
+    width: 50px;
+    /* Smaller image */
+    opacity: 0.7;
+    /* Slightly faded */
+}
+
+
+
 .hippotrack_container {
     position: relative;
     width: 672px;
@@ -186,6 +210,9 @@ select:focus {
 .partogramme_contour {
     z-index: 2;
 }
+
+
+
 
 .image_cycling_hippotrack_container {
     min-height: 200px;

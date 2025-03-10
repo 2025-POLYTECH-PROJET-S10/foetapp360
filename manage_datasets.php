@@ -61,7 +61,8 @@ if ($deleting && confirm_sesskey()) {
 
 
 // 📌 Helper Function to Render Datasets Table
-function render_datasets_table($datasets, $context, $cmid, $OUTPUT) {
+function render_datasets_table($datasets, $context, $cmid, $OUTPUT)
+{
     global $CFG;
 
     if (empty($datasets)) {
@@ -72,19 +73,19 @@ function render_datasets_table($datasets, $context, $cmid, $OUTPUT) {
     $image_manager_anterieure = new image_manager(
         'vue_anterieure'
     );
-    
+
     $image_manager_laterale = new image_manager(
         'vue_laterale'
     );
 
     $table_html = html_writer::start_tag('table', array('class' => 'table table-striped'));
     $table_html .= html_writer::start_tag('thead') . html_writer::start_tag('tr');
-    $table_html .= html_writer::tag('th', 'Nom') 
-        . html_writer::tag('th', 'Sigle') 
-        . html_writer::tag('th', 'Rotation') 
-        . html_writer::tag('th', 'Inclinaison') 
-        . html_writer::tag('th', 'Vue Antérieure') 
-        . html_writer::tag('th', 'Vue Latérale') 
+    $table_html .= html_writer::tag('th', 'Nom')
+        . html_writer::tag('th', 'Sigle')
+        . html_writer::tag('th', 'Rotation')
+        . html_writer::tag('th', 'Inclinaison')
+        . html_writer::tag('th', 'Vue Antérieure')
+        . html_writer::tag('th', 'Vue Latérale')
         . html_writer::tag('th', 'Actions');
     $table_html .= html_writer::end_tag('tr') . html_writer::end_tag('thead');
 
@@ -101,7 +102,7 @@ function render_datasets_table($datasets, $context, $cmid, $OUTPUT) {
         $laterale_url = $image_manager_laterale->getImageUrl($dataset->id, $laterale_filename);
 
         // Create image previews with lightbox functionality
-        $anterieure_img = $anterieure_url 
+        $anterieure_img = $anterieure_url
             ? html_writer::link(
                 $anterieure_url,
                 html_writer::empty_tag('img', array(
@@ -111,10 +112,10 @@ function render_datasets_table($datasets, $context, $cmid, $OUTPUT) {
                     'loading' => 'lazy'
                 )),
                 array('data-lightbox' => 'vue_anterieure')
-              )
+            )
             : html_writer::tag('span', 'Image manquante', array('class' => 'text-muted'));
 
-        $laterale_img = $laterale_url 
+        $laterale_img = $laterale_url
             ? html_writer::link(
                 $laterale_url,
                 html_writer::empty_tag('img', array(
@@ -124,7 +125,7 @@ function render_datasets_table($datasets, $context, $cmid, $OUTPUT) {
                     'loading' => 'lazy'
                 )),
                 array('data-lightbox' => 'vue_laterale')
-              )
+            )
             : html_writer::tag('span', 'Image manquante', array('class' => 'text-muted'));
 
         $table_html .= html_writer::start_tag('tr');
@@ -136,11 +137,15 @@ function render_datasets_table($datasets, $context, $cmid, $OUTPUT) {
         $table_html .= html_writer::tag('td', $laterale_img);
 
         // Actions
-        $edit_url = new moodle_url('/mod/hippotrack/db_form_submission.php', 
-            array('cmid' => $cmid, 'edit' => $dataset->id));
-        $delete_url = new moodle_url('/mod/hippotrack/manage_datasets.php', 
-            array('cmid' => $cmid, 'delete' => $dataset->id, 'sesskey' => sesskey()));
-        
+        $edit_url = new moodle_url(
+            '/mod/hippotrack/db_form_submission.php',
+            array('cmid' => $cmid, 'edit' => $dataset->id)
+        );
+        $delete_url = new moodle_url(
+            '/mod/hippotrack/manage_datasets.php',
+            array('cmid' => $cmid, 'delete' => $dataset->id, 'sesskey' => sesskey())
+        );
+
         $actions = html_writer::div(
             $OUTPUT->single_button($edit_url, 'Modifier', 'get', ['class' => 'mr-1']) .
             $OUTPUT->single_button($delete_url, 'Supprimer', 'post'),
@@ -170,10 +175,16 @@ if (!$showform && !$editing) {
 } else {
     if ($editing) {
         redirect(new moodle_url('/mod/hippotrack/db_form_submission.php', array('cmid' => $cmid, 'edit' => $editing)));
-    }
-    else {
+    } else {
         redirect(new moodle_url('/mod/hippotrack/db_form_submission.php', array('cmid' => $cmid, 'addnew' => 1)));
     }
 }
+echo '<div class="hippotrack-license-notice">
+ <img src="' . new moodle_url('/mod/hippotrack/pix/licence-cc-by-nc.png') . '" alt="CC BY-NC License">
+ <br>
+ FoetApp360\'s images © 2024 by Pierre-Yves Rabattu is licensed under CC BY-NC 4.0. 
+ To view a copy of this license, visit 
+ <a href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">here</a>.
+</div>';
 
 echo $OUTPUT->footer();

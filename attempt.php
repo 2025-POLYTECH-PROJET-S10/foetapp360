@@ -483,6 +483,14 @@ if ($submitted) {
         $_SESSION['hippotrack_session_' . $session_id]['_questionsdone']++;
     }
 
+    echo '<div class="hippotrack-license-notice">
+    <img src="' . new moodle_url('/mod/hippotrack/pix/licence-cc-by-nc.png') . '" alt="CC BY-NC License">
+    <br>
+    FoetApp360\'s images © 2024 by Pierre-Yves Rabattu is licensed under CC BY-NC 4.0. 
+    To view a copy of this license, visit 
+    <a href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">here</a>.
+   </div>';
+
     // 📌 Hidden field to debug missing parameters
     echo '<input type="hidden" name="debug_submission" value="1">';
 
