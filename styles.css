@@ -258,14 +258,20 @@ select:focus {
     /* Hide the hidden input field */
 }
 
-.hippotrack_background-image {
+.hippotrack_background-image_vue_laterale {
     height: 50%;
     width: auto;
     left: 50%;
-    transform: translateX(-50%);
-
-    /* transform: translate(-50%, -50%); */
+    /* transform: translateX(-50%);
+    transform: translate(-50%, 100%); */
     /* Centers both horizontally and vertically */
+}
+
+.hippotrack_background-image_vue_anterieure {
+    height: 50%;
+    width: auto;
+    left: 50%;
+    transform: translate(-50%, 50%);
 }
 
 .button-hippotrack_container {

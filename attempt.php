@@ -120,9 +120,9 @@ if (empty($difficulty)) {
     exit;
 }
 
-$possible_inputs = ($difficulty === 'easy') ? 
-['name', 'sigle', 'partogramme', 'schema_simplifie', 'vue_anterieure', 'vue_laterale'] : 
-['name', 'sigle', 'partogramme', 'schema_simplifie'];
+$possible_inputs = ($difficulty === 'easy') ?
+    ['name', 'sigle', 'partogramme', 'schema_simplifie', 'vue_anterieure', 'vue_laterale'] :
+    ['name', 'sigle', 'partogramme', 'schema_simplifie'];
 
 // GET toutes les vue antérieures
 $image_manager_anterieur = new image_manager('vue_anterieure');
@@ -148,7 +148,7 @@ foreach ($vue_laterale_img_names as $img_name) {
     $filename = $img_name->vue_laterale; // Récupération du nom de fichier correct
     $image_database_vue_laterale[$filename] = ($image_manager_laterale->getImageUrlByName($filename))->out(); // Append à $image_database
 }
-$nb_vue_laterale = max(0, count($image_database_vue_laterale)-1);
+$nb_vue_laterale = max(0, count($image_database_vue_laterale) - 1);
 
 $image_database = [
     "vue_anterieure" => $image_database_vue_anterieur,
@@ -189,15 +189,14 @@ if ($submitted) {
             $student_rotation = required_param("rotation_$field", PARAM_RAW);
 
             $input_dataset = get_dataset_from_inclinaison_rotation($student_inclinaison, $student_rotation);
-            if($student_inclinaison != $dataset->inclinaison || get_correct_rotation($student_rotation) != $dataset->rotation){
+            if ($student_inclinaison != $dataset->inclinaison || get_correct_rotation($student_rotation) != $dataset->rotation) {
                 $is_current_correct = false;
                 $is_correct = false;
             }
 
-            if($input_dataset == null){
+            if ($input_dataset == null) {
                 $input_dataset_name = get_dataset_name_from_inclinaison_rotation($student_inclinaison, $student_rotation);
-            }
-            else{
+            } else {
                 $input_dataset_name = $input_dataset->name;
             }
 
@@ -221,21 +220,21 @@ if ($submitted) {
             $interior_image = ($field === 'partogramme') ? 'partogramme_interieur' : 'schema_simplifie_interieur';
             $background_image = ($field === 'partogramme') ? 'null' : 'bassin';
             $contour_class = ($field === 'partogramme') ? 'partogramme_contour' : 'schema_simplifie_contour';
-    
+
             echo '<div class="rotation_hippotrack_container attempt_container" id="' . $field . '_container">';
             echo html_writer::tag('h4', $label);
             echo html_writer::tag('p', ($is_current_correct ? ' La réponse est correcte. ✅' : ' La réponse est incorrecte. ❌'));
             echo html_writer::tag('p', $feedback_data->feedback);
             echo '<div class="hippotrack_container" data-schema-type="' . $field . '">';
-    
+
             if ($background_image !== 'null') {
                 echo '<img class="' . $background_image . '" src="' . new moodle_url('/mod/hippotrack/pix/' . $background_image . '.png') . '">';
             }
-    
+
             echo '<img class="' . $contour_class . '" src="' . new moodle_url('/mod/hippotrack/pix/' . $contour_class . '.png') . '">';
             echo '<img class="' . $interior_image . '" src="' . new moodle_url('/mod/hippotrack/pix/' . $interior_image . '.png') . '">';
             echo '</div>';  // Close .hippotrack_container
-    
+
             // Rotation & Inclination Sliders
             echo '<div class="hippotrack_sliders">';
             // Si bloqué, on ajoute un input hidden pour transmettre l'information
@@ -247,8 +246,7 @@ if ($submitted) {
             echo '</div>';
 
             echo '</div>';  // Close .rotation-hippotrack_container
-        } 
-        else {
+        } else {
             // 🔥 Cas normal (name, sigle, vue_anterieure, vue_laterale)
             $student_answer = required_param($field, PARAM_RAW);
             $correct_answer = $dataset->$field;
@@ -261,21 +259,20 @@ if ($submitted) {
                 $student_answer = end($elements);
                 $prefix = ($field === 'vue_anterieure') ? 'bb_vue_ante_bf_' : 'bb_vue_lat_bf_';
                 $image_path = $image_database[$field][$student_answer];
-    
+
                 // **🆕 Select Background Image Based on $field**
                 $background_image = ($field === 'vue_anterieure') ? 'bassin_anterieur.png' : 'bassin_laterale.png';
-    
+
                 echo '<div class="image_cycling_hippotrack_container attempt_container" data-schema-type="' . $field . '" data-prefix="' . $prefix . '" id="' . $field . '_container">';
                 echo html_writer::tag('h4', $label);
                 echo html_writer::tag('p', ($is_current_correct ? ' La réponse est correcte. ✅' : ' La réponse est incorrecte. ❌'));
                 echo '<div class="hippotrack_container">';
                 // 🆕 Dynamically set background image
-                echo '<img class="hippotrack_background-image" src="' . new moodle_url('/mod/hippotrack/pix/' . $background_image) . '">';
+                echo '<img class="hippotrack_background-image_' . $field . '" src="' . new moodle_url('/mod/hippotrack/pix/' . $background_image) . '">';
                 echo '<img class="hippotrack_attempt_cycling-image" src="' . $image_path . '">';
                 echo '</div>';
                 echo '</div>';
-            }
-            else{
+            } else {
                 echo '<div class="attempt_container attempt_form_group" id="' . $field . '_container">';
                 echo html_writer::tag('label', $label . ' - ' . (($dataset->inclinaison == 1) ? "Bien fléchis" : "Mal fléchis"), array('for' => $field));
                 echo html_writer::tag('p', ($is_current_correct ? ' La réponse est correcte. ✅' : ' La réponse est incorrecte. ❌'));
@@ -302,14 +299,13 @@ if ($submitted) {
     // Incrémente le nombre de question
     if (!isset($_SESSION['hippotrack_session_' . $session_id]['_sumgrades'])) {
         // Si la variable n'existe pas, on l'initialise à 1
-        if($is_correct){
+        if ($is_correct) {
             $_SESSION['hippotrack_session_' . $session_id]['_sumgrades'] = 1;
-        }
-        else{
+        } else {
             $_SESSION['hippotrack_session_' . $session_id]['_sumgrades'] = 0;
         }
     } else {
-        if($is_correct){
+        if ($is_correct) {
             $_SESSION['hippotrack_session_' . $session_id]['_sumgrades']++;
         }
     }
@@ -355,8 +351,7 @@ if ($submitted) {
 
     echo $OUTPUT->footer();
     exit;
-} 
-else {
+} else {
     $random_dataset = $DB->get_record_sql("SELECT * FROM {hippotrack_datasets} ORDER BY RAND() LIMIT 1"); // TODO A regarder pk random un peu bizarre
     $random_input = $possible_inputs[array_rand($possible_inputs)]; // get random input from dataset
 
@@ -388,35 +383,35 @@ else {
         $label = ucfirst(str_replace('_', ' ', $field));
         $is_given_input = ($field === $random_input);
         $readonly = $is_given_input ? 'readonly' : '';
-    
+
         if ($field === 'partogramme' || $field === 'schema_simplifie') {
-    
+
             $interior_image = ($field === 'partogramme') ? 'partogramme_interieur' : 'schema_simplifie_interieur';
             $background_image = ($field === 'partogramme') ? 'null' : 'bassin';
             $contour_class = ($field === 'partogramme') ? 'partogramme_contour' : 'schema_simplifie_contour';
-    
+
             echo '<div class="rotation_hippotrack_container attempt_container" id="' . $field . '_container">';
             echo html_writer::tag('h4', $label);
             echo '<div class="hippotrack_container" data-schema-type="' . $field . '">';
-    
+
             if ($background_image !== 'null') {
                 echo '<img class="' . $background_image . '" src="' . new moodle_url('/mod/hippotrack/pix/' . $background_image . '.png') . '">';
             }
-    
+
             echo '<img class="' . $contour_class . '" src="' . new moodle_url('/mod/hippotrack/pix/' . $contour_class . '.png') . '">';
             echo '<img class="' . $interior_image . '" src="' . new moodle_url('/mod/hippotrack/pix/' . $interior_image . '.png') . '">';
             echo '</div>';  // Close .hippotrack_container
-    
+
             // Rotation & Inclination Sliders
             echo '<div class="hippotrack_sliders">';
-            if(!$is_given_input){
+            if (!$is_given_input) {
                 echo '<label for="rotate-slider">Rotation:</label>';
             }
             // Si bloqué, on ajoute un input hidden pour transmettre l'information
             echo '<input type="range" class="rotate-slider" name="rotation_' . $field . '" min="0" max="360" 
                 value="' . ($is_given_input ? $random_dataset->rotation : 0) . '" ' . ($is_given_input ? 'style="display: none;"' : '') . '><br>';
 
-            if(!$is_given_input){
+            if (!$is_given_input) {
                 echo '<label for="move-axis-slider">Inclinaison:</label>';
             }
             echo '<input type="range" class="move-axis-slider" name="inclinaison_' . $field . '" min="-50" max="50" 
@@ -431,7 +426,7 @@ else {
 
             echo '</div>';  // Close .rotation-hippotrack_container
         } elseif ($field === 'vue_anterieure' || $field === 'vue_laterale') {
-    
+
             $prefix = ($field === 'vue_anterieure') ? 'bb_vue_ante_bf_' : 'bb_vue_lat_bf_';
             $image_path = ($is_given_input ? ($image_database[$field][$random_dataset->$random_input]) : (array_values($image_database[$field])[0]));
 
@@ -444,11 +439,11 @@ else {
 
             echo '<div class="hippotrack_container">';
             // 🆕 Dynamically set background image
-            echo '<img class="hippotrack_background-image" src="' . new moodle_url('/mod/hippotrack/pix/' . $background_image) . '">';
+            echo '<img class="hippotrack_background-image_' . $field . '" src="' . new moodle_url('/mod/hippotrack/pix/' . $background_image) . '">';
             echo '<img class="hippotrack_attempt_cycling-image" src="' . $image_path . '">';
             echo '</div>';
 
-            
+
             echo '<div class="hippotrack_container button-hippotrack_container">';
             if (!$is_given_input) {
                 echo '<button type="button" class="hippotrack_attempt_prev-btn">←</button>';
@@ -457,14 +452,13 @@ else {
             }
             echo '<input type="hidden" class="hippotrack_attempt_selected_position" name="' . $field . '" value="' . $image_path . '">';
             echo '</div>';
-        
+
             echo '</div>';
         } else {
             echo '<div class="attempt_container attempt_form_group" id="' . $field . '_container">';
             if ($is_given_input) {
                 echo html_writer::tag('label', $label . ' - ' . (($random_dataset->inclinaison == 1) ? "Bien fléchis" : "Mal fléchis"), array('for' => $field));
-            }
-            else{
+            } else {
                 echo html_writer::tag('label', $label, array('for' => $field));
             }
             echo html_writer::empty_tag('input', array(
