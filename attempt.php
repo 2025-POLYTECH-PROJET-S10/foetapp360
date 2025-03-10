@@ -269,7 +269,7 @@ if ($submitted) {
                 echo '<div class="hippotrack_container">';
                 // 🆕 Dynamically set background image
                 echo '<img class="hippotrack_background-image_' . $field . '" src="' . new moodle_url('/mod/hippotrack/pix/' . $background_image) . '">';
-                echo '<img class="hippotrack_attempt_cycling-image" src="' . $image_path . '">';
+                echo '<img class="hippotrack_attempt_cycling-image_' . $field . '" src="' . $image_path . '">';
                 echo '</div>';
                 echo '</div>';
             } else {
@@ -440,7 +440,7 @@ if ($submitted) {
             echo '<div class="hippotrack_container">';
             // 🆕 Dynamically set background image
             echo '<img class="hippotrack_background-image_' . $field . '" src="' . new moodle_url('/mod/hippotrack/pix/' . $background_image) . '">';
-            echo '<img class="hippotrack_attempt_cycling-image" src="' . $image_path . '">';
+            echo '<img class="hippotrack_attempt_cycling-image_' . $field . '" src="' . $image_path . '">';
             echo '</div>';
 
 

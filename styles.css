@@ -209,15 +209,6 @@ select:focus {
     /* Make sure background image stays behind the cycling image */
 }
 
-.hippotrack_attempt_cycling-image {
-    height: 75%;
-    max-width: 100%;
-    max-height: 150px;
-    /*I can't fix the height to be in %*/
-    z-index: 2;
-    object-fit: contain;
-    /* Ensures the image scales correctly */
-}
 
 
 .hippotrack_attempt_prev-btn,
@@ -258,13 +249,34 @@ select:focus {
     /* Hide the hidden input field */
 }
 
-.hippotrack_background-image_vue_laterale {
+
+.hippotrack_attempt_cycling-image_vue_laterale {
     height: 50%;
+    max-width: 100%;
+    max-height: 150px;
+    z-index: 2;
+    object-fit: contain;
+    transform: translate(70%, -28%);
+}
+
+.hippotrack_background-image_vue_laterale {
+    height: 100%;
     width: auto;
     left: 50%;
     /* transform: translateX(-50%);
     transform: translate(-50%, 100%); */
     /* Centers both horizontally and vertically */
+}
+
+
+.hippotrack_attempt_cycling-image_vue_anterieure {
+    height: 75%;
+    max-width: 100%;
+    max-height: 150px;
+    /*I can't fix the height to be in %*/
+    z-index: 2;
+    object-fit: contain;
+    /* Ensures the image scales correctly */
 }
 
 .hippotrack_background-image_vue_anterieure {
