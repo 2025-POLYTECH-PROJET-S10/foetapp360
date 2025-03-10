@@ -1,4 +1,4 @@
-<?php 
+<?php
 require(__DIR__ . '/../../config.php');
 require_once(__DIR__ . '/lib.php');
 
@@ -27,7 +27,8 @@ echo $OUTPUT->header();
 echo html_writer::tag('h2', format_string($moduleinstance->name), array('class' => 'hippotrack-title'));
 
 // 📌 Fonction pour vérifier si une page existe
-function page_exists($page) {
+function page_exists($page)
+{
     global $CFG;
     return file_exists($CFG->dirroot . "/mod/hippotrack/$page");
 }
@@ -98,5 +99,6 @@ if ($is_student) {
 
     echo html_writer::end_div();
 }
+
 
 echo $OUTPUT->footer();

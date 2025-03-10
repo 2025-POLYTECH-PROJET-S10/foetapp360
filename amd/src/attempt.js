@@ -1,7 +1,7 @@
-define(['jquery'], function($) {
+define(['jquery'], function ($) {
     return {
-        init: function() {
-            $(".rotation_hippotrack_container").each(function() {
+        init: function () {
+            $(".rotation_hippotrack_container").each(function () {
                 let rotationhippotrack_container = $(this);
                 let hippotrack_container = rotationhippotrack_container.find(".hippotrack_container");
 
@@ -36,21 +36,22 @@ define(['jquery'], function($) {
                     }
                 }
 
-                rotateSlider.on("input", function() {
+                rotateSlider.on("input", function () {
                     rotationAngle = parseInt($(this).val(), 10);
                     updateTransform();
                 });
 
-                moveSlider.on("input", function() {
+                moveSlider.on("input", function () {
                     translateDistance = parseInt($(this).val(), 10);
                     updateTransform();
                 });
             });
 
             let imageDatabase = JSON.parse(document.getElementById("image_database").dataset.values);
-            $(".image_cycling_hippotrack_container").each(function() {
+            $(".image_cycling_hippotrack_container").each(function () {
                 let hippotrack_container = $(this);
-                let cyclingImage = hippotrack_container.find(".hippotrack_attempt_cycling-image");
+                let cyclingImage = hippotrack_container.find(".hippotrack_attempt_cycling-image_vue_laterale, .hippotrack_attempt_cycling-image_vue_anterieure");
+
                 let hiddenInput = hippotrack_container.find(".hippotrack_attempt_selected_position");
                 let toggleButtonHiddenInput = hippotrack_container.find(".hippotrack_attempt_toggle_btn_value");
                 /**
@@ -66,7 +67,7 @@ define(['jquery'], function($) {
                         currentIndex = 0; // Sécurité : si l’image actuelle n’existe pas dans la liste, commencer à 0
                     }
                     currentIndex = currentIndex + 1;
-                    if(currentIndex == images.length){
+                    if (currentIndex == images.length) {
                         currentIndex = 0;
                     }
                     cyclingImage.attr("src", images[currentIndex]);
@@ -85,8 +86,8 @@ define(['jquery'], function($) {
                         currentIndex = 0; // Sécurité : si l’image actuelle n’existe pas dans la liste, commencer à 0
                     }
                     currentIndex = currentIndex - 1;
-                    if(currentIndex < 0){
-                        currentIndex = images.length-1;
+                    if (currentIndex < 0) {
+                        currentIndex = images.length - 1;
                     }
                     cyclingImage.attr("src", images[currentIndex]);
                     hiddenInput.val(images[currentIndex]);
@@ -124,11 +125,11 @@ define(['jquery'], function($) {
                     return inclinaison;
                 }
 
-                hippotrack_container.find(".hippotrack_attempt_prev-btn").on("click", function() {
+                hippotrack_container.find(".hippotrack_attempt_prev-btn").on("click", function () {
                     decreaseImage();
                 });
 
-                hippotrack_container.find(".hippotrack_attempt_next-btn").on("click", function() {
+                hippotrack_container.find(".hippotrack_attempt_next-btn").on("click", function () {
                     increaseImage();
                 });
 
@@ -140,12 +141,12 @@ define(['jquery'], function($) {
 
             // Gestion des onglets et du contenu affiché
             $(".attempt_container").hide();
-            $(".hippotrack-tab.active").each(function() {
+            $(".hippotrack-tab.active").each(function () {
                 $($(this).data("target")).show();
                 $(this).addClass("hippotrack_given_tab_input");
             });
 
-            $(".hippotrack-tab").click(function() {
+            $(".hippotrack-tab").click(function () {
                 $(".hippotrack-tab").removeClass("active");
                 $(this).addClass("active");
 
@@ -154,7 +155,7 @@ define(['jquery'], function($) {
             });
 
             // Gestion message lorsque inputs manquants.
-            document.getElementById("submit_attempt").addEventListener("click", function(event) {
+            document.getElementById("submit_attempt").addEventListener("click", function (event) {
                 let inputs = document.querySelectorAll("#attempt_form input[type='text']");
                 // Vérifier si l'overlay existe déjà
                 let overlay = document.getElementById('attempt_error_overlay');
@@ -168,7 +169,7 @@ define(['jquery'], function($) {
                     `;
                     document.body.appendChild(overlay);
                     // Ajouter un gestionnaire d'événements pour fermer l'overlay
-                    document.getElementById("attempt_close_overlay").addEventListener("click", function() {
+                    document.getElementById("attempt_close_overlay").addEventListener("click", function () {
                         overlay.style.display = 'none'; // Cache l'overlay
                     });
                 }

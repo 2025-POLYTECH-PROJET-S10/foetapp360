@@ -1,8 +1,11 @@
 /* Global Variables using Gray Scale */
 :root {
-    --base-color: #b0b4b7;         /* Primary gray */
-    --base-color-dark: #787c7f;    /* Darker gray for hover/focus */
-    --light-color: #e1e3e5;        /* Light gray for borders/backgrounds */
+    --base-color: #b0b4b7;
+    /* Primary gray */
+    --base-color-dark: #787c7f;
+    /* Darker gray for hover/focus */
+    --light-color: #e1e3e5;
+    /* Light gray for borders/backgrounds */
     --text-color: #242424;
     --background-color: #fff;
     --border-color: #ddd;
@@ -81,7 +84,8 @@ label {
 input[type="text"],
 input[type="email"],
 input[type="password"],
-textarea, select {
+textarea,
+select {
     width: 100%;
     padding: 10px;
     border: 1px solid var(--border-color);
@@ -95,7 +99,8 @@ textarea, select {
 input[type="text"]:focus,
 input[type="email"]:focus,
 input[type="password"]:focus,
-textarea:focus, select:focus {
+textarea:focus,
+select:focus {
     outline: none;
     border-color: var(--base-color);
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
@@ -108,7 +113,8 @@ textarea:focus, select:focus {
     margin-bottom: 20px;
 }
 
-.table th, .table td {
+.table th,
+.table td {
     padding: 10px;
     border: 1px solid var(--border-color);
     text-align: left;
@@ -119,10 +125,35 @@ textarea:focus, select:focus {
     .container {
         padding: 10px;
     }
+
     .button-group {
         flex-direction: column;
     }
 }
+
+.hippotrack-license-notice {
+    font-size: 10px;
+    /* Small text */
+    color: #777;
+    /* Light gray text */
+    position: absolute;
+    right: 10px;
+    /* Push to the right */
+    /* bottom: 10px; */
+    /* Position near the bottom */
+    text-align: right;
+    opacity: 0.6;
+    /* Make it less noticeable */
+}
+
+.hippotrack-license-notice img {
+    width: 50px;
+    /* Smaller image */
+    opacity: 0.7;
+    /* Slightly faded */
+}
+
+
 
 .hippotrack_container {
     position: relative;
@@ -142,14 +173,14 @@ textarea:focus, select:focus {
     max-height: 100%;
 }
 
-.rotation_hippotrack_container{
+.rotation_hippotrack_container {
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
 }
 
-.hippotrack_sliders{
+.hippotrack_sliders {
     display: flex;
     flex-wrap: nowrap;
 }
@@ -162,7 +193,7 @@ textarea:focus, select:focus {
 }
 
 .schema_simplifie_interieur {
-    height: 90%;
+    height: 75%;
     z-index: 1;
 }
 
@@ -172,13 +203,16 @@ textarea:focus, select:focus {
 }
 
 .partogramme_interieur {
-    height: 90%;
+    height: 72%;
     z-index: 1;
 }
 
 .partogramme_contour {
     z-index: 2;
 }
+
+
+
 
 .image_cycling_hippotrack_container {
     min-height: 200px;
@@ -202,15 +236,6 @@ textarea:focus, select:focus {
     /* Make sure background image stays behind the cycling image */
 }
 
-.hippotrack_attempt_cycling-image {
-    height: 80%;
-    max-width: 100%;
-    max-height: 150px;
-    /*I can't fix the height to be in %*/
-    z-index: 2;
-    object-fit: contain;
-    /* Ensures the image scales correctly */
-}
 
 
 .hippotrack_attempt_prev-btn,
@@ -251,14 +276,41 @@ textarea:focus, select:focus {
     /* Hide the hidden input field */
 }
 
-.hippotrack_background-image {
+
+.hippotrack_attempt_cycling-image_vue_laterale {
+    height: 50%;
+    max-width: 100%;
+    max-height: 150px;
+    z-index: 2;
+    object-fit: contain;
+    transform: translate(70%, -28%);
+}
+
+.hippotrack_background-image_vue_laterale {
     height: 100%;
     width: auto;
     left: 50%;
-    transform: translateX(-50%);
-
-    /* transform: translate(-50%, -50%); */
+    /* transform: translateX(-50%);
+    transform: translate(-50%, 100%); */
     /* Centers both horizontally and vertically */
+}
+
+
+.hippotrack_attempt_cycling-image_vue_anterieure {
+    height: 75%;
+    max-width: 100%;
+    max-height: 150px;
+    /*I can't fix the height to be in %*/
+    z-index: 2;
+    object-fit: contain;
+    /* Ensures the image scales correctly */
+}
+
+.hippotrack_background-image_vue_anterieure {
+    height: 50%;
+    width: auto;
+    left: 50%;
+    transform: translate(-50%, 50%);
 }
 
 .button-hippotrack_container {
@@ -305,50 +357,73 @@ textarea:focus, select:focus {
 /* Name + Sigle Label */
 /* Conteneur principal pour le label et l'input */
 .attempt_form_group {
-    display: flex;               /* Utilisation de Flexbox pour aligner les éléments */
-    flex-direction: column;      /* Aligner le label au-dessus de l'input */
-    gap: 5px;                    /* Espace entre le label et l'input */
-    margin-bottom: 15px;         /* Espace sous chaque champ */
+    display: flex;
+    /* Utilisation de Flexbox pour aligner les éléments */
+    flex-direction: column;
+    /* Aligner le label au-dessus de l'input */
+    gap: 5px;
+    /* Espace entre le label et l'input */
+    margin-bottom: 15px;
+    /* Espace sous chaque champ */
 }
 
 /* Style du label */
 .attempt_form_group label {
-    font-size: 14px;             /* Taille de police du label */
-    font-weight: normal;         /* Poids de la police du label */
-    margin-bottom: 5px;          /* Un petit espace sous le label */
-    color: #333;                 /* Couleur du texte du label */
+    font-size: 14px;
+    /* Taille de police du label */
+    font-weight: normal;
+    /* Poids de la police du label */
+    margin-bottom: 5px;
+    /* Un petit espace sous le label */
+    color: #333;
+    /* Couleur du texte du label */
 }
 
 /* Style de l'input */
 .attempt_form_group input {
-    padding: 8px;                /* Espacement intérieur pour l'input */
-    font-size: 14px;             /* Taille de police de l'input */
-    width: 100%;                 /* L'input occupe toute la largeur disponible */
-    box-sizing: border-box;      /* Inclure les bordures et le padding dans la largeur totale */
-    border: 1px solid #ccc;      /* Bordure légère pour l'input */
-    border-radius: 4px;          /* Coins arrondis pour l'input */
+    padding: 8px;
+    /* Espacement intérieur pour l'input */
+    font-size: 14px;
+    /* Taille de police de l'input */
+    width: 100%;
+    /* L'input occupe toute la largeur disponible */
+    box-sizing: border-box;
+    /* Inclure les bordures et le padding dans la largeur totale */
+    border: 1px solid #ccc;
+    /* Bordure légère pour l'input */
+    border-radius: 4px;
+    /* Coins arrondis pour l'input */
 }
 
 .readonly-text {
     position: absolute;
     top: 50%;
-    left: 100%; /* Positionne le texte après l'input */
+    left: 100%;
+    /* Positionne le texte après l'input */
     transform: translateY(-50%);
-    margin-left: 5px; /* Ajuste l'espace entre le texte et l'input */
-    color: rgba(0, 0, 0, 0.5); /* Gris clair pour ne pas perturber l'input */
-    pointer-events: none; /* Empêche l'interaction avec le texte, pour que l'input reste accessible */
-    white-space: nowrap; /* Evite que le texte soit coupé ou chevauché */
+    margin-left: 5px;
+    /* Ajuste l'espace entre le texte et l'input */
+    color: rgba(0, 0, 0, 0.5);
+    /* Gris clair pour ne pas perturber l'input */
+    pointer-events: none;
+    /* Empêche l'interaction avec le texte, pour que l'input reste accessible */
+    white-space: nowrap;
+    /* Evite que le texte soit coupé ou chevauché */
 }
 
 /* Optionnel : ajout d'un focus sur l'input */
 .attempt_form_group input:focus {
-    border-color: #0073e6;       /* Changer la couleur de la bordure au focus */
-    outline: none;               /* Retirer le contour par défaut */
+    border-color: #0073e6;
+    /* Changer la couleur de la bordure au focus */
+    outline: none;
+    /* Retirer le contour par défaut */
 }
 
 .attempt_missing_inputs {
-    color: red !important; /* Texte rouge pour les onglets des inputs manquants */
-    font-weight: bold; /* Rendre le texte plus visible */
+    color: red !important;
+    /* Texte rouge pour les onglets des inputs manquants */
+    font-weight: bold;
+    /* Rendre le texte plus visible */
 }
 
 #attempt_error_overlay {
@@ -362,7 +437,8 @@ textarea:focus, select:focus {
     color: white;
     font-size: 30px;
     text-align: center;
-    justify-content: flex-start; /* Aligner les éléments en haut */
+    justify-content: flex-start;
+    /* Aligner les éléments en haut */
     align-items: center;
     z-index: 1000;
     display: flex;
@@ -370,21 +446,26 @@ textarea:focus, select:focus {
 }
 
 #attempt_error_overlay p {
-    margin-top: 20%; /* Marge au sommet pour centrer le message */
+    margin-top: 20%;
+    /* Marge au sommet pour centrer le message */
 }
 
 #attempt_close_overlay {
-    background-color: #f44336; /* Couleur rouge pour le bouton */
+    background-color: #f44336;
+    /* Couleur rouge pour le bouton */
     color: white;
     border: none;
     padding: 10px 20px;
     font-size: 16px;
     cursor: pointer;
     border-radius: 5px;
-    margin-top: auto; /* Place le bouton en bas */
-    margin-bottom: 30px; /* Un petit espace au bas */
+    margin-top: auto;
+    /* Place le bouton en bas */
+    margin-bottom: 30px;
+    /* Un petit espace au bas */
 }
 
 #attempt_close_overlay:hover {
-    background-color: #d32f2f; /* Effet au survol */
+    background-color: #d32f2f;
+    /* Effet au survol */
 }

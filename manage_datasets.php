@@ -61,7 +61,8 @@ if ($deleting && confirm_sesskey()) {
 
 
 // 📌 Helper Function to Render Datasets Table
-function render_datasets_table($datasets, $context, $cmid, $OUTPUT) {
+function render_datasets_table($datasets, $context, $cmid, $OUTPUT)
+{
     global $CFG;
 
     if (empty($datasets)) {
@@ -72,19 +73,19 @@ function render_datasets_table($datasets, $context, $cmid, $OUTPUT) {
     $image_manager_anterieure = new image_manager(
         'vue_anterieure'
     );
-    
+
     $image_manager_laterale = new image_manager(
         'vue_laterale'
     );
 
     $table_html = html_writer::start_tag('table', array('class' => 'table table-striped'));
     $table_html .= html_writer::start_tag('thead') . html_writer::start_tag('tr');
-    $table_html .= html_writer::tag('th', 'Nom') 
-        . html_writer::tag('th', 'Sigle') 
-        . html_writer::tag('th', 'Rotation') 
-        . html_writer::tag('th', 'Inclinaison') 
-        . html_writer::tag('th', 'Vue Antérieure') 
-        . html_writer::tag('th', 'Vue Latérale') 
+    $table_html .= html_writer::tag('th', 'Nom')
+        . html_writer::tag('th', 'Sigle')
+        . html_writer::tag('th', 'Rotation')
+        . html_writer::tag('th', 'Inclinaison')
+        . html_writer::tag('th', 'Vue Antérieure')
+        . html_writer::tag('th', 'Vue Latérale')
         . html_writer::tag('th', 'Actions');
     $table_html .= html_writer::end_tag('tr') . html_writer::end_tag('thead');
 
@@ -101,7 +102,7 @@ function render_datasets_table($datasets, $context, $cmid, $OUTPUT) {
         $laterale_url = $image_manager_laterale->getImageUrl($dataset->id, $laterale_filename);
 
         // Create image previews with lightbox functionality
-        $anterieure_img = $anterieure_url 
+        $anterieure_img = $anterieure_url
             ? html_writer::link(
                 $anterieure_url,
                 html_writer::empty_tag('img', array(
@@ -111,10 +112,10 @@ function render_datasets_table($datasets, $context, $cmid, $OUTPUT) {
                     'loading' => 'lazy'
                 )),
                 array('data-lightbox' => 'vue_anterieure')
-              )
+            )
             : html_writer::tag('span', 'Image manquante', array('class' => 'text-muted'));
 
-        $laterale_img = $laterale_url 
+        $laterale_img = $laterale_url
             ? html_writer::link(
                 $laterale_url,
                 html_writer::empty_tag('img', array(
@@ -124,7 +125,7 @@ function render_datasets_table($datasets, $context, $cmid, $OUTPUT) {
                     'loading' => 'lazy'
                 )),
                 array('data-lightbox' => 'vue_laterale')
-              )
+            )
             : html_writer::tag('span', 'Image manquante', array('class' => 'text-muted'));
 
         $table_html .= html_writer::start_tag('tr');
@@ -136,11 +137,15 @@ function render_datasets_table($datasets, $context, $cmid, $OUTPUT) {
         $table_html .= html_writer::tag('td', $laterale_img);
 
         // Actions
-        $edit_url = new moodle_url('/mod/hippotrack/db_form_submission.php', 
-            array('cmid' => $cmid, 'edit' => $dataset->id));
-        $delete_url = new moodle_url('/mod/hippotrack/manage_datasets.php', 
-            array('cmid' => $cmid, 'delete' => $dataset->id, 'sesskey' => sesskey()));
-        
+        $edit_url = new moodle_url(
+            '/mod/hippotrack/db_form_submission.php',
+            array('cmid' => $cmid, 'edit' => $dataset->id)
+        );
+        $delete_url = new moodle_url(
+            '/mod/hippotrack/manage_datasets.php',
+            array('cmid' => $cmid, 'delete' => $dataset->id, 'sesskey' => sesskey())
+        );
+
         $actions = html_writer::div(
             $OUTPUT->single_button($edit_url, 'Modifier', 'get', ['class' => 'mr-1']) .
             $OUTPUT->single_button($delete_url, 'Supprimer', 'post'),
@@ -158,6 +163,66 @@ function render_datasets_table($datasets, $context, $cmid, $OUTPUT) {
 // 📌 Main Output
 echo $OUTPUT->header();
 
+
+
+echo '<div class="dataset-management">
+        <p>Dans cette interface, vous pouvez <strong>gérer les ensembles de données</strong> qui seront utilisés par les étudiants. Vous avez la possibilité <strong>d\'ajouter, modifier ou supprimer</strong> des ensembles.</p>
+        
+        <p>Chaque ensemble comprend plusieurs éléments :</p>
+
+        <ul>
+            <li><strong>Nom</strong> : L\'étudiant devra indiquer le nom de la variété de présentation la position, sans avoir à respecter les majuscules ou les tirets.</li>
+            <li><strong>Sigle</strong> : le sigle représentant la variété de présentation.</li>
+            <li><strong>Rotation</strong> : Correspond à l’angle d’orientation du fœtus, utilisé dans le <strong>partogramme</strong> et le <strong>schéma simplifié</strong>.</li>
+        </ul>
+
+        <ul>
+            <li>L’angle <strong>0° Occipito-Sacrée (OS)</strong>.</li>
+            <li>Les rotations sont définies en <strong>sens horaire</strong> :
+                <ul>
+                    <li><strong>Occipito-Iliaque Droite Postérieure (OIDP) = 45°</strong></li>
+                    <li><strong>Occipito-Iliaque Droite Transverse (OIDT) = 90°</strong></li>
+                </ul>
+            </li>
+            <li>Les étudiants devront mettre la <strong>bonne rotation du fœtus en déplaçant un curseur</strong>.</li>
+            <li>Une <strong>tolérance de 5°</strong> est accordée pour les axes perpendiculaires (<strong>OS, OP, OIDT, OIGT</strong>). Sinon, l\'angle pris en compte sera la <strong>diagonale la plus proche</strong>.</li>
+        </ul>
+
+        <ul>
+            <li><strong>Inclinaison</strong> : Valeur comprise entre <strong>-1 et 1</strong> :
+                <ul>
+                    <li><strong>1 = Bien fléchi</strong></li>
+                    <li><strong>-1 = Mal fléchi</strong></li>
+                    <li><strong>Tout le reste = Peu fléchi</strong></li>
+                    <li>Une tolérance de <strong>5 degrés</strong> est appliquée pour la classification.</li>
+                </ul>
+            </li>
+        </ul>
+
+        <ul>
+            <li><strong>Images associées :</strong>
+                <ul>
+                    <li><strong>Vue antérieure</strong></li>
+                    <li><strong>Vue latérale</strong></li>
+                </ul>
+            </li>
+        </ul>
+
+        <p>Les étudiants recevront un <strong>feedback personnalisé</strong> pour les <strong>16 positions initiales</strong> afin de les guider dans leur apprentissage.</p>
+      </div>';
+
+
+
+
+echo '<div class="hippotrack-license-notice">
+ <img src="' . new moodle_url('/mod/hippotrack/pix/licence-cc-by-nc.png') . '" alt="CC BY-NC License">
+ <br>
+ FoetApp360\'s images © 2024 by Pierre-Yves Rabattu is licensed under CC BY-NC 4.0. 
+ To view a copy of this license, visit 
+ <a href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">here</a>.
+</div>';
+
+
 if (!$showform && !$editing) {
     // Display datasets table
     echo html_writer::tag('h2', "Liste des ensembles de données");
@@ -170,10 +235,8 @@ if (!$showform && !$editing) {
 } else {
     if ($editing) {
         redirect(new moodle_url('/mod/hippotrack/db_form_submission.php', array('cmid' => $cmid, 'edit' => $editing)));
-    }
-    else {
+    } else {
         redirect(new moodle_url('/mod/hippotrack/db_form_submission.php', array('cmid' => $cmid, 'addnew' => 1)));
     }
 }
-
 echo $OUTPUT->footer();
