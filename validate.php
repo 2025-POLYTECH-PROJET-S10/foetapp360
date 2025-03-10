@@ -20,15 +20,16 @@ if (!isset($_SESSION['hippotrack_session_' . $session_id]) || empty($_SESSION['h
 }
 
 // Sauvegarde en base de données la session en cours
-$session = new stdClass();
-$session->id_hippotrack = $hippotrack->id;
-$session->userid = $USER->id;
+$session = $DB->get_record('hippotrack_session', array('id' => $session_id));
+// $session->id_hippotrack = $hippotrack->id;
+// $session->userid = $USER->id;
 $session->timestart = $_SESSION['hippotrack_session_' . $session_id]['_time_start'];
 $session->timefinish = $timefinish;
 $session->sumgrades = $_SESSION['hippotrack_session_' . $session_id]['_sumgrades'];
 $session->questionsdone = $_SESSION['hippotrack_session_' . $session_id]['_questionsdone'];
 $session->difficulty = $_SESSION['hippotrack_session_' . $session_id]['_difficulty'];
-$DB->insert_record('hippotrack_session', $session);
+$DB->update_record('hippotrack_session', $session); // J'ai changer la façon de faire pour la sauvegarde de la session
+// Avant c'était un insert maintenant c'est un update, car on a déjà un enregistrement de session
 
 // Sauvegarde en base de données des tentatives
 $attempt_number = 0;

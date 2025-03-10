@@ -22,7 +22,7 @@ $context = context_course::instance($course->id);
 // Check if the student ID is set
 if (!$studentid){
     $studentid = $USER->id;
-    var_dump($studentid);
+    // var_dump($studentid); // Commented out
 } else if ($studentid != $USER->id) {
     // Check if the user is a teacher
     require_capability('mod/hippotrack:viewstats', $context);
@@ -43,79 +43,95 @@ $stats_manager = new \mod_hippotrack\stats_manager($DB);
 $studentstats = $stats_manager->get_student_stats($hippotrack->id, $studentid);
 $performancedata = $stats_manager->get_student_performance_data($studentid, $hippotrack->id);
 
+// Calcul du sessions réalisées
+$difficulties_amount = $stats_manager->get_student_difficulties_amount($hippotrack->id, $studentid);
+list($easy_session, $hard_session) = $difficulties_amount;
+
 // Affichage
 echo $OUTPUT->header();
 echo $OUTPUT->heading(get_string('mystats', 'mod_hippotrack'));
 
+// Check if there is any data, if studentstats is empty, it means user didn't take attemps
+if (empty($studentstats) || ($easy_session + $hard_session <= 0 )) { // or if you have another specific metric to check, like total_attempts == 0 use && in if
 
+      echo html_writer::start_tag('div', ['class' => 'no-data-message alert alert-info']);
+      echo html_writer::tag('h4', get_string('nostatsavailabletitle', 'mod_hippotrack')); // Use a language string
+      echo html_writer::tag('p', get_string('nostatsavailabletext', 'mod_hippotrack')); // Use a language string, optional.
+      echo html_writer::end_tag('div');
 
-echo "<h3>📊 Statistiques personnelles</h3>";
+      echo $OUTPUT->footer();
+      exit;
+}
+else {
+    // Only display if there's data 
+    echo "<h3>📊 Statistiques personnelles</h3>";
 
-##########
-//Time passed
-$total_time = $stats_manager->get_student_time_passed($hippotrack->id, $studentid);
-// Now, convert total time to hours and minutes
-$hours = floor($total_time / 3600); // Calculate total hours
-$minutes = floor(($total_time % 3600) / 60); // Calculate remaining minutes
+    ##########
+    //Time passed
+    $total_time = $stats_manager->get_student_time_passed($hippotrack->id, $studentid);
+    // Now, convert total time to hours and minutes
+    $hours = floor($total_time / 3600); // Calculate total hours
+    $minutes = floor(($total_time % 3600) / 60); // Calculate remaining minutes
 
-echo "<p><strong>Temps total passé :</strong> {$hours}h{$minutes}</p>";
-##########
+    echo "<p><strong>Temps total passé :</strong> {$hours}h{$minutes}</p>";
+    ##########
 
-//Difficulties ammount
-$difficulties_amount = $stats_manager->get_student_difficulties_amount($hippotrack->id, $studentid);
-list($easy_session, $hard_session) = $difficulties_amount;
-echo "<p><strong>Sessions réalisées :</strong> {$easy_session} (Facile) | {$hard_session} (Difficile)</p>";
+    //Difficulties ammount
+    // ! Le code qui était ici a été déplacé plus haut (afin de faire des vérifications avant d'afficher les statistiques)
+    echo "<p><strong>Sessions réalisées :</strong> {$easy_session} (Facile) | {$hard_session} (Difficile)</p>";
 
-// Success Rate by Difficulty (Bar Chart)
-list($easy_success, $hard_success) = $stats_manager->get_student_success_rate($hippotrack->id, $studentid);
-$chart = new \core\chart_bar();
-$series = new \core\chart_series('Taux de réussite (%)', [$easy_success, $hard_success]);
-$chart->add_series($series);
-$chart->set_labels(['Facile', 'Difficile']);
+    // Success Rate by Difficulty (Bar Chart)
+    list($easy_success, $hard_success) = $stats_manager->get_student_success_rate($hippotrack->id, $studentid);
+    $chart = new \core\chart_bar();
+    $series = new \core\chart_series('Taux de réussite (%)', [$easy_success, $hard_success]);
+    $chart->add_series($series);
+    $chart->set_labels(['Facile', 'Difficile']);
 
-echo $OUTPUT->render($chart);
-##########
+    echo $OUTPUT->render($chart);
+    ##########
 
-//Success rate per difficulties
-$success_rates = $stats_manager->get_success_rate_by_input($hippotrack->id, $studentid);
+    //Success rate per difficulties
+    $success_rates = $stats_manager->get_success_rate_by_input($hippotrack->id, $studentid);
 
-$labels = array_keys($success_rates);
-$values = array_values($success_rates);
+    $labels = array_keys($success_rates);
+    $values = array_values($success_rates);
 
-$chart = new \core\chart_bar();
-$series = new \core\chart_series('Taux de réussite par type d’input (%)', $values);
-$chart->add_series($series);
-$chart->set_labels($labels);
+    $chart = new \core\chart_bar();
+    $series = new \core\chart_series('Taux de réussite par type d’input (%)', $values);
+    $chart->add_series($series);
+    $chart->set_labels($labels);
 
-echo $OUTPUT->render($chart);
+    echo $OUTPUT->render($chart);
 
-##########
+    ##########
 
-// Get success rates by representation type
-$success_rates = $stats_manager->get_success_rate_by_representation($hippotrack->id, $studentid);
+    // Get success rates by representation type
+    $success_rates = $stats_manager->get_success_rate_by_representation($hippotrack->id, $studentid);
 
-// Extract labels and values for the chart
-$labels = array_keys(array_merge($success_rates['correct'], $success_rates['ok'], $success_rates['bad']));
-$correct_values = [];
-$ok_values = [];
-$bad_values = [];
+    // Extract labels and values for the chart
+    $labels = array_keys(array_merge($success_rates['correct'], $success_rates['ok'], $success_rates['bad']));
+    $correct_values = [];
+    $ok_values = [];
+    $bad_values = [];
 
-// Populate values while ensuring all labels exist in each category
-foreach ($labels as $label) {
-    $correct_values[] = $success_rates['correct'][$label] ?? 0;
-    $ok_values[] = $success_rates['ok'][$label] ?? 0;
-    $bad_values[] = $success_rates['bad'][$label] ?? 0;
+    // Populate values while ensuring all labels exist in each category
+    foreach ($labels as $label) {
+        $correct_values[] = $success_rates['correct'][$label] ?? 0;
+        $ok_values[] = $success_rates['ok'][$label] ?? 0;
+        $bad_values[] = $success_rates['bad'][$label] ?? 0;
+    }
+
+    // Render bar chart
+    $chart = new \core\chart_bar();
+    $chart->add_series(new \core\chart_series('Bien Fléchie (%)', $correct_values));
+    $chart->add_series(new \core\chart_series('Peu Fléchie (%)', $ok_values));
+    $chart->add_series(new \core\chart_series('Mal Fléchie (%)', $bad_values));
+    $chart->set_labels($labels);
+
+    echo $OUTPUT->render($chart);
+    ##########
 }
 
-// Render bar chart
-$chart = new \core\chart_bar();
-$chart->add_series(new \core\chart_series('Bien Fléchie (%)', $correct_values));
-$chart->add_series(new \core\chart_series('Peu Fléchie (%)', $ok_values));
-$chart->add_series(new \core\chart_series('Mal Fléchie (%)', $bad_values));
-$chart->set_labels($labels);
-
-echo $OUTPUT->render($chart);
-##########
 
 echo html_writer::end_tag('div');
 

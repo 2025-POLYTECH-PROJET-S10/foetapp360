@@ -60,6 +60,7 @@ class manage_datasets_form extends moodleform {
                 'accepted_types' => 'image',
             ]
         );
+        $mform->addRule('vue_anterieure', 'Vue Antérieure requise', 'required');
 
         $mform->addElement(
             'filepicker',
@@ -71,6 +72,7 @@ class manage_datasets_form extends moodleform {
                 'accepted_types' => 'image',
             ]
         );
+        $mform->addRule('vue_laterale', 'Vue Latérale requise', 'required');
 
         // Add hidden field for dataset_id (used for editing)
         $mform->addElement('hidden', 'id');
@@ -78,5 +80,49 @@ class manage_datasets_form extends moodleform {
 
         // Add submit and cancel buttons
         $this->add_action_buttons(true, "Enregistrer");
+    }
+
+
+    /**
+     * If there are errors return array of errors ("fieldname"=>"error message"),
+     * otherwise true if ok.
+     *
+     * Server side rules do not work for uploaded files, implement serverside rules here if needed.
+     *
+     * @param array $data array of ("fieldname"=>value) of submitted data
+     * @param array $files array of uploaded files "element_name"=>tmp_file_path
+     * @return array of "element_name"=>"error_description" if there are errors,
+     *         or an empty array if everything is OK (true allowed for backwards compatibility too).
+     */
+    function validation($data, $files) {
+        global $CFG, $DB;
+        $errors = parent::validation($data, $files);
+
+        // Get the datas
+        $name = $data["name"];
+        $sigle = $data["sigle"];
+        $rotation = $data["rotation"];
+        $inclinaison = $data["inclinaison"];
+
+        // Ensure that $name contains at least one letter (a-z or A-Z)
+        // and allow any other character
+        if (!preg_match('/^(?=.*[A-Za-z]).+$/', $name)) {
+            $errors["name"] = "Le nom doit contenir au moins une lettre.";
+        }
+
+        // Similarly, ensure that $sigle contains at least one letter
+        if (!preg_match('/^(?=.*[A-Za-z]).+$/', $sigle)) {
+            $errors["sigle"] = "Le sigle doit contenir au moins une lettre.";
+        }
+
+        // Check if rotation and inclinaison are integers
+        if (!preg_match('/^\d+$/', $rotation) || $rotation < 0 || $rotation > 360) {
+            $errors["rotation"] = "La rotation doit être un entier entre 0 et 360.";
+        }
+
+        if (!preg_match('/^-?\d+(\.\d+)?$/', $inclinaison) || $inclinaison > 1 || $inclinaison < -1) {
+            $errors["inclinaison"] = "L'inclinaison doit être un entier entre -1 et 1.";
+        }
+        return $errors;
     }
 }
