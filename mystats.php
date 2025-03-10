@@ -73,7 +73,7 @@ else {
     $hours = floor($total_time / 3600); // Calculate total hours
     $minutes = floor(($total_time % 3600) / 60); // Calculate remaining minutes
 
-    echo "<p><strong>Temps total passé :</strong> {$hours}h{$minutes}</p>";
+    echo "<p><strong>Temps total passé :</strong> {$hours}h{$minutes}m</p>";
     ##########
 
     //Difficulties ammount

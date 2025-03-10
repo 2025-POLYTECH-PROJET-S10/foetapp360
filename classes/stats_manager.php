@@ -187,6 +187,9 @@ class stats_manager
 
         foreach ($sessions as $session) {
             // Calculate duration of each session (in seconds)
+            if ($session->timefinish == 0) {
+                continue; // Skip session if it's not finished
+            } 
             $session_duration = $session->timefinish - $session->timestart;
             $total_time += $session_duration; // Add session duration to total time
         }
