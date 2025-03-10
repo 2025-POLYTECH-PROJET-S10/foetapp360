@@ -73,7 +73,7 @@ if ($is_student) {
     // 📊 Voir les statistiques
     $stats_url = new moodle_url('/mod/hippotrack/mystats.php', array('id' => $id));
     if (page_exists('stats.php')) {
-        echo $OUTPUT->single_button($stats_url, '📊 Voir les statistiques', 'get');
+        echo $OUTPUT->single_button($stats_url, '📊 Voir mes statistiques', 'get');
     } else {
         echo html_writer::tag('button', '📊 Voir les statistiques (Bientôt dispo)', array('disabled' => 'disabled', 'class' => 'btn btn-secondary'));
     }

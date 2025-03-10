@@ -116,12 +116,12 @@ class manage_datasets_form extends moodleform {
         }
 
         // Check if rotation and inclinaison are integers
-        if (!is_numeric($rotation) || $rotation < 0 || $rotation > 360) {
+        if (!preg_match('/^\d+$/', $rotation) || $rotation < 0 || $rotation > 360) {
             $errors["rotation"] = "La rotation doit être un entier entre 0 et 360.";
         }
 
-        if (!is_numeric($inclinaison) || !in_array($inclinaison, [-1, 0, 1], true)) { //Use in_array for checking valid array of values
-            $errors["inclinaison"] = "L'inclinaison doit être un entier de -1 , 0 ou 1.";
+        if (!preg_match('/^-?\d+(\.\d+)?$/', $inclinaison) || $inclinaison > 1 || $inclinaison < -1) {
+            $errors["inclinaison"] = "L'inclinaison doit être un entier entre -1 et 1.";
         }
         return $errors;
     }
