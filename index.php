@@ -15,9 +15,9 @@
 // along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
 
 /**
- * Display information about all the hippotrack modules in the requested course.
+ * Display information about all the foetapp360 modules in the requested course.
  *
- * @package     mod_hippotrack
+ * @package     mod_foetapp360
  * @copyright   2025 Lionel Di Marco <LDiMarco@chu-grenoble.fr>
  * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -33,26 +33,26 @@ require_course_login($course);
 
 $coursecontext = context_course::instance($course->id);
 
-$event = \mod_hippotrack\event\course_module_instance_list_viewed::create(array(
+$event = \mod_foetapp360\event\course_module_instance_list_viewed::create(array(
     'context' => $modulecontext
 ));
 $event->add_record_snapshot('course', $course);
 $event->trigger();
 
-$PAGE->set_url('/mod/hippotrack/index.php', array('id' => $id));
+$PAGE->set_url('/mod/foetapp360/index.php', array('id' => $id));
 $PAGE->set_title(format_string($course->fullname));
 $PAGE->set_heading(format_string($course->fullname));
 $PAGE->set_context($coursecontext);
 
 echo $OUTPUT->header();
 
-$modulenameplural = get_string('modulenameplural', 'hippotrack');
+$modulenameplural = get_string('modulenameplural', 'foetapp360');
 echo $OUTPUT->heading($modulenameplural);
 
-$hippotracks = get_all_instances_in_course('hippotrack', $course);
+$foetapp360s = get_all_instances_in_course('foetapp360', $course);
 
-if (empty($hippotracks)) {
-    notice(get_string('no$hippotrackinstances', 'hippotrack'), new moodle_url('/course/view.php', array('id' => $course->id)));
+if (empty($foetapp360s)) {
+    notice(get_string('no$foetapp360instances', 'foetapp360'), new moodle_url('/course/view.php', array('id' => $course->id)));
 }
 
 $table = new html_table();
@@ -69,22 +69,22 @@ if ($course->format == 'weeks') {
     $table->align = array('left', 'left', 'left');
 }
 
-foreach ($hippotracks as $hippotrack) {
-    if (!$hippotrack->visible) {
+foreach ($foetapp360s as $foetapp360) {
+    if (!$foetapp360->visible) {
         $link = html_writer::link(
-            new moodle_url('/mod/hippotrack/view.php', array('id' => $hippotrack->coursemodule)),
-            format_string($hippotrack->name, true),
+            new moodle_url('/mod/foetapp360/view.php', array('id' => $foetapp360->coursemodule)),
+            format_string($foetapp360->name, true),
             array('class' => 'dimmed')
         );
     } else {
         $link = html_writer::link(
-            new moodle_url('/mod/hippotrack/view.php', array('id' => $hippotrack->coursemodule)),
-            format_string($hippotrack->name, true)
+            new moodle_url('/mod/foetapp360/view.php', array('id' => $foetapp360->coursemodule)),
+            format_string($foetapp360->name, true)
         );
     }
 
     if ($course->format == 'weeks' || $course->format == 'topics') {
-        $table->data[] = array($hippotrack->section, $link);
+        $table->data[] = array($foetapp360->section, $link);
     } else {
         $table->data[] = array($link);
     }

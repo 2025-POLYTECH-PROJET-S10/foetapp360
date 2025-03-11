@@ -1,6 +1,6 @@
 <?php
 
-namespace mod_hippotrack;
+namespace mod_foetapp360;
 
 defined('MOODLE_INTERNAL') || die();
 
@@ -15,10 +15,10 @@ class single_student {
         global $DB;
         $this->userid = $userid;
         $this->user = $DB->get_record('user', ['id' => $userid], '*', MUST_EXIST);
-        $this->sessions = $DB->get_records('hippotrack_session', ['userid' => $userid]);
+        $this->sessions = $DB->get_records('foetapp360_session', ['userid' => $userid]);
         $this->attempts = $DB->get_records_sql(
-            "SELECT ha.* FROM {hippotrack_attempt} ha
-            JOIN {hippotrack_session} hs ON ha.id_session = hs.id
+            "SELECT ha.* FROM {foetapp360_attempt} ha
+            JOIN {foetapp360_session} hs ON ha.id_session = hs.id
             WHERE hs.userid = ?", 
             [$userid]
         );

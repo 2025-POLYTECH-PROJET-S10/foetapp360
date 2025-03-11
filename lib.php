@@ -17,12 +17,12 @@
 /**
  * Library of interface functions and constants.
  *
- * @package     mod_hippotrack
+ * @package     mod_foetapp360
  * @copyright   2025 Lionel Di Marco <LDiMarco@chu-grenoble.fr>
  * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
- use mod_hippotrack\image_manager;
+ use mod_foetapp360\image_manager;
 
 /**
  * Return if the plugin supports $feature.
@@ -30,7 +30,7 @@
  * @param string $feature Constant representing the feature.
  * @return true | null True if the feature is supported, null otherwise.
  */
-function hippotrack_supports($feature)
+function foetapp360_supports($feature)
 {
     switch ($feature) {
         case FEATURE_MOD_INTRO:
@@ -41,88 +41,88 @@ function hippotrack_supports($feature)
 }
 
 /**
- * Saves a new instance of the hippotrack into the database.
+ * Saves a new instance of the foetapp360 into the database.
  *
  * Given an object containing all the necessary data, (defined by the form
  * in mod_form.php) this function will create a new instance and return the id
  * number of the instance.
  *
  * @param object $moduleinstance An object from the form.
- * @param mod_hippotrack_mod_form $mform The form.
+ * @param mod_foetapp360_mod_form $mform The form.
  * @return int The id of the newly inserted record.
  */
-function hippotrack_add_instance($moduleinstance)
+function foetapp360_add_instance($moduleinstance)
 {
     global $DB;
 
     $moduleinstance->timecreated = time();
 
-    $id = $DB->insert_record('hippotrack', $moduleinstance);
+    $id = $DB->insert_record('foetapp360', $moduleinstance);
 
     return $id;
 }
 
 /**
- * Updates an instance of the hippotrack in the database.
+ * Updates an instance of the foetapp360 in the database.
  *
  * Given an object containing all the necessary data (defined in mod_form.php),
  * this function will update an existing instance with new data.
  *
  * @param object $moduleinstance An object from the form in mod_form.php.
- * @param mod_hippotrack_mod_form $mform The form.
+ * @param mod_foetapp360_mod_form $mform The form.
  * @return bool True if successful, false otherwise.
  */
-function hippotrack_update_instance($moduleinstance)
+function foetapp360_update_instance($moduleinstance)
 {
     global $DB;
 
     $moduleinstance->timemodified = time();
     $moduleinstance->id = $moduleinstance->instance;
 
-    return $DB->update_record('hippotrack', $moduleinstance);
+    return $DB->update_record('foetapp360', $moduleinstance);
 }
 
 /**
- * Delete an instance of the hippotrack activity.
+ * Delete an instance of the foetapp360 activity.
  *
- * This function is called when a hippotrack instance is deleted. It will
+ * This function is called when a foetapp360 instance is deleted. It will
  * remove any dependent data (such as sessions and attempts) linked to the instance.
  *
- * @param int $id The ID of the hippotrack instance to delete.
+ * @param int $id The ID of the foetapp360 instance to delete.
  * @return bool True if deletion was successful, false otherwise.
  */
-function hippotrack_delete_instance($id) {
+function foetapp360_delete_instance($id) {
     global $DB;
 
     // Ensure the instance exists.
-    if (!$DB->get_record('hippotrack', array('id' => $id))) {
+    if (!$DB->get_record('foetapp360', array('id' => $id))) {
         return false;
     }
 
     // Delete all attempts linked to sessions of this instance.
-    // This SQL deletes records from hippotrack_attempt whose session is linked to the instance.
-    $sql = "DELETE FROM {hippotrack_attempt}
+    // This SQL deletes records from foetapp360_attempt whose session is linked to the instance.
+    $sql = "DELETE FROM {foetapp360_attempt}
             WHERE id_session IN (
-                SELECT id FROM {hippotrack_session} WHERE id_hippotrack = ?
+                SELECT id FROM {foetapp360_session} WHERE id_foetapp360 = ?
             )";
     $DB->execute($sql, array($id));
 
     // Delete all session records for this instance.
-    $DB->delete_records('hippotrack_session', array('id_hippotrack' => $id));
+    $DB->delete_records('foetapp360_session', array('id_foetapp360' => $id));
 
     // Optionally: if your design requires cleaning up other tables (e.g. feedback data), add similar deletions.
-    // Note: The hippotrack_datasets table does not include a direct reference to an instance.
+    // Note: The foetapp360_datasets table does not include a direct reference to an instance.
     // If you ever add an instance foreign key, be sure to delete those records here.
 
-    // Finally, delete the hippotrack instance itself.
-    $DB->delete_records('hippotrack', array('id' => $id));
+    // Finally, delete the foetapp360 instance itself.
+    $DB->delete_records('foetapp360', array('id' => $id));
 
     return true;
 }
 
 
 /**
- * Serve the files from the hippotrack file areas.
+ * Serve the files from the foetapp360 file areas.
  *
  * @param stdClass $course the course object
  * @param stdClass $cm the course module object
@@ -133,7 +133,7 @@ function hippotrack_delete_instance($id) {
  * @param array $options additional options affecting the file serving
  * @return bool false if the file not found, just send the file otherwise and do not return anything
  */
-function mod_hippotrack_pluginfile(
+function mod_foetapp360_pluginfile(
     $course,
     $cm,
     $context,
@@ -157,7 +157,7 @@ function mod_hippotrack_pluginfile(
     require_login($course, true, $cm);
 
     // Check the relevant capabilities - these may vary depending on the filearea being accessed.
-    if (!has_capability('mod/hippotrack:viewimages', $context)) {
+    if (!has_capability('mod/foetapp360:viewimages', $context)) {
         return false;
     }
 
@@ -169,7 +169,7 @@ function mod_hippotrack_pluginfile(
     // record belongs to the specifeid context. For example:
     if ($filearea === 'vue_anterieure' || $filearea === 'vue_laterale') {
         // Check that the record exists.
-        if (!$DB->record_exists('hippotrack_datasets', ['id' => $itemid])) {
+        if (!$DB->record_exists('foetapp360_datasets', ['id' => $itemid])) {
             return false;
         }
 
@@ -226,16 +226,16 @@ function mod_hippotrack_pluginfile(
  * If an active session is found, it returns the session ID. Otherwise, it creates a new session
  * with the current timestamp and a default difficulty level of 'medium', and returns the new session ID.
  *
- * @param int $instanceid The ID of the hippotrack instance.
+ * @param int $instanceid The ID of the foetapp360 instance.
  * @param int $userid The ID of the user.
  * @return int The ID of the existing or newly created session.
  */
-function hippotrack_start_new_session($instanceid, $userid) {
+function foetapp360_start_new_session($instanceid, $userid) {
     global $DB;
     
     // Check for existing active session
-    if ($existingsession = $DB->get_record('hippotrack_session', [
-        'id_hippotrack' => $instanceid,
+    if ($existingsession = $DB->get_record('foetapp360_session', [
+        'id_foetapp360' => $instanceid,
         'userid' => $userid,
         'timefinish' => 0,
     ])) {
@@ -243,11 +243,11 @@ function hippotrack_start_new_session($instanceid, $userid) {
     }
 
     $newsession = (object)[
-        'id_hippotrack' => $instanceid,
+        'id_foetapp360' => $instanceid,
         'userid' => $userid,
         'timestart' => time(),
         'timefinish' => 0,
     ];
     
-    return $DB->insert_record('hippotrack_session', $newsession);
+    return $DB->insert_record('foetapp360_session', $newsession);
 }

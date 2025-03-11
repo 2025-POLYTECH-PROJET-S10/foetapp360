@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<XMLDB PATH="mod/hippotrack/db" VERSION="20250205" COMMENT="XMLDB file for Moodle hippotrack"
+<XMLDB PATH="mod/foetapp360/db" VERSION="20250205" COMMENT="XMLDB file for Moodle foetapp360"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:noNamespaceSchemaLocation="../../../lib/xmldb/xmldb.xsd"
 >
   <TABLES>
     <!-- Table principale pour stocker les instances du plugin -->
-    <TABLE NAME="hippotrack" COMMENT="Stores the hippotrack activity module instances.">
+    <TABLE NAME="foetapp360" COMMENT="Stores the foetapp360 activity module instances.">
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
         <FIELD NAME="course" TYPE="int" LENGTH="10" NOTNULL="true" COMMENT="ID du cours contenant l'activité"/>
@@ -22,7 +22,7 @@
     </TABLE>
 
     <!-- Table pour stocker les ensembles de données -->
-    <TABLE NAME="hippotrack_datasets" COMMENT="Stocke les ensembles de données pour l'exercice">
+    <TABLE NAME="foetapp360_datasets" COMMENT="Stocke les ensembles de données pour l'exercice">
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
         <FIELD NAME="name" TYPE="char" LENGTH="255" NOTNULL="true" COMMENT="Nom de la position"/>
@@ -39,10 +39,10 @@
       </KEYS>
     </TABLE>
 
-    <TABLE NAME="hippotrack_session" COMMENT="Stores user session">
+    <TABLE NAME="foetapp360_session" COMMENT="Stores user session">
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" COMMENT="The number of the session for a given activity and user."/>
-        <FIELD NAME="id_hippotrack" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="ID of the current hippotrack instance"/>
+        <FIELD NAME="id_foetapp360" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="ID of the current foetapp360 instance"/>
         <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="Foreign key reference to the user whose attempt this is."/>
         <FIELD NAME="timestart" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="Time when the attempt was started."/>
         <FIELD NAME="timefinish" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="Time when the attempt was submitted. 0 if the attempt has not been submitted yet."/>
@@ -51,18 +51,18 @@
         <FIELD NAME="difficulty" TYPE="text" NOTNULL="false" SEQUENCE="false" COMMENT="Easy of Hard"/>
       </FIELDS>
       <KEYS>
-        <KEY NAME="primary" TYPE="primary" FIELDS="id,id_hippotrack,userid"/>
-        <KEY NAME="fk_id_hippotrack" TYPE="foreign" FIELDS="id_hippotrack" REFTABLE="hippotrack" REFFIELDS="id"/>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id,id_foetapp360,userid"/>
+        <KEY NAME="fk_id_foetapp360" TYPE="foreign" FIELDS="id_foetapp360" REFTABLE="foetapp360" REFFIELDS="id"/>
         <KEY NAME="userid" TYPE="foreign" FIELDS="userid" REFTABLE="user" REFFIELDS="id"/>
       </KEYS>
     </TABLE>
 
     <!-- Table pour stocker les tentatives des étudiants -->
-    <TABLE NAME="hippotrack_attempt" COMMENT="Stores student responses and attempt statistics.">
+    <TABLE NAME="foetapp360_attempt" COMMENT="Stores student responses and attempt statistics.">
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" COMMENT="Standard Moodle primary key."/>
-        <FIELD NAME="id_session" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="ID of the current hippotrack instance"/>
-        <FIELD NAME="id_dataset" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="ID of the current hippotrack instance"/>
+        <FIELD NAME="id_session" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="ID of the current foetapp360 instance"/>
+        <FIELD NAME="id_dataset" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="ID of the current foetapp360 instance"/>
         <FIELD NAME="attempt_number" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="Numero de l'attempt pour la session."/>
         <FIELD NAME="name" TYPE="text" NOTNULL="false" COMMENT="Nom du dataset entrée par l'étudiant"/>
         <FIELD NAME="sigle" TYPE="char" LENGTH="255" NOTNULL="true" COMMENT="Sigle de la position"/>
@@ -75,12 +75,12 @@
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id,id_session"/>
-        <KEY NAME="fk_id_session" TYPE="foreign" FIELDS="id_session" REFTABLE="hippotrack_session" REFFIELDS="id"/>
-        <KEY NAME="fk_id_dataset" TYPE="foreign" FIELDS="id_dataset" REFTABLE="hippotrack_datasets" REFFIELDS="id"/>
+        <KEY NAME="fk_id_session" TYPE="foreign" FIELDS="id_session" REFTABLE="foetapp360_session" REFFIELDS="id"/>
+        <KEY NAME="fk_id_dataset" TYPE="foreign" FIELDS="id_dataset" REFTABLE="foetapp360_datasets" REFFIELDS="id"/>
       </KEYS>
     </TABLE>
 
-    <TABLE NAME="hippotrack_feedback" COMMENT="Stocke les feedbacks en fonction des réponses données et attendues">
+    <TABLE NAME="foetapp360_feedback" COMMENT="Stocke les feedbacks en fonction des réponses données et attendues">
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" COMMENT="Standard Moodle primary key."/>
         <FIELD NAME="input_dataset" TYPE="text" NOTNULL="false" COMMENT="Nom du dataset entré par l'étudiant"/>
@@ -91,12 +91,12 @@
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
-        <KEY NAME="fk_id_feedback" TYPE="foreign" FIELDS="id_feedback" REFTABLE="hippotrack_feedback_data" REFFIELDS="id"/>
+        <KEY NAME="fk_id_feedback" TYPE="foreign" FIELDS="id_feedback" REFTABLE="foetapp360_feedback_data" REFFIELDS="id"/>
       </KEYS>
     </TABLE>
 
 
-    <TABLE NAME="hippotrack_feedback_data" COMMENT="Stock les feedback à renvoyer pour un dataset">
+    <TABLE NAME="foetapp360_feedback_data" COMMENT="Stock les feedback à renvoyer pour un dataset">
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" COMMENT="Standard Moodle primary key."/>
         <FIELD NAME="feedback" TYPE="text" NOTNULL="false" COMMENT="Nom du dataset entrée par l'étudiant"/>

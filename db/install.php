@@ -17,7 +17,7 @@
 /**
  * Code executed after the plugin's database scheme has been installed.
  *
- * @package     mod_hippotrack
+ * @package     mod_foetapp360
  * @category    upgrade
  * @copyright   2025 Lionel Di Marco
  * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
@@ -25,12 +25,12 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-use mod_hippotrack\image_manager;
+use mod_foetapp360\image_manager;
 
 /**
  * Function executed when the plugin is installed.
  */
-function xmldb_hippotrack_install() {
+function xmldb_foetapp360_install() {
     global $DB, $CFG;
     
     // Initialize image managers for both views
@@ -43,7 +43,7 @@ function xmldb_hippotrack_install() {
     );
 
         // 📌 Importation des feedbacks
-        $feedback_csv = $CFG->dirroot . '/mod/hippotrack/feedback_texts.csv';
+        $feedback_csv = $CFG->dirroot . '/mod/foetapp360/feedback_texts.csv';
 
         if (!file_exists($feedback_csv)) {
             debugging('⚠️ Fichier CSV des feedbacks introuvable : ' . $feedback_csv, DEBUG_DEVELOPER);
@@ -60,7 +60,7 @@ function xmldb_hippotrack_install() {
                         $record->feedback = $feedback_text;
     
                         // 📌 Insérer en base
-                        $DB->insert_record('hippotrack_feedback_data', $record);
+                        $DB->insert_record('foetapp360_feedback_data', $record);
                     }
                 }
                 fclose($handle);
@@ -69,7 +69,7 @@ function xmldb_hippotrack_install() {
         }
 
         // 📌 Importation des combinaisons de feedbacks
-        $feedback_combinations_csv = $CFG->dirroot . '/mod/hippotrack/feedback_combinations.csv';
+        $feedback_combinations_csv = $CFG->dirroot . '/mod/foetapp360/feedback_combinations.csv';
 
         if (!file_exists($feedback_combinations_csv)) {
             debugging('⚠️ Fichier CSV des combinaisons de feedbacks introuvable : ' . $feedback_combinations_csv, DEBUG_DEVELOPER);
@@ -97,7 +97,7 @@ function xmldb_hippotrack_install() {
     
                     // 📌 Insérer en base
                     try {
-                        $DB->insert_record('hippotrack_feedback', $record);
+                        $DB->insert_record('foetapp360_feedback', $record);
                     } catch (Exception $e) {
                         debugging("⚠️ Erreur lors de l'insertion de la ligne $line_number : " . $e->getMessage(), DEBUG_DEVELOPER);
                     }
@@ -110,7 +110,7 @@ function xmldb_hippotrack_install() {
     
 
     // CSV file path for datasets
-    $csv_file = $CFG->dirroot . '/mod/hippotrack/datasets.csv';
+    $csv_file = $CFG->dirroot . '/mod/foetapp360/datasets.csv';
 
     if (!file_exists($csv_file)) {
         debugging('⚠️ Fichier CSV introuvable : ' . $csv_file, DEBUG_DEVELOPER);
@@ -159,7 +159,7 @@ function xmldb_hippotrack_install() {
 
 
         // 📌 Insérer en base
-        $new_id = $DB->insert_record('hippotrack_datasets', $record);
+        $new_id = $DB->insert_record('foetapp360_datasets', $record);
 
         // Upload anterior view image
         if (!empty($nom_vue_anterieure)) {

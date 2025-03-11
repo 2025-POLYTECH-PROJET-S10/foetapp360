@@ -17,7 +17,7 @@
 /**
  * Plugin strings are defined here.
  *
- * @package     mod_hippotrack
+ * @package     mod_foetapp360
  * @category    string
  * @copyright   2025 Lionel Di Marco <LDiMarco@chu-grenoble.fr>
  * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
@@ -25,14 +25,14 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-$string['pluginname'] = 'hippotrack';
+$string['pluginname'] = 'foetapp360';
 
-$string['pluginname'] = 'hippotrack';
-$string['modulename'] = 'Hippotrack';
-$string['modulenameplural'] = 'Hippotrack';
-$string['pluginadministration'] = 'hippotrack Administration';
-$string['hippotrack:hostquizz'] = 'hippotrack  Hôte du Quizz';
-$string['hippotrack:addinstance'] = 'hippotrack Ajouter une instance';
+$string['pluginname'] = 'foetapp360';
+$string['modulename'] = 'Foetapp360';
+$string['modulenameplural'] = 'Foetapp360';
+$string['pluginadministration'] = 'foetapp360 Administration';
+$string['foetapp360:hostquizz'] = 'foetapp360  Hôte du Quizz';
+$string['foetapp360:addinstance'] = 'foetapp360 Ajouter une instance';
 
 // Chaînes ajoutées pour les statistiques
 $string['stats'] = 'Statistiques';

@@ -17,7 +17,7 @@
 /**
  * Contain the form to manage datasets.
  *
- * @package     mod_hippotrack
+ * @package     mod_foetapp360
  * @copyright   2025 Lionel Di Marco <LDiMarco@chu-grenoble.fr>
  * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */

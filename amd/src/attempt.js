@@ -1,20 +1,20 @@
 define(['jquery'], function ($) {
     return {
         init: function () {
-            $(".rotation_hippotrack_container").each(function () {
-                let rotationhippotrack_container = $(this);
-                let hippotrack_container = rotationhippotrack_container.find(".hippotrack_container");
+            $(".rotation_foetapp360_container").each(function () {
+                let rotationfoetapp360_container = $(this);
+                let foetapp360_container = rotationfoetapp360_container.find(".foetapp360_container");
 
-                if (!hippotrack_container.length) { return; }
+                if (!foetapp360_container.length) { return; }
 
-                let schemaType = hippotrack_container.data("schema-type");
+                let schemaType = foetapp360_container.data("schema-type");
                 if (!schemaType) { return; }
 
-                let targetInteriorImage = hippotrack_container.find("." + schemaType + "_interieur");
-                let targetContourImage = hippotrack_container.find("." + schemaType + "_contour");
+                let targetInteriorImage = foetapp360_container.find("." + schemaType + "_interieur");
+                let targetContourImage = foetapp360_container.find("." + schemaType + "_contour");
 
-                let rotateSlider = rotationhippotrack_container.find(".rotate-slider");
-                let moveSlider = rotationhippotrack_container.find(".move-axis-slider");
+                let rotateSlider = rotationfoetapp360_container.find(".rotate-slider");
+                let moveSlider = rotationfoetapp360_container.find(".move-axis-slider");
 
                 let rotationAngle = rotateSlider.val();
                 let translateDistance = moveSlider.val();
@@ -48,17 +48,17 @@ define(['jquery'], function ($) {
             });
 
             let imageDatabase = JSON.parse(document.getElementById("image_database").dataset.values);
-            $(".image_cycling_hippotrack_container").each(function () {
-                let hippotrack_container = $(this);
-                let cyclingImage = hippotrack_container.find(".hippotrack_attempt_cycling-image_vue_laterale, .hippotrack_attempt_cycling-image_vue_anterieure");
+            $(".image_cycling_foetapp360_container").each(function () {
+                let foetapp360_container = $(this);
+                let cyclingImage = foetapp360_container.find(".foetapp360_attempt_cycling-image_vue_laterale, .foetapp360_attempt_cycling-image_vue_anterieure");
 
-                let hiddenInput = hippotrack_container.find(".hippotrack_attempt_selected_position");
-                let toggleButtonHiddenInput = hippotrack_container.find(".hippotrack_attempt_toggle_btn_value");
+                let hiddenInput = foetapp360_container.find(".foetapp360_attempt_selected_position");
+                let toggleButtonHiddenInput = foetapp360_container.find(".foetapp360_attempt_toggle_btn_value");
                 /**
                  * Met à jour l'image affichée en fonction de la position et de la variation.
                  */
                 function increaseImage() {
-                    let field = hippotrack_container.find(".hippotrack_field");
+                    let field = foetapp360_container.find(".foetapp360_field");
                     let inclinaison = toggleButtonHiddenInput.attr("value");
                     let images = Object.values(imageDatabase[field[0].dataset.values][inclinaison]); // Convertir en tableau indexé
                     let imageActuelle = cyclingImage.attr("src");
@@ -77,7 +77,7 @@ define(['jquery'], function ($) {
                  * Met à jour l'image affichée en fonction de la position et de la variation.
                  */
                 function decreaseImage() {
-                    let field = hippotrack_container.find(".hippotrack_field");
+                    let field = foetapp360_container.find(".foetapp360_field");
                     let inclinaison = toggleButtonHiddenInput.attr("value");
                     let images = Object.values(imageDatabase[field[0].dataset.values][inclinaison]); // Convertir en tableau indexé
                     let imageActuelle = cyclingImage.attr("src");
@@ -97,7 +97,7 @@ define(['jquery'], function ($) {
                  * @param {string} previousInclinaison - La clé de l'inclinaison précédente.
                  */
                 function updateImage(previousInclinaison){
-                    let field = hippotrack_container.find(".hippotrack_field");
+                    let field = foetapp360_container.find(".foetapp360_field");
                     let images = Object.values(imageDatabase[field[0].dataset.values][previousInclinaison]);
                     let imageActuelle = cyclingImage.attr("src");
                     let currentIndex = images.indexOf(imageActuelle);
@@ -111,7 +111,7 @@ define(['jquery'], function ($) {
                  */
                 function toggleView(){
                     let inclinaison = toggleButtonHiddenInput.attr("value");
-                    let field = hippotrack_container.find(".hippotrack_field");
+                    let field = foetapp360_container.find(".foetapp360_field");
                     let images = imageDatabase[field[0].dataset.values];
                     let inclinaisonKeys = Object.keys(images);
                     let currentIndex = inclinaisonKeys.indexOf(inclinaison); // Trouver son index
@@ -125,15 +125,15 @@ define(['jquery'], function ($) {
                     return inclinaison;
                 }
 
-                hippotrack_container.find(".hippotrack_attempt_prev-btn").on("click", function () {
+                foetapp360_container.find(".foetapp360_attempt_prev-btn").on("click", function () {
                     decreaseImage();
                 });
 
-                hippotrack_container.find(".hippotrack_attempt_next-btn").on("click", function () {
+                foetapp360_container.find(".foetapp360_attempt_next-btn").on("click", function () {
                     increaseImage();
                 });
 
-                hippotrack_container.find(".hippotrack_attempt_toggle_btn").on("click", function() {
+                foetapp360_container.find(".foetapp360_attempt_toggle_btn").on("click", function() {
                     let previousInclinaison = toggleView();
                     updateImage(previousInclinaison);
                 });
@@ -141,13 +141,13 @@ define(['jquery'], function ($) {
 
             // Gestion des onglets et du contenu affiché
             $(".attempt_container").hide();
-            $(".hippotrack-tab.active").each(function () {
+            $(".foetapp360-tab.active").each(function () {
                 $($(this).data("target")).show();
-                $(this).addClass("hippotrack_given_tab_input");
+                $(this).addClass("foetapp360_given_tab_input");
             });
 
-            $(".hippotrack-tab").click(function () {
-                $(".hippotrack-tab").removeClass("active");
+            $(".foetapp360-tab").click(function () {
+                $(".foetapp360-tab").removeClass("active");
                 $(this).addClass("active");
 
                 $(".attempt_container").hide();

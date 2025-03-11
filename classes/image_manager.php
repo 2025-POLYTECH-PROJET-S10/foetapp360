@@ -1,5 +1,5 @@
 <?php
-namespace mod_hippotrack;
+namespace mod_foetapp360;
 
 defined('MOODLE_INTERNAL') || die();
 
@@ -17,7 +17,7 @@ class image_manager {
         $systemcontext = context_system::instance();
 
         $this->contextid = $systemcontext->id;
-        $this->component = "mod_hippotrack";
+        $this->component = "mod_foetapp360";
         $this->filearea = $filearea;
     }
 
@@ -25,7 +25,7 @@ class image_manager {
 
         $fileinfo = [
             'contextid' => $this->contextid,   // ID of the context.
-            'component' => 'mod_hippotrack', // Your component name.
+            'component' => 'mod_foetapp360', // Your component name.
             'filearea'  => $this->filearea,       // Usually = table name.
             'itemid'    => $itemid,              // Usually = ID of row in table.
             'filepath'  => '/',            // Any path beginning and ending in /.
@@ -43,7 +43,7 @@ class image_manager {
     public function upload_pix_image($itemid , $filename){
         global $CFG;
 
-        $requestdir = $CFG->dirroot . "/mod/hippotrack/pix" ;
+        $requestdir = $CFG->dirroot . "/mod/foetapp360/pix" ;
 
         $fs = get_file_storage();
 
@@ -54,7 +54,7 @@ class image_manager {
     // Modified delete method
     private function _delete_image_with_id($itemid) {
         global $DB;
-        $record = $DB->get_record("hippotrack_datasets" , ["id"=> $itemid]);
+        $record = $DB->get_record("foetapp360_datasets" , ["id"=> $itemid]);
 
         if ($this->filearea == "vue_anterieure") {
             $filename = $record->vue_anterieure;
@@ -179,9 +179,9 @@ class image_manager {
         // Search in the database for the itemid
         $filearea_name = $this->filearea;
         if ($this->filearea === 'vue_anterieure') {
-            $sql = 'SELECT id FROM {hippotrack_datasets} WHERE vue_anterieure = :filename';
+            $sql = 'SELECT id FROM {foetapp360_datasets} WHERE vue_anterieure = :filename';
         } else if ($this->filearea === 'vue_laterale') {
-            $sql = 'SELECT id FROM {hippotrack_datasets} WHERE vue_laterale = :filename';
+            $sql = 'SELECT id FROM {foetapp360_datasets} WHERE vue_laterale = :filename';
         } else {
             throw new \moodle_exception("Invalid file area");
         }

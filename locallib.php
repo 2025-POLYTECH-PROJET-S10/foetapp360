@@ -59,7 +59,7 @@ function get_dataset_from_inclinaison_rotation(int $input_inclinaison, int $inpu
     // Récupérer le dataset correspondant
     if($inclinaison != 0){
         $dataset = $DB->get_record_sql(
-            "SELECT * FROM {hippotrack_datasets} WHERE inclinaison = :inclinaison AND rotation = :rotation",
+            "SELECT * FROM {foetapp360_datasets} WHERE inclinaison = :inclinaison AND rotation = :rotation",
             array('inclinaison' => $inclinaison, 'rotation' => $rotation)
         );
     }
@@ -76,7 +76,7 @@ function get_dataset_name_from_inclinaison_rotation(int $input_inclinaison, int 
     $rotation = get_correct_rotation($input_rotation);
 
     $dataset = $DB->get_record_sql(
-        "SELECT * FROM {hippotrack_datasets} WHERE inclinaison = :inclinaison AND rotation = :rotation",
+        "SELECT * FROM {foetapp360_datasets} WHERE inclinaison = :inclinaison AND rotation = :rotation",
         array('inclinaison' => 1, 'rotation' => $rotation)
     );
     return $dataset->name;

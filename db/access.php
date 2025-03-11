@@ -17,7 +17,7 @@
 /**
  * Version information
  *
- * @package    mod_hippotrack
+ * @package    mod_foetapp360
  * @copyright  2025 Lionel Di Marco <LDiMarco@chu-grenoble.fr>
  * @license    https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -26,7 +26,7 @@ defined('MOODLE_INTERNAL') || die();
 
 $capabilities = array(
     // 📌 Permission pour ajouter une instance du plugin (déjà existante)
-    'mod/hippotrack:addinstance' => array(
+    'mod/foetapp360:addinstance' => array(
         'riskbitmask' => RISK_XSS,
         'captype' => 'write',
         'contextlevel' => CONTEXT_COURSE,
@@ -38,7 +38,7 @@ $capabilities = array(
     ),
 
     // 📌 Permission pour que les enseignants puissent gérer le plugin
-    'mod/hippotrack:manage' => array(
+    'mod/foetapp360:manage' => array(
         'captype' => 'write',
         'contextlevel' => CONTEXT_MODULE,
         'archetypes' => array(
@@ -48,7 +48,7 @@ $capabilities = array(
     ),
 
     // 📌 Permission pour que les étudiants puissent tenter l'exercice
-    'mod/hippotrack:attempt' => array(
+    'mod/foetapp360:attempt' => array(
         'captype' => 'read',
         'contextlevel' => CONTEXT_MODULE,
         'archetypes' => array(
@@ -57,7 +57,7 @@ $capabilities = array(
     ),
 
     // 📌 🔥 Nouvelle permission pour permettre aux enseignants de voir les statistiques
-    'mod/hippotrack:viewstats' => array(
+    'mod/foetapp360:viewstats' => array(
         'captype' => 'read',
         'contextlevel' => CONTEXT_MODULE,
         'archetypes' => array(
@@ -68,7 +68,7 @@ $capabilities = array(
         ),
 
     // 📌 🔥 Nouvelle permission pour permettre aux tous de voir les images et ainsi de suite
-    'mod/hippotrack:viewimages' => array(
+    'mod/foetapp360:viewimages' => array(
         'captype' => 'read',
         'contextlevel' => CONTEXT_MODULE,
         'archetypes' => array(

@@ -3,25 +3,25 @@ require(__DIR__ . '/../../config.php');
 require_once(__DIR__ . '/classes/form/db_form.php');
 
 // Add namespace reference at the top
-use mod_hippotrack\image_manager;
+use mod_foetapp360\image_manager;
 
 // 📌 Parameter Validation
 $cmid = required_param('cmid', PARAM_INT);
 $userid = $USER->id;
 
 // 📌 Retrieve Course Module and Context
-$cm = get_coursemodule_from_id('hippotrack', $cmid, 0, false, MUST_EXIST);
+$cm = get_coursemodule_from_id('foetapp360', $cmid, 0, false, MUST_EXIST);
 $course = $DB->get_record('course', array('id' => $cm->course), '*', MUST_EXIST);
 $context = context_module::instance($cm->id);
 
 // 📌 Access Control
 require_login($course, true, $cm);
-require_capability('mod/hippotrack:manage', $context);
+require_capability('mod/foetapp360:manage', $context);
 
 // 📌 Page Configuration
 $PAGE->set_cm($cm);
 $PAGE->set_context($context);
-$PAGE->set_url('/mod/hippotrack/manage_datasets.php', array('id' => $cmid));
+$PAGE->set_url('/mod/foetapp360/manage_datasets.php', array('id' => $cmid));
 $PAGE->set_title("Gestion des ensembles de données");
 $PAGE->set_heading("Gestion des ensembles de données");
 
@@ -37,21 +37,21 @@ if ($deleting && confirm_sesskey()) {
         $image_manager_anterieure = new image_manager('vue_anterieure');
         $image_manager_laterale = new image_manager('vue_laterale');
 
-        $dataset = $DB->get_record('hippotrack_datasets', array('id' => $deleting), '*', MUST_EXIST);
+        $dataset = $DB->get_record('foetapp360_datasets', array('id' => $deleting), '*', MUST_EXIST);
 
         $image_manager_anterieure->delete_image($dataset->id, $dataset->vue_anterieure);
         $image_manager_laterale->delete_image($dataset->id, $dataset->vue_laterale);
 
-        $DB->delete_records('hippotrack_datasets', array('id' => $deleting));
+        $DB->delete_records('foetapp360_datasets', array('id' => $deleting));
         redirect(
-            new moodle_url('/mod/hippotrack/manage_datasets.php', array('cmid' => $cmid)),
+            new moodle_url('/mod/foetapp360/manage_datasets.php', array('cmid' => $cmid)),
             "Entrée supprimée avec succès.",
             null,
             \core\output\notification::NOTIFY_SUCCESS
         );
     } catch (Exception $e) {
         redirect(
-            new moodle_url('/mod/hippotrack/manage_datasets.php', array('cmid' => $cmid)),
+            new moodle_url('/mod/foetapp360/manage_datasets.php', array('cmid' => $cmid)),
             "Une erreur est survenue lors de la suppression de l'entrée.",
             null,
             \core\output\notification::NOTIFY_ERROR
@@ -138,11 +138,11 @@ function render_datasets_table($datasets, $context, $cmid, $OUTPUT)
 
         // Actions
         $edit_url = new moodle_url(
-            '/mod/hippotrack/db_form_submission.php',
+            '/mod/foetapp360/db_form_submission.php',
             array('cmid' => $cmid, 'edit' => $dataset->id)
         );
         $delete_url = new moodle_url(
-            '/mod/hippotrack/manage_datasets.php',
+            '/mod/foetapp360/manage_datasets.php',
             array('cmid' => $cmid, 'delete' => $dataset->id, 'sesskey' => sesskey())
         );
 
@@ -214,8 +214,8 @@ echo '<div class="dataset-management">
 
 
 
-echo '<div class="hippotrack-license-notice">
- <img src="' . new moodle_url('/mod/hippotrack/pix/licence-cc-by-nc.png') . '" alt="CC BY-NC License">
+echo '<div class="foetapp360-license-notice">
+ <img src="' . new moodle_url('/mod/foetapp360/pix/licence-cc-by-nc.png') . '" alt="CC BY-NC License">
  <br>
  FoetApp360\'s images © 2024 by Pierre-Yves Rabattu is licensed under CC BY-NC 4.0. 
  To view a copy of this license, visit 
@@ -226,17 +226,17 @@ echo '<div class="hippotrack-license-notice">
 if (!$showform && !$editing) {
     // Display datasets table
     echo html_writer::tag('h2', "Liste des ensembles de données");
-    $datasets = $DB->get_records('hippotrack_datasets', array(), 'id ASC');
+    $datasets = $DB->get_records('foetapp360_datasets', array(), 'id ASC');
     echo render_datasets_table($datasets, $context, $cmid, $OUTPUT);
 
     // Add new entry button
-    $addnew_url = new moodle_url('/mod/hippotrack/db_form_submission.php', array('cmid' => $cmid, 'addnew' => 1));
+    $addnew_url = new moodle_url('/mod/foetapp360/db_form_submission.php', array('cmid' => $cmid, 'addnew' => 1));
     echo $OUTPUT->single_button($addnew_url, "Ajouter une nouvelle entrée", "get");
 } else {
     if ($editing) {
-        redirect(new moodle_url('/mod/hippotrack/db_form_submission.php', array('cmid' => $cmid, 'edit' => $editing)));
+        redirect(new moodle_url('/mod/foetapp360/db_form_submission.php', array('cmid' => $cmid, 'edit' => $editing)));
     } else {
-        redirect(new moodle_url('/mod/hippotrack/db_form_submission.php', array('cmid' => $cmid, 'addnew' => 1)));
+        redirect(new moodle_url('/mod/foetapp360/db_form_submission.php', array('cmid' => $cmid, 'addnew' => 1)));
     }
 }
 echo $OUTPUT->footer();

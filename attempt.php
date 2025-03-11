@@ -25,7 +25,7 @@
 require(__DIR__ . '/../../config.php');
 require_once($CFG->libdir . '/sessionlib.php');
 require_once(__DIR__ . '/locallib.php');
-use mod_hippotrack\image_manager;
+use mod_foetapp360\image_manager;
 
 $cmid = required_param('id', PARAM_INT);
 $session_id = required_param('session_id', PARAM_INT);
@@ -36,20 +36,20 @@ $first_time = optional_param('first_time', 0, PARAM_INT);
 $userid = $USER->id;
 $TOLERANCE = 5;
 
-$cm = get_coursemodule_from_id('hippotrack', $cmid, 0, false, MUST_EXIST);
+$cm = get_coursemodule_from_id('foetapp360', $cmid, 0, false, MUST_EXIST);
 $course = $DB->get_record('course', array('id' => $cm->course), '*', MUST_EXIST);
-$instance = $DB->get_record('hippotrack', array('id' => $cm->instance), '*', MUST_EXIST);
+$instance = $DB->get_record('foetapp360', array('id' => $cm->instance), '*', MUST_EXIST);
 $context = context_module::instance($cm->id);
 
 require_login($course, true, $cm);
-require_capability('mod/hippotrack:attempt', $context);
+require_capability('mod/foetapp360:attempt', $context);
 
 $PAGE->set_cm($cm);
 $PAGE->set_context($context);
-$PAGE->set_url('/mod/hippotrack/attempt.php', array('id' => $cmid));
+$PAGE->set_url('/mod/foetapp360/attempt.php', array('id' => $cmid));
 $PAGE->set_title("Session d'entraînement");
 $PAGE->set_heading("Session d'entraînement");
-$PAGE->requires->css("/mod/hippotrack/styles.css");
+$PAGE->requires->css("/mod/foetapp360/styles.css");
 
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['validate'])) {
     foreach ($_POST as $key => $value) {
@@ -69,7 +69,7 @@ echo $OUTPUT->header();
 
 // 📌 Étape 1 : Sélection de la difficulté
 if (empty($difficulty)) {
-    $_SESSION['hippotrack_session_' . $session_id]['_time_start'] = time();
+    $_SESSION['foetapp360_session_' . $session_id]['_time_start'] = time();
     echo '<div class="foetapp360-info">
         <p><strong>FoetApp360 est un outil interactif conçu pour vous aider à mieux comprendre les positions variétés de présentations fœtales</strong>. En vous entraînant ici, vous pourrez suivre <strong>vos statistiques personnelles</strong> pour identifier vos points forts et les notions à améliorer et recevrez des feedbacks après chaque exercice.</p>
 
@@ -91,8 +91,8 @@ if (empty($difficulty)) {
 
     echo html_writer::tag('h3', "Choisissez votre niveau de difficulté");
 
-    $easy_url = new moodle_url('/mod/hippotrack/attempt.php', array('id' => $cmid, 'session_id' => $session_id, 'difficulty' => 'easy'));
-    $hard_url = new moodle_url('/mod/hippotrack/attempt.php', array('id' => $cmid, 'session_id' => $session_id, 'difficulty' => 'hard'));
+    $easy_url = new moodle_url('/mod/foetapp360/attempt.php', array('id' => $cmid, 'session_id' => $session_id, 'difficulty' => 'easy'));
+    $hard_url = new moodle_url('/mod/foetapp360/attempt.php', array('id' => $cmid, 'session_id' => $session_id, 'difficulty' => 'hard'));
 
     echo html_writer::start_div('difficulty-selection');
     echo $OUTPUT->single_button($easy_url, 'Facile', 'get');
@@ -110,7 +110,7 @@ $possible_inputs = ($difficulty === 'easy') ?
 // GET toutes les vue antérieures
 $image_manager_anterieur = new image_manager('vue_anterieure');
 $sql = "SELECT id, inclinaison, vue_anterieure 
-        FROM {hippotrack_datasets} 
+        FROM {foetapp360_datasets} 
         ORDER BY inclinaison ASC, rotation ASC";
 $vue_anterieur_img_names = $DB->get_records_sql($sql);
 $image_database_vue_anterieur = [];
@@ -131,7 +131,7 @@ $nb_vue_anterieur = max(0, count($image_database_vue_anterieur) - 1);
 // GET toutes les vue latérales
 $image_manager_laterale = new image_manager('vue_laterale');
 $sql = "SELECT id, inclinaison, vue_laterale 
-        FROM {hippotrack_datasets} 
+        FROM {foetapp360_datasets} 
         ORDER BY inclinaison ASC, rotation ASC";
 $vue_laterale_img_names = $DB->get_records_sql($sql);
 $image_database_vue_laterale = [];
@@ -159,7 +159,7 @@ $image_database_review = [
     "vue_laterale" => $image_database_vue_laterale_review
 ];
 
-$PAGE->requires->js_call_amd('mod_hippotrack/attempt', 'init');
+$PAGE->requires->js_call_amd('mod_foetapp360/attempt', 'init');
 
 // Champ index pour images.
 echo '<input type="hidden" name="max_vue_anterieur" data-values="' . $nb_vue_anterieur . '">';
@@ -170,13 +170,13 @@ echo '<div id="image_database" data-values="' . htmlspecialchars(json_encode($im
 if ($submitted) {
     echo html_writer::tag('h3', "Revue de l'exercice :");
     $is_correct = true;
-    $dataset = $DB->get_record_sql("SELECT * FROM {hippotrack_datasets} WHERE id = :dataset_id", array('dataset_id' => $_POST['dataset_id']));
+    $dataset = $DB->get_record_sql("SELECT * FROM {foetapp360_datasets} WHERE id = :dataset_id", array('dataset_id' => $_POST['dataset_id']));
 
     // List Selector
-    echo '<div class="hippotrack-tabs">';
-    echo '<ul class="hippotrack-tab-list">';
+    echo '<div class="foetapp360-tabs">';
+    echo '<ul class="foetapp360-tab-list">';
     foreach ($possible_inputs as $field) {
-        echo '<li class="hippotrack-tab ' . ($_POST['input'] === $field ? 'active' : '') . '" data-target="#' . $field . '_container">' . ucfirst(strtolower(str_replace('_', ' ', $field))) . '</li>';
+        echo '<li class="foetapp360-tab ' . ($_POST['input'] === $field ? 'active' : '') . '" data-target="#' . $field . '_container">' . ucfirst(strtolower(str_replace('_', ' ', $field))) . '</li>';
     }
     echo '</ul">';
     echo '</div>';
@@ -204,7 +204,7 @@ if ($submitted) {
 
             // Feedback
             $feedback = $DB->get_record_sql(
-                "SELECT * FROM {hippotrack_feedback} 
+                "SELECT * FROM {foetapp360_feedback} 
                 WHERE input_dataset = :input_dataset 
                 AND expected_dataset = :expected_dataset
                 AND input_inclinaison = :input_inclinaison
@@ -216,29 +216,29 @@ if ($submitted) {
                     'expected_inclinaison' => $dataset->inclinaison
                 )
             );
-            $feedback_data = $DB->get_record_sql("SELECT * FROM {hippotrack_feedback_data} WHERE id = :id", array('id' => $feedback->id_feedback));
+            $feedback_data = $DB->get_record_sql("SELECT * FROM {foetapp360_feedback_data} WHERE id = :id", array('id' => $feedback->id_feedback));
 
             // Affichage
             $interior_image = ($field === 'partogramme') ? 'partogramme_interieur' : 'schema_simplifie_interieur';
             $background_image = ($field === 'partogramme') ? 'null' : 'bassin';
             $contour_class = ($field === 'partogramme') ? 'partogramme_contour' : 'schema_simplifie_contour';
 
-            echo '<div class="rotation_hippotrack_container attempt_container" id="' . $field . '_container">';
+            echo '<div class="rotation_foetapp360_container attempt_container" id="' . $field . '_container">';
             echo html_writer::tag('h4', $label);
             echo html_writer::tag('p', ($is_current_correct ? ' La réponse est correcte. ✅' : ' La réponse est incorrecte. ❌'));
             echo html_writer::tag('p', $feedback_data->feedback);
-            echo '<div class="hippotrack_container" data-schema-type="' . $field . '">';
+            echo '<div class="foetapp360_container" data-schema-type="' . $field . '">';
 
             if ($background_image !== 'null') {
-                echo '<img class="' . $background_image . '" src="' . new moodle_url('/mod/hippotrack/pix/' . $background_image . '.png') . '">';
+                echo '<img class="' . $background_image . '" src="' . new moodle_url('/mod/foetapp360/pix/' . $background_image . '.png') . '">';
             }
 
-            echo '<img class="' . $contour_class . '" src="' . new moodle_url('/mod/hippotrack/pix/' . $contour_class . '.png') . '">';
-            echo '<img class="' . $interior_image . '" src="' . new moodle_url('/mod/hippotrack/pix/' . $interior_image . '.png') . '">';
-            echo '</div>';  // Close .hippotrack_container
+            echo '<img class="' . $contour_class . '" src="' . new moodle_url('/mod/foetapp360/pix/' . $contour_class . '.png') . '">';
+            echo '<img class="' . $interior_image . '" src="' . new moodle_url('/mod/foetapp360/pix/' . $interior_image . '.png') . '">';
+            echo '</div>';  // Close .foetapp360_container
 
             // Rotation & Inclination Sliders
-            echo '<div class="hippotrack_sliders">';
+            echo '<div class="foetapp360_sliders">';
             // Si bloqué, on ajoute un input hidden pour transmettre l'information
             echo '<input type="range" class="rotate-slider" name="rotation_' . $field . '" min="0" max="360" 
                 value="' . $student_rotation . '"style="display: none;"><br>';
@@ -247,7 +247,7 @@ if ($submitted) {
                 value="' . $student_inclinaison_raw . '"style="display: none;"><br>';
             echo '</div>';
 
-            echo '</div>';  // Close .rotation-hippotrack_container
+            echo '</div>';  // Close .rotation-foetapp360_container
         } else {
             // 🔥 Cas normal (name, sigle, vue_anterieure, vue_laterale)
             $student_answer = required_param($field, PARAM_RAW);
@@ -265,13 +265,13 @@ if ($submitted) {
                 // **🆕 Select Background Image Based on $field**
                 $background_image = ($field === 'vue_anterieure') ? 'bassin_anterieur.png' : 'bassin_laterale.png';
 
-                echo '<div class="image_cycling_hippotrack_container attempt_container" data-schema-type="' . $field . '" data-prefix="' . $prefix . '" id="' . $field . '_container">';
+                echo '<div class="image_cycling_foetapp360_container attempt_container" data-schema-type="' . $field . '" data-prefix="' . $prefix . '" id="' . $field . '_container">';
                 echo html_writer::tag('h4', $label);
                 echo html_writer::tag('p', ($is_current_correct ? ' La réponse est correcte. ✅' : ' La réponse est incorrecte. ❌'));
-                echo '<div class="hippotrack_container">';
+                echo '<div class="foetapp360_container">';
                 // 🆕 Dynamically set background image
-                echo '<img class="hippotrack_background-image_' . $field . '" src="' . new moodle_url('/mod/hippotrack/pix/' . $background_image) . '">';
-                echo '<img class="hippotrack_attempt_cycling-image_' . $field . '" src="' . $image_path . '">';
+                echo '<img class="foetapp360_background-image_' . $field . '" src="' . new moodle_url('/mod/foetapp360/pix/' . $background_image) . '">';
+                echo '<img class="foetapp360_attempt_cycling-image_' . $field . '" src="' . $image_path . '">';
                 echo '</div>';
                 echo '</div>';
             }
@@ -299,21 +299,21 @@ if ($submitted) {
 
     // 📌 Enregistrer les réponses de l'étudiant dans la base de données
     // Vérifier si une tentative existe déjà, sinon l'initialiser
-    if (!isset($_SESSION['hippotrack_session_' . $session_id])) {
-        $_SESSION['hippotrack_session_' . $session_id] = [];
+    if (!isset($_SESSION['foetapp360_session_' . $session_id])) {
+        $_SESSION['foetapp360_session_' . $session_id] = [];
     }
 
     // Incrémente le nombre de question
-    if (!isset($_SESSION['hippotrack_session_' . $session_id]['_sumgrades'])) {
+    if (!isset($_SESSION['foetapp360_session_' . $session_id]['_sumgrades'])) {
         // Si la variable n'existe pas, on l'initialise à 1
         if ($is_correct) {
-            $_SESSION['hippotrack_session_' . $session_id]['_sumgrades'] = 1;
+            $_SESSION['foetapp360_session_' . $session_id]['_sumgrades'] = 1;
         } else {
-            $_SESSION['hippotrack_session_' . $session_id]['_sumgrades'] = 0;
+            $_SESSION['foetapp360_session_' . $session_id]['_sumgrades'] = 0;
         }
     } else {
         if ($is_correct) {
-            $_SESSION['hippotrack_session_' . $session_id]['_sumgrades']++;
+            $_SESSION['foetapp360_session_' . $session_id]['_sumgrades']++;
         }
     }
 
@@ -323,10 +323,10 @@ if ($submitted) {
     ];
 
     // Ajouter l’entrée à la session
-    $_SESSION['hippotrack_session_' . $session_id]['attempts'][] = $new_attempt;
+    $_SESSION['foetapp360_session_' . $session_id]['attempts'][] = $new_attempt;
 
     // Récupérer l'index de la dernière entrée ajoutée
-    $last_index = count($_SESSION['hippotrack_session_' . $session_id]['attempts']) - 1;
+    $last_index = count($_SESSION['foetapp360_session_' . $session_id]['attempts']) - 1;
 
     // Compléter l'entrée avec les réponses de l'utilisateur
     foreach ($possible_inputs as $field) {
@@ -339,10 +339,10 @@ if ($submitted) {
             $student_answer = required_param($field, PARAM_RAW); // Récupère la réponse
         }
         // Ajouter la réponse de l'utilisateur au dernier enregistrement
-        $_SESSION['hippotrack_session_' . $session_id]['attempts'][$last_index][$field] = $student_answer;
+        $_SESSION['foetapp360_session_' . $session_id]['attempts'][$last_index][$field] = $student_answer;
     }
-    $_SESSION['hippotrack_session_' . $session_id]['attempts'][$last_index]['given_input'] = $_POST['input'];
-    $_SESSION['hippotrack_session_' . $session_id]['attempts'][$last_index]['is_correct'] = (int) $is_correct;
+    $_SESSION['foetapp360_session_' . $session_id]['attempts'][$last_index]['given_input'] = $_POST['input'];
+    $_SESSION['foetapp360_session_' . $session_id]['attempts'][$last_index]['is_correct'] = (int) $is_correct;
 
     // Sauvegarde la réponse actuelle
     $student_data = array_filter($_POST, function ($key) {
@@ -350,8 +350,8 @@ if ($submitted) {
     }, ARRAY_FILTER_USE_KEY);
 
     // 📌 Boutons "Nouvelle Question" et "Terminer"
-    $new_question_url = new moodle_url('/mod/hippotrack/attempt.php', array('id' => $cmid, 'session_id' => $session_id, 'difficulty' => $difficulty, 'new_question' => 1));
-    $finish_url = new moodle_url('/mod/hippotrack/validate.php', array('id' => $cmid, 'session_id' => $session_id));
+    $new_question_url = new moodle_url('/mod/foetapp360/attempt.php', array('id' => $cmid, 'session_id' => $session_id, 'difficulty' => $difficulty, 'new_question' => 1));
+    $finish_url = new moodle_url('/mod/foetapp360/validate.php', array('id' => $cmid, 'session_id' => $session_id));
 
     echo $OUTPUT->single_button($new_question_url, 'Nouvelle Question', 'get');
     echo $OUTPUT->single_button($finish_url, 'Terminer', 'get');
@@ -359,12 +359,12 @@ if ($submitted) {
     echo $OUTPUT->footer();
     exit;
 } else {
-    $random_dataset = $DB->get_record_sql("SELECT * FROM {hippotrack_datasets} ORDER BY RAND() LIMIT 1"); // TODO A regarder pk random un peu bizarre
+    $random_dataset = $DB->get_record_sql("SELECT * FROM {foetapp360_datasets} ORDER BY RAND() LIMIT 1"); // TODO A regarder pk random un peu bizarre
     $random_input = $possible_inputs[array_rand($possible_inputs)]; // get random input from dataset
 
     // Enregistre la difficulté dans la session.
-    if (!isset($_SESSION['hippotrack_session_' . $session_id]['_difficulty'])) {
-        $_SESSION['hippotrack_session_' . $session_id]['_difficulty'] = $difficulty;
+    if (!isset($_SESSION['foetapp360_session_' . $session_id]['_difficulty'])) {
+        $_SESSION['foetapp360_session_' . $session_id]['_difficulty'] = $difficulty;
     }
 
     echo html_writer::tag('h3', "Trouvez les bonnes correspondances pour :");
@@ -378,15 +378,15 @@ if ($submitted) {
     echo html_writer::empty_tag('input', array('type' => 'hidden', 'name' => 'submitted', 'value' => '1'));
 
     // List Selector
-    echo '<div class="hippotrack-tabs">';
-    echo '<ul class="hippotrack-tab-list">';
+    echo '<div class="foetapp360-tabs">';
+    echo '<ul class="foetapp360-tab-list">';
     foreach ($possible_inputs as $field) {
-        echo '<li class="hippotrack-tab ' . ($random_input === $field ? 'active' : '') . '" data-target="#' . $field . '_container">' . ucfirst(strtolower(str_replace('_', ' ', $field))) . '</li>';
+        echo '<li class="foetapp360-tab ' . ($random_input === $field ? 'active' : '') . '" data-target="#' . $field . '_container">' . ucfirst(strtolower(str_replace('_', ' ', $field))) . '</li>';
     }
     echo '</ul">';
     echo '</div>';
-    echo '<div class="hippotrack-license-notice">
-    <img src="' . new moodle_url('/mod/hippotrack/pix/licence-cc-by-nc.png') . '" alt="CC BY-NC License">
+    echo '<div class="foetapp360-license-notice">
+    <img src="' . new moodle_url('/mod/foetapp360/pix/licence-cc-by-nc.png') . '" alt="CC BY-NC License">
     <br>
     FoetApp360\'s images © 2024 by Pierre-Yves Rabattu is licensed under CC BY-NC 4.0. 
     To view a copy of this license, visit 
@@ -404,20 +404,20 @@ if ($submitted) {
             $background_image = ($field === 'partogramme') ? 'null' : 'bassin';
             $contour_class = ($field === 'partogramme') ? 'partogramme_contour' : 'schema_simplifie_contour';
 
-            echo '<div class="rotation_hippotrack_container attempt_container" id="' . $field . '_container">';
+            echo '<div class="rotation_foetapp360_container attempt_container" id="' . $field . '_container">';
             echo html_writer::tag('h4', $label);
-            echo '<div class="hippotrack_container" data-schema-type="' . $field . '">';
+            echo '<div class="foetapp360_container" data-schema-type="' . $field . '">';
 
             if ($background_image !== 'null') {
-                echo '<img class="' . $background_image . '" src="' . new moodle_url('/mod/hippotrack/pix/' . $background_image . '.png') . '">';
+                echo '<img class="' . $background_image . '" src="' . new moodle_url('/mod/foetapp360/pix/' . $background_image . '.png') . '">';
             }
 
-            echo '<img class="' . $contour_class . '" src="' . new moodle_url('/mod/hippotrack/pix/' . $contour_class . '.png') . '">';
-            echo '<img class="' . $interior_image . '" src="' . new moodle_url('/mod/hippotrack/pix/' . $interior_image . '.png') . '">';
-            echo '</div>';  // Close .hippotrack_container
+            echo '<img class="' . $contour_class . '" src="' . new moodle_url('/mod/foetapp360/pix/' . $contour_class . '.png') . '">';
+            echo '<img class="' . $interior_image . '" src="' . new moodle_url('/mod/foetapp360/pix/' . $interior_image . '.png') . '">';
+            echo '</div>';  // Close .foetapp360_container
 
             // Rotation & Inclination Sliders
-            echo '<div class="hippotrack_sliders">';
+            echo '<div class="foetapp360_sliders">';
             if (!$is_given_input) {
                 echo '<label for="rotate-slider">Rotation:</label>';
             }
@@ -438,7 +438,7 @@ if ($submitted) {
             }
             echo '</div>';
 
-            echo '</div>';  // Close .rotation-hippotrack_container
+            echo '</div>';  // Close .rotation-foetapp360_container
         } elseif ($field === 'vue_anterieure' || $field === 'vue_laterale') {
             $random_inclinaison_index = rand(0, count($image_database[$field])-1); // TODO
             $inclinaison_keys = array_keys($image_database[$field]);
@@ -451,25 +451,25 @@ if ($submitted) {
             // **🆕 Select Background Image Based on $field**
             $background_image = ($field === 'vue_anterieure') ? 'bassin_anterieur.png' : 'bassin_laterale.png';
 
-            echo '<div class="image_cycling_hippotrack_container attempt_container" data-schema-type="' . $field . '" data-prefix="' . $prefix . '" id="' . $field . '_container">';
-            echo '<input type="hidden" class="hippotrack_field" data-values="' . $field . '">';
+            echo '<div class="image_cycling_foetapp360_container attempt_container" data-schema-type="' . $field . '" data-prefix="' . $prefix . '" id="' . $field . '_container">';
+            echo '<input type="hidden" class="foetapp360_field" data-values="' . $field . '">';
             echo html_writer::tag('h4', $label);
 
-            echo '<div class="hippotrack_container">';
+            echo '<div class="foetapp360_container">';
             // 🆕 Dynamically set background image
-            echo '<img class="hippotrack_background-image_' . $field . '" src="' . new moodle_url('/mod/hippotrack/pix/' . $background_image) . '">';
-            echo '<img class="hippotrack_attempt_cycling-image_' . $field . '" src="' . $image_path . '">';
+            echo '<img class="foetapp360_background-image_' . $field . '" src="' . new moodle_url('/mod/foetapp360/pix/' . $background_image) . '">';
+            echo '<img class="foetapp360_attempt_cycling-image_' . $field . '" src="' . $image_path . '">';
             echo '</div>';
 
 
-            echo '<div class="hippotrack_container button-hippotrack_container">';
+            echo '<div class="foetapp360_container button-foetapp360_container">';
             if (!$is_given_input) {
-                echo '<button type="button" class="hippotrack_attempt_prev-btn">←</button>';
-                echo '<button type="button" class="hippotrack_attempt_next-btn">→</button>';
-                echo '<button type="button" class="hippotrack_attempt_toggle_btn">🔄 Toggle bf/mf</button>'; // Toggle button
+                echo '<button type="button" class="foetapp360_attempt_prev-btn">←</button>';
+                echo '<button type="button" class="foetapp360_attempt_next-btn">→</button>';
+                echo '<button type="button" class="foetapp360_attempt_toggle_btn">🔄 Toggle bf/mf</button>'; // Toggle button
             }
-            echo '<input type="hidden" class="hippotrack_attempt_selected_position" name="' . $field . '" value="' . $image_path . '">';
-            echo '<input type="hidden" class="hippotrack_attempt_toggle_btn_value" name="' . $field . '" value="' . $inclinaison . '">';
+            echo '<input type="hidden" class="foetapp360_attempt_selected_position" name="' . $field . '" value="' . $image_path . '">';
+            echo '<input type="hidden" class="foetapp360_attempt_toggle_btn_value" name="' . $field . '" value="' . $inclinaison . '">';
             echo '</div>';
 
             echo '</div>';
@@ -494,12 +494,12 @@ if ($submitted) {
     }
 
     // Incrémente le nombre de question
-    if (!isset($_SESSION['hippotrack_session_' . $session_id]['_questionsdone'])) {
+    if (!isset($_SESSION['foetapp360_session_' . $session_id]['_questionsdone'])) {
         // Si la variable n'existe pas, on l'initialise à 1
-        $_SESSION['hippotrack_session_' . $session_id]['_questionsdone'] = 1;
+        $_SESSION['foetapp360_session_' . $session_id]['_questionsdone'] = 1;
     } else {
         // Si la variable existe, on l'incrémente de 1
-        $_SESSION['hippotrack_session_' . $session_id]['_questionsdone']++;
+        $_SESSION['foetapp360_session_' . $session_id]['_questionsdone']++;
     }
 
 

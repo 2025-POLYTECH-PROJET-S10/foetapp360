@@ -1,8 +1,8 @@
 <?php
-// Fichier : mod/hippotrack/stats.php
+// Fichier : mod/foetapp360/stats.php
 
 require_once('../../config.php');
-require_once($CFG->dirroot . '/mod/hippotrack/classes/stats_manager.php');
+require_once($CFG->dirroot . '/mod/foetapp360/classes/stats_manager.php');
 
 global $DB, $PAGE, $OUTPUT, $USER;
 
@@ -10,33 +10,33 @@ global $DB, $PAGE, $OUTPUT, $USER;
 $cmid = required_param('id', PARAM_INT);
 $userid = optional_param('userid', 0, PARAM_INT);
 
-// Récupération de l'instance hippotrack et vérification
-$cm = get_coursemodule_from_id('hippotrack', $cmid, 0, false, MUST_EXIST);
+// Récupération de l'instance foetapp360 et vérification
+$cm = get_coursemodule_from_id('foetapp360', $cmid, 0, false, MUST_EXIST);
 $course = $DB->get_record('course', array('id' => $cm->course), '*', MUST_EXIST);
-$hippotrack = $DB->get_record('hippotrack', array('id' => $cm->instance), '*', MUST_EXIST);
-// $course = $DB->get_record('course', ['id' => $hippotrack->course], '*', MUST_EXIST);
+$foetapp360 = $DB->get_record('foetapp360', array('id' => $cm->instance), '*', MUST_EXIST);
+// $course = $DB->get_record('course', ['id' => $foetapp360->course], '*', MUST_EXIST);
 require_login($course);
 $context = context_course::instance($course->id);
-require_capability('mod/hippotrack:viewstats', $context);
+require_capability('mod/foetapp360:viewstats', $context);
 
 // Configuration de la page
-$PAGE->set_url('/mod/hippotrack/stats.php', ['id' => $cmid]);
-$PAGE->set_title(get_string('stats', 'mod_hippotrack'));
+$PAGE->set_url('/mod/foetapp360/stats.php', ['id' => $cmid]);
+$PAGE->set_title(get_string('stats', 'mod_foetapp360'));
 $PAGE->set_heading($course->fullname);
 
 // Instanciation du gestionnaire de statistiques
-$stats_manager = new \mod_hippotrack\stats_manager($DB);
+$stats_manager = new \mod_foetapp360\stats_manager($DB);
 
 // Récupération des statistiques globales
-$globalstats = $stats_manager->get_global_stats($hippotrack->id);
+$globalstats = $stats_manager->get_global_stats($foetapp360->id);
 
 // Récupération de la liste des étudiants pour le menu déroulant
 $students = $DB->get_records_sql(
     "SELECT DISTINCT u.id, u.firstname, u.lastname
      FROM {user} u
-     JOIN {hippotrack_session} s ON u.id = s.userid
-     WHERE s.id_hippotrack = :hippotrackid",
-    ['hippotrackid' => $hippotrack->id]
+     JOIN {foetapp360_session} s ON u.id = s.userid
+     WHERE s.id_foetapp360 = :foetapp360id",
+    ['foetapp360id' => $foetapp360->id]
 );
 
 function get_user_fullname($user) {
@@ -45,7 +45,7 @@ function get_user_fullname($user) {
 
 // Affichage
 echo $OUTPUT->header();
-echo $OUTPUT->heading(get_string('stats', 'mod_hippotrack'));
+echo $OUTPUT->heading(get_string('stats', 'mod_foetapp360'));
 
 
 /* -------------------------------------------------------------------------- */
@@ -56,9 +56,9 @@ echo $OUTPUT->heading(get_string('stats', 'mod_hippotrack'));
 if (empty($globalstats) || $globalstats['total_attempts'] <= 0) {
     // Display informative message instead of throwing an exception
     echo html_writer::start_tag('div', ['class' => 'no-data-message alert alert-info']); //  Using Moodle's alert styling
-    echo html_writer::tag('h4', get_string('nodataavailabletitle', 'mod_hippotrack')); // Use a language string
-    echo html_writer::tag('p', get_string('nodataavailabletext', 'mod_hippotrack')); // Use a language string
-    echo html_writer::tag('p', get_string('nodataavailablehelp', 'mod_hippotrack')); // Use a language string, optional.
+    echo html_writer::tag('h4', get_string('nodataavailabletitle', 'mod_foetapp360')); // Use a language string
+    echo html_writer::tag('p', get_string('nodataavailabletext', 'mod_foetapp360')); // Use a language string
+    echo html_writer::tag('p', get_string('nodataavailablehelp', 'mod_foetapp360')); // Use a language string, optional.
     echo html_writer::end_tag('div');
 
     echo $OUTPUT->footer();
@@ -68,7 +68,7 @@ if (empty($globalstats) || $globalstats['total_attempts'] <= 0) {
 
 // Statistiques globales
 echo html_writer::start_tag('div', ['class' => 'global-stats']);
-echo html_writer::tag('h3', get_string('globalstats', 'mod_hippotrack'));
+echo html_writer::tag('h3', get_string('globalstats', 'mod_foetapp360'));
 echo html_writer::tag('p', 'Nombre total d’étudiants : ' . ($globalstats['total_students'] ?? 0));
 echo html_writer::tag('p', 'Taux de réussite : ' . (($globalstats['success_rate']/$globalstats['total_attempts']) ?? 0)*100 . '%');
 echo html_writer::end_tag('div');
@@ -77,11 +77,11 @@ echo html_writer::end_tag('div');
 /*                             DEBUT TABLEAU EXOS                             */
 /* -------------------------------------------------------------------------- */
 // Récupérer les jeux de données corrects
-$correct_datasets = $DB->get_records('hippotrack_datasets', null, '', '*');
+$correct_datasets = $DB->get_records('foetapp360_datasets', null, '', '*');
 
 // Récupérer les statistiques par difficulté et nom de dataset
-$stats_facile = $stats_manager->get_dataset_stats_by_difficulty($hippotrack->id, 'easy');
-$stats_difficile = $stats_manager->get_dataset_stats_by_difficulty($hippotrack->id, 'hard');
+$stats_facile = $stats_manager->get_dataset_stats_by_difficulty($foetapp360->id, 'easy');
+$stats_difficile = $stats_manager->get_dataset_stats_by_difficulty($foetapp360->id, 'hard');
 
 /* -------------------------------------------------------------------------- */
 /*          GRAPHIQUES PAR TYPE D'INCLINAISON (REGROUPÉS PAR DATASET)         */
@@ -421,9 +421,9 @@ foreach ($inclinaison_types as $type => $description) {
 echo html_writer::start_tag('table', array('class' => 'table table-striped'));
 echo html_writer::start_tag('thead');
 echo html_writer::tag('tr',
-    html_writer::tag('th', get_string('student', 'mod_hippotrack')) .
-    html_writer::tag('th', get_string('attempts', 'mod_hippotrack')) .
-    html_writer::tag('th', get_string('successrate', 'mod_hippotrack')) .
+    html_writer::tag('th', get_string('student', 'mod_foetapp360')) .
+    html_writer::tag('th', get_string('attempts', 'mod_foetapp360')) .
+    html_writer::tag('th', get_string('successrate', 'mod_foetapp360')) .
     html_writer::tag('th', '')
 );
 echo html_writer::end_tag('thead');
@@ -431,7 +431,7 @@ echo html_writer::start_tag('tbody');
 
 foreach ($students as $student) {
     // Récupération des statistiques de l'étudiant
-    $studentstats = $stats_manager->get_student_stats( $hippotrack->id, $student->id);
+    $studentstats = $stats_manager->get_student_stats( $foetapp360->id, $student->id);
     $attempts = $studentstats['total_attempts'] ?? 0;
     
     // Récupération des données de performance pour calculer le taux de réussite
@@ -443,8 +443,8 @@ foreach ($students as $student) {
 
     // Création d'un bouton pour afficher les statistiques complètes de l'étudiant
     // Redirection vers la page "mystats.php" avec l'ID de l'étudiant passé en paramètre
-    $url = new moodle_url('/mod/hippotrack/mystats.php', ['id' => $cmid, 'userid' => $student->id]);
-    $button = html_writer::link($url, get_string('showstats', 'mod_hippotrack'), ['class' => 'btn btn-primary']);
+    $url = new moodle_url('/mod/foetapp360/mystats.php', ['id' => $cmid, 'userid' => $student->id]);
+    $button = html_writer::link($url, get_string('showstats', 'mod_foetapp360'), ['class' => 'btn btn-primary']);
 
     echo html_writer::start_tag('tr');
     echo html_writer::tag('td', get_user_fullname($student));

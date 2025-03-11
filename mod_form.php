@@ -15,9 +15,9 @@
 // along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
 
 /**
- * The main hippotrack configuration form.
+ * The main foetapp360 configuration form.
  *
- * @package     mod_hippotrack
+ * @package     mod_foetapp360
  * @copyright   2025 Lionel Di Marco
  * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -29,11 +29,11 @@ require_once($CFG->dirroot . '/course/moodleform_mod.php');
 /**
  * Module instance settings form.
  *
- * @package     mod_hippotrack
+ * @package     mod_foetapp360
  * @copyright   2025 Lionel Di Marco
  * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class mod_hippotrack_mod_form extends moodleform_mod
+class mod_foetapp360_mod_form extends moodleform_mod
 {
     /**
      * Defines forms elements
