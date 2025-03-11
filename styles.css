@@ -283,15 +283,12 @@ select:focus {
     max-height: 150px;
     z-index: 2;
     object-fit: contain;
-    transform: translate(70%, -28%);
+    transform: translate(-35%, -16%);
 }
 
 .foetapp360_background-image_vue_laterale {
     height: 100%;
     width: auto;
-    left: 50%;
-    /* transform: translateX(-50%);
-    transform: translate(-50%, 100%); */
     /* Centers both horizontally and vertically */
 }
 
