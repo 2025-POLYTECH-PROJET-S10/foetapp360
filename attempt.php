@@ -413,10 +413,6 @@ if ($submitted) {
         $readonly = $is_given_input ? 'readonly' : '';
 
         if ($field === 'partogramme' || $field === 'schema_simplifie') {
-            $random_inclinaison_index = rand(0, count($image_database[$field])-1);
-            $inclinaison_keys = array_keys($image_database[$field]);
-            $random_inclinaison = $inclinaison_keys[$random_inclinaison_index];
-
             $interior_image = ($field === 'partogramme') ? 'partogramme_interieur' : 'schema_simplifie_interieur';
             $background_image = ($field === 'partogramme') ? 'null' : 'bassin';
             $contour_class = ($field === 'partogramme') ? 'partogramme_contour' : 'schema_simplifie_contour';
@@ -440,13 +436,13 @@ if ($submitted) {
             }
             // Si bloqué, on ajoute un input hidden pour transmettre l'information
             echo '<input type="range" class="rotate-slider" name="rotation_' . $field . '" min="0" max="360" 
-                value="' . ($is_given_input ? $random_dataset->rotation : rand(0, 360);) . '" ' . ($is_given_input ? 'style="display: none;"' : '') . '><br>';
+                value="' . ($is_given_input ? $random_dataset->rotation : rand(0, 360)) . '" ' . ($is_given_input ? 'style="display: none;"' : '') . '><br>';
 
             if (!$is_given_input) {
                 echo '<label for="move-axis-slider">Inclinaison:</label>';
             }
             echo '<input type="range" class="move-axis-slider" name="inclinaison_' . $field . '" min="-50" max="50" 
-                value="' . ($is_given_input ? $random_dataset->inclinaison * 50 : $random_inclinaison) . '" ' . ($is_given_input ? 'style="display: none;"' : '') . '><br>';
+                value="' . ($is_given_input ? $random_dataset->inclinaison * 50 : 0) . '" ' . ($is_given_input ? 'style="display: none;"' : '') . '><br>';
 
             // Mandory. If not, will not send values with POST.
             if ($is_given_input) {
