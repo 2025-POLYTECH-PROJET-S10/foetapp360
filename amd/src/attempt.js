@@ -103,6 +103,9 @@ define(['jquery'], function ($) {
                     let currentIndex = images.indexOf(imageActuelle);
                     let correctInclinaison = toggleButtonHiddenInput.attr("value");
                     let imagesBonInclinaison = Object.values(imageDatabase[field[0].dataset.values][correctInclinaison]);
+                    if(currentIndex >= imagesBonInclinaison.length){
+                        currentIndex = imagesBonInclinaison.length-1;
+                    }
                     cyclingImage.attr("src", imagesBonInclinaison[currentIndex]);
                     hiddenInput.val(imagesBonInclinaison[currentIndex]);
                 }

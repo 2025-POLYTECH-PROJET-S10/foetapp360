@@ -216,7 +216,18 @@ if ($submitted) {
                     'expected_inclinaison' => $dataset->inclinaison
                 )
             );
-            $feedback_data = $DB->get_record_sql("SELECT * FROM {hippotrack_feedback_data} WHERE id = :id", array('id' => $feedback->id_feedback));
+            $feedback_data = 0;
+            if(!$feedback){
+                if($is_current_correct){
+                    $feedback_data = $DB->get_record_sql("SELECT * FROM {hippotrack_feedback_data} WHERE id = :id", array('id' => 1));
+                }
+                else{
+                    $feedback_data = $DB->get_record_sql("SELECT * FROM {hippotrack_feedback_data} WHERE id = :id", array('id' => 5));
+                }
+            }
+            else{
+                $feedback_data = $DB->get_record_sql("SELECT * FROM {hippotrack_feedback_data} WHERE id = :id", array('id' => $feedback->id_feedback));
+            }
 
             // Affichage
             $interior_image = ($field === 'partogramme') ? 'partogramme_interieur' : 'schema_simplifie_interieur';
@@ -469,7 +480,7 @@ if ($submitted) {
                 echo '<button type="button" class="hippotrack_attempt_toggle_btn">🔄 Toggle bf/mf</button>'; // Toggle button
             }
             echo '<input type="hidden" class="hippotrack_attempt_selected_position" name="' . $field . '" value="' . $image_path . '">';
-            echo '<input type="hidden" class="hippotrack_attempt_toggle_btn_value" name="' . $field . '" value="' . $inclinaison . '">';
+            echo '<input type="hidden" class="hippotrack_attempt_toggle_btn_value" name="' . $field . '_inclinaison" value="' . $inclinaison . '">';
             echo '</div>';
 
             echo '</div>';

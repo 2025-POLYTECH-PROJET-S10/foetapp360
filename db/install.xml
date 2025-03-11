@@ -68,8 +68,8 @@
         <FIELD NAME="sigle" TYPE="char" LENGTH="255" NOTNULL="true" COMMENT="Sigle de la position"/>
         <FIELD NAME="partogram" TYPE="text" NOTNULL="false" COMMENT="Réponse de l'étudiant: inclinaison et rotation du partogramme"/>
         <FIELD NAME="schema_simplifie" TYPE="text" NOTNULL="false" COMMENT="Réponse de l'étudiant: inclinaison et rotation du schema simplifie"/>
-        <FIELD NAME="vue_anterieure" TYPE="char" LENGTH="255" NOTNULL="true" COMMENT="Nom du fichier image de la vue antérieure"/>
-        <FIELD NAME="vue_laterale" TYPE="char" LENGTH="255" NOTNULL="true" COMMENT="Nom du fichier image de la vue latérale"/>
+        <FIELD NAME="vue_anterieure" TYPE="text" NOTNULL="true" COMMENT="Nom du fichier image de la vue antérieure"/>
+        <FIELD NAME="vue_laterale" TYPE="text" NOTNULL="true" COMMENT="Nom du fichier image de la vue latérale"/>
         <FIELD NAME="given_input" TYPE="char" LENGTH="255" NOTNULL="true" COMMENT="name/sigle/partogram/schema_simplifie/vue_anterieur/vue_laterale"/>
         <FIELD NAME="is_correct" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" COMMENT="Indique si l'élément est sélectionné (0 = non, 1 = oui)"/>
       </FIELDS>
