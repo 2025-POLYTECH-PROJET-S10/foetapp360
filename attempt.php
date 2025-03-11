@@ -482,7 +482,7 @@ if ($submitted) {
                 echo '<button type="button" class="foetapp360_attempt_toggle_btn">🔄 Changer L\'inclinaison'; // Toggle button
             }
             echo '<input type="hidden" class="foetapp360_attempt_selected_position" name="' . $field . '" value="' . $image_path . '">';
-            echo '<input type="hidden" class="foetapp360_attempt_toggle_btn_value" name="' . $field . '_inclinaison" value="' . $inclinaison . '">';
+            echo '<input type="hidden" class="foetapp360_attempt_toggle_btn_value" name="' . $field . '_inclinaison" value="' . $random_inclinaison . '">';
             echo '</div>';
 
             echo '</div>';
