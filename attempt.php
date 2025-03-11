@@ -189,6 +189,9 @@ if ($submitted) {
             $student_inclinaison_raw = required_param("inclinaison_$field", PARAM_RAW);
             $student_inclinaison = get_correct_inclinaison($student_inclinaison_raw);
             $student_rotation = required_param("rotation_$field", PARAM_RAW);
+            if($student_rotation == 360){
+                $student_rotation = 0;
+            }
 
             $input_dataset = get_dataset_from_inclinaison_rotation($student_inclinaison, $student_rotation);
             if ($student_inclinaison != $dataset->inclinaison || get_correct_rotation($student_rotation) != $dataset->rotation) {
