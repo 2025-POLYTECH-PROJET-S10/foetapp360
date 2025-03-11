@@ -189,6 +189,9 @@ if ($submitted) {
             $student_inclinaison_raw = required_param("inclinaison_$field", PARAM_RAW);
             $student_inclinaison = get_correct_inclinaison($student_inclinaison_raw);
             $student_rotation = required_param("rotation_$field", PARAM_RAW);
+            if($student_rotation == 360){
+                $student_rotation = 0;
+            }
 
             $input_dataset = get_dataset_from_inclinaison_rotation($student_inclinaison, $student_rotation);
             if ($student_inclinaison != $dataset->inclinaison || get_correct_rotation($student_rotation) != $dataset->rotation) {
@@ -216,7 +219,18 @@ if ($submitted) {
                     'expected_inclinaison' => $dataset->inclinaison
                 )
             );
-            $feedback_data = $DB->get_record_sql("SELECT * FROM {foetapp360_feedback_data} WHERE id = :id", array('id' => $feedback->id_feedback));
+            $feedback_data = 0;
+            if(!$feedback){
+                if($is_current_correct){
+                    $feedback_data = $DB->get_record_sql("SELECT * FROM {foetapp360_feedback_data} WHERE id = :id", array('id' => 1));
+                }
+                else{
+                    $feedback_data = $DB->get_record_sql("SELECT * FROM {foetapp360_feedback_data} WHERE id = :id", array('id' => 5));
+                }
+            }
+            else{
+                $feedback_data = $DB->get_record_sql("SELECT * FROM {foetapp360_feedback_data} WHERE id = :id", array('id' => $feedback->id_feedback));
+            }
 
             // Affichage
             $interior_image = ($field === 'partogramme') ? 'partogramme_interieur' : 'schema_simplifie_interieur';
@@ -399,7 +413,6 @@ if ($submitted) {
         $readonly = $is_given_input ? 'readonly' : '';
 
         if ($field === 'partogramme' || $field === 'schema_simplifie') {
-
             $interior_image = ($field === 'partogramme') ? 'partogramme_interieur' : 'schema_simplifie_interieur';
             $background_image = ($field === 'partogramme') ? 'null' : 'bassin';
             $contour_class = ($field === 'partogramme') ? 'partogramme_contour' : 'schema_simplifie_contour';
@@ -423,7 +436,7 @@ if ($submitted) {
             }
             // Si bloqué, on ajoute un input hidden pour transmettre l'information
             echo '<input type="range" class="rotate-slider" name="rotation_' . $field . '" min="0" max="360" 
-                value="' . ($is_given_input ? $random_dataset->rotation : 0) . '" ' . ($is_given_input ? 'style="display: none;"' : '') . '><br>';
+                value="' . ($is_given_input ? $random_dataset->rotation : rand(0, 360)) . '" ' . ($is_given_input ? 'style="display: none;"' : '') . '><br>';
 
             if (!$is_given_input) {
                 echo '<label for="move-axis-slider">Inclinaison:</label>';
@@ -440,7 +453,7 @@ if ($submitted) {
 
             echo '</div>';  // Close .rotation-foetapp360_container
         } elseif ($field === 'vue_anterieure' || $field === 'vue_laterale') {
-            $random_inclinaison_index = rand(0, count($image_database[$field])-1); // TODO
+            $random_inclinaison_index = rand(0, count($image_database[$field])-1);
             $inclinaison_keys = array_keys($image_database[$field]);
             $random_inclinaison = $inclinaison_keys[$random_inclinaison_index];
             $random_index = rand(0, ((count($image_database[$field][$random_inclinaison])-1)));
@@ -469,7 +482,7 @@ if ($submitted) {
                 echo '<button type="button" class="foetapp360_attempt_toggle_btn">🔄 Toggle bf/mf</button>'; // Toggle button
             }
             echo '<input type="hidden" class="foetapp360_attempt_selected_position" name="' . $field . '" value="' . $image_path . '">';
-            echo '<input type="hidden" class="foetapp360_attempt_toggle_btn_value" name="' . $field . '" value="' . $inclinaison . '">';
+            echo '<input type="hidden" class="foetapp360_attempt_toggle_btn_value" name="' . $field . '_inclinaison" value="' . $inclinaison . '">';
             echo '</div>';
 
             echo '</div>';
