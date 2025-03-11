@@ -292,6 +292,11 @@ select:focus {
     /* Centers both horizontally and vertically */
 }
 
+.minimum-size {
+    min-height: 600px;
+    /* Hauteur minimale */
+}
+
 
 .foetapp360_attempt_cycling-image_vue_anterieure {
     height: 75%;

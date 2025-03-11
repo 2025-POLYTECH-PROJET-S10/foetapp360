@@ -166,6 +166,8 @@ echo '<input type="hidden" name="max_vue_anterieur" data-values="' . $nb_vue_ant
 echo '<input type="hidden" name="max_vue_laterale" data-values="' . $nb_vue_laterale . '">';
 echo '<div id="image_database" data-values="' . htmlspecialchars(json_encode($image_database), ENT_QUOTES, 'UTF-8') . '"></div>';
 
+echo '<div class="minimum-size">';
+
 // 📌 Correction après validation
 if ($submitted) {
     echo html_writer::tag('h3', "Revue de l'exercice :");
@@ -189,7 +191,7 @@ if ($submitted) {
             $student_inclinaison_raw = required_param("inclinaison_$field", PARAM_RAW);
             $student_inclinaison = get_correct_inclinaison($student_inclinaison_raw);
             $student_rotation = required_param("rotation_$field", PARAM_RAW);
-            if($student_rotation == 360){
+            if ($student_rotation == 360) {
                 $student_rotation = 0;
             }
 
@@ -220,15 +222,13 @@ if ($submitted) {
                 )
             );
             $feedback_data = 0;
-            if(!$feedback){
-                if($is_current_correct){
+            if (!$feedback) {
+                if ($is_current_correct) {
                     $feedback_data = $DB->get_record_sql("SELECT * FROM {foetapp360_feedback_data} WHERE id = :id", array('id' => 1));
-                }
-                else{
+                } else {
                     $feedback_data = $DB->get_record_sql("SELECT * FROM {foetapp360_feedback_data} WHERE id = :id", array('id' => 5));
                 }
-            }
-            else{
+            } else {
                 $feedback_data = $DB->get_record_sql("SELECT * FROM {foetapp360_feedback_data} WHERE id = :id", array('id' => $feedback->id_feedback));
             }
 
@@ -275,7 +275,7 @@ if ($submitted) {
                 }
                 $prefix = ($field === 'vue_anterieure') ? 'bb_vue_ante_bf_' : 'bb_vue_lat_bf_';
                 $image_path = $image_database_review[$field][$student_answer];
-    
+
                 // **🆕 Select Background Image Based on $field**
                 $background_image = ($field === 'vue_anterieure') ? 'bassin_anterieur.png' : 'bassin_laterale.png';
 
@@ -288,8 +288,7 @@ if ($submitted) {
                 echo '<img class="foetapp360_attempt_cycling-image_' . $field . '" src="' . $image_path . '">';
                 echo '</div>';
                 echo '</div>';
-            }
-            else{
+            } else {
                 if (format_answer_string($student_answer) != format_answer_string($correct_answer)) {
                     $is_current_correct = false;
                     $is_correct = false;
@@ -453,11 +452,11 @@ if ($submitted) {
 
             echo '</div>';  // Close .rotation-foetapp360_container
         } elseif ($field === 'vue_anterieure' || $field === 'vue_laterale') {
-            $random_inclinaison_index = rand(0, count($image_database[$field])-1);
+            $random_inclinaison_index = rand(0, count($image_database[$field]) - 1);
             $inclinaison_keys = array_keys($image_database[$field]);
             $random_inclinaison = $inclinaison_keys[$random_inclinaison_index];
-            $random_index = rand(0, ((count($image_database[$field][$random_inclinaison])-1)));
-    
+            $random_index = rand(0, ((count($image_database[$field][$random_inclinaison]) - 1)));
+
             $prefix = ($field === 'vue_anterieure') ? 'bb_vue_ante_bf_' : 'bb_vue_lat_bf_';
             $image_path = ($is_given_input ? ($image_database[$field][$random_dataset->inclinaison][$random_dataset->$random_input]) : (array_values($image_database[$field][$random_inclinaison])[$random_index]));
 
@@ -504,6 +503,7 @@ if ($submitted) {
             // Si readonly, ajouter un texte supplémentaire visible
             echo '</div>';
         }
+
     }
 
     // Incrémente le nombre de question
@@ -523,6 +523,9 @@ if ($submitted) {
     echo html_writer::empty_tag('input', array('type' => 'submit', 'value' => 'Terminer la session', 'id' => 'submit_attempt'));
 
     echo html_writer::end_tag('form');
+
 }
+//End div of minimum-size
+echo '</div>';
 
 echo $OUTPUT->footer();
