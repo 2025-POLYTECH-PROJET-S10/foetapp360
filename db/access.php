@@ -65,7 +65,7 @@ $capabilities = array(
             'editingteacher' => CAP_ALLOW,
             'manager' => CAP_ALLOW
         )
-        ),
+    ),
 
     // 📌 🔥 Nouvelle permission pour permettre aux tous de voir les images et ainsi de suite
     'mod/foetapp360:viewimages' => array(
@@ -74,7 +74,8 @@ $capabilities = array(
         'archetypes' => array(
             'teacher' => CAP_ALLOW,
             'editingteacher' => CAP_ALLOW,
-            'manager' => CAP_ALLOW
+            'manager' => CAP_ALLOW,
+            'student' => CAP_ALLOW
         )
     )
 );
