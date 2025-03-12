@@ -104,8 +104,8 @@ if (empty($difficulty)) {
 }
 
 $possible_inputs = ($difficulty === 'easy') ?
-    ['name', 'sigle', 'partogramme', 'schema_simplifie', 'vue_anterieure', 'vue_laterale'] :
-    ['name', 'sigle', 'partogramme', 'schema_simplifie'];
+    ['nom', 'sigle', 'partogramme', 'schema_simplifie', 'vue_anterieure', 'vue_laterale'] :
+    ['nom', 'sigle', 'partogramme', 'schema_simplifie'];
 
 // GET toutes les vue antérieures
 $image_manager_anterieur = new image_manager('vue_anterieure');
@@ -399,6 +399,7 @@ if ($submitted) {
     }
     echo '</ul">';
     echo '</div>';
+
     echo '<div class="foetapp360-license-notice">
     <img src="' . new moodle_url('/mod/foetapp360/pix/licence-cc-by-nc.png') . '" alt="CC BY-NC License">
     <br>
@@ -439,7 +440,7 @@ if ($submitted) {
                 value="' . ($is_given_input ? $random_dataset->rotation : rand(0, 360)) . '" ' . ($is_given_input ? 'style="display: none;"' : '') . '><br>';
 
             if (!$is_given_input) {
-                echo '<label for="move-axis-slider">Inclinaison:</label>';
+                echo '<label for="move-axis-slider">Flexion:</label>';
             }
             echo '<input type="range" class="move-axis-slider" name="inclinaison_' . $field . '" min="-50" max="50" 
                 value="' . ($is_given_input ? $random_dataset->inclinaison * 50 : 0) . '" ' . ($is_given_input ? 'style="display: none;"' : '') . '><br>';
@@ -479,7 +480,7 @@ if ($submitted) {
             if (!$is_given_input) {
                 echo '<button type="button" class="foetapp360_attempt_prev-btn">←</button>';
                 echo '<button type="button" class="foetapp360_attempt_next-btn">→</button>';
-                echo '<button type="button" class="foetapp360_attempt_toggle_btn">🔄 Changer L\'inclinaison'; // Toggle button
+                echo '<button type="button" class="foetapp360_attempt_toggle_btn">🔄 Changer la flexion'; // Toggle button
             }
             echo '<input type="hidden" class="foetapp360_attempt_selected_position" name="' . $field . '" value="' . $image_path . '">';
             echo '<input type="hidden" class="foetapp360_attempt_toggle_btn_value" name="' . $field . '_inclinaison" value="' . $random_inclinaison . '">';
@@ -489,7 +490,7 @@ if ($submitted) {
         } else {
             echo '<div class="attempt_container attempt_form_group" id="' . $field . '_container">';
             if ($is_given_input) {
-                echo html_writer::tag('label', $label . ' - ' . (($random_dataset->inclinaison == 1) ? "Bien fléchis" : "Mal fléchis"), array('for' => $field));
+                echo html_writer::tag('label', $label . ' - ' . (($random_dataset->inclinaison == 1) ? "Bien fléchie" : "Mal fléchie"), array('for' => $field));
             } else {
                 echo html_writer::tag('label', $label, array('for' => $field));
             }
