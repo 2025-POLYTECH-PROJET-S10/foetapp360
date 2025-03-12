@@ -34,8 +34,8 @@ class stats_manager
                AVG(questionsdone) as average_questions,
                AVG(a.is_correct) as success_rate,
                COUNT(a.id) as total_attempts
-            FROM {foetapp360_session} s
-            JOIN {foetapp360_attempt} a ON s.id = a.id_session
+            FROM {foetapp360_attempt} a
+            JOIN {foetapp360_session} s ON a.id_session = s.id
             WHERE s.id_foetapp360 = :foetapp360id";
 
         $params = ['foetapp360id' => $foetapp360id];
@@ -309,7 +309,7 @@ class stats_manager
     public function get_student_stats(int $foetapp360id, int $userid): array
     {
         $sql = "SELECT COUNT(a.id) as total_attempts,
-                        SUM(a.is_correct) as success_total
+                        AVG(a.is_correct) as success_rate
                 FROM {foetapp360_attempt} a
                 JOIN {foetapp360_session} s ON a.id_session = s.id
                 WHERE s.id_foetapp360 = :foetapp360id AND s.userid = :userid";
