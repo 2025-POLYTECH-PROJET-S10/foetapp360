@@ -157,9 +157,9 @@ function mod_foetapp360_pluginfile(
     require_login($course, true, $cm);
 
     // Check the relevant capabilities - these may vary depending on the filearea being accessed.
-    if (!has_capability('mod/foetapp360:viewimages', $context)) {
-        return false;
-    }
+    // if (!has_capability('mod/foetapp360:viewimages', $context)) {
+    //     return false;
+    // }
 
     // The args is an array containing [itemid, path].
     // Fetch the itemid from the path.

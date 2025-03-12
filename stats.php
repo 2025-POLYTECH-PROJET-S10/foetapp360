@@ -70,7 +70,7 @@ if (empty($globalstats) || $globalstats['total_attempts'] <= 0) {
 echo html_writer::start_tag('div', ['class' => 'global-stats']);
 echo html_writer::tag('h3', get_string('globalstats', 'mod_foetapp360'));
 echo html_writer::tag('p', 'Nombre total d’étudiants : ' . ($globalstats['total_students'] ?? 0));
-echo html_writer::tag('p', 'Taux de réussite : ' . (($globalstats['success_rate']/$globalstats['total_attempts']) ?? 0)*100 . '%');
+echo html_writer::tag('p', 'Taux de réussite : ' . (($globalstats['success_rate']) ?? 0)*100 . '%');
 echo html_writer::end_tag('div');
 
 /* -------------------------------------------------------------------------- */
@@ -436,7 +436,7 @@ foreach ($students as $student) {
     
     // Récupération des données de performance pour calculer le taux de réussite
     if ($attempts > 0) {
-        $rate = ($studentstats['success_total'] ?? 0) / $attempts * 100;
+        $rate = ($studentstats['success_rate'] ?? 0) * 100;
     } else {
         $rate = 0;
     }

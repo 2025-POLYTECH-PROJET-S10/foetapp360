@@ -31,7 +31,7 @@ class manage_datasets_form extends moodleform {
     public function definition() {
         $mform = $this->_form;
         
-        $maxbytes = 10000000; // 10 MB
+        $maxbytes = 5242880; // 5MB
 
         // Add text fields
         $mform->addElement('text', 'name', 'Nom');
