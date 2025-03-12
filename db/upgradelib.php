@@ -17,7 +17,7 @@
 /**
  * Plugin upgrade helper functions are defined here.
  *
- * @package     mod_hippotrack
+ * @package     mod_foetapp360
  * @category    upgrade
  * @copyright   2025 Lionel Di Marco <LDiMarco@chu-grenoble.fr>
  * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
@@ -26,7 +26,7 @@
 /**
  * Helper function used by the upgrade.php file.
  */
-function hippotrack_helper_function()
+function foetapp360_helper_function()
 {
     global $DB;
 

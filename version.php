@@ -17,15 +17,15 @@
 /**
  * Plugin version and other meta-data are defined here.
  *
- * @package     mod_hippotrack
+ * @package     mod_foetapp360
  * @copyright   2025 Lionel Di Marco <LDiMarco@chu-grenoble.fr>
  * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->component = 'mod_hippotrack';// Full name of the plugin (used for diagnostics)
-$plugin->release = '0.1.0';
-$plugin->version = 2025013000;  // The current module version (Date: YYYYMMDDXX) 
+$plugin->component = 'mod_foetapp360';// Full name of the plugin (used for diagnostics)
+$plugin->release = '1.0.0';
+$plugin->version = 2025031201;  // The current module version (Date: YYYYMMDDXX) 
 $plugin->requires = 2022112800;// Requires this Moodle version
-$plugin->maturity = MATURITY_ALPHA;
+$plugin->maturity = MATURITY_BETA; // This version's maturity level

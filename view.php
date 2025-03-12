@@ -1,78 +1,107 @@
 <?php
-// This file is part of Moodle - https://moodle.org/
-//
-// Moodle is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-//
-// Moodle is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-//
-// You should have received a copy of the GNU General Public License
-// along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
-
-/**
- * Prints an instance of hippotrack.
- *
- * @package     mod_hippotrack
- * @copyright   2025 Lionel Di Marco <LDiMarco@chu-grenoble.fr>
- * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
-
 require(__DIR__ . '/../../config.php');
 require_once(__DIR__ . '/lib.php');
 
-// Course module id.
-$id = optional_param('id', 0, PARAM_INT);
+global $USER, $DB;
 
-// Activity instance id.
-$h = optional_param('h', 0, PARAM_INT);
+$id = required_param('id', PARAM_INT); // Course module ID
 
-if ($id) {
-    $cm = get_coursemodule_from_id('hippotrack', $id, 0, false, MUST_EXIST);
-    $course = $DB->get_record('course', array('id' => $cm->course), '*', MUST_EXIST);
-    $moduleinstance = $DB->get_record('hippotrack', array('id' => $cm->instance), '*', MUST_EXIST);
-} else {
-    $moduleinstance = $DB->get_record('hippotrack', array('id' => $h), '*', MUST_EXIST);
-    $course = $DB->get_record('course', array('id' => $moduleinstance->course), '*', MUST_EXIST);
-    $cm = get_coursemodule_from_instance('hippotrack', $moduleinstance->id, $course->id, false, MUST_EXIST);
-}
+$cm = get_coursemodule_from_id('foetapp360', $id, 0, false, MUST_EXIST);
+$course = $DB->get_record('course', array('id' => $cm->course), '*', MUST_EXIST);
+$moduleinstance = $DB->get_record('foetapp360', array('id' => $cm->instance), '*', MUST_EXIST);
+$context = context_module::instance($cm->id);
 
+require_login($course, true, $cm);
 
-
-// if (!$cm = get_coursemodule_from_id('hippotrack', $id)) {
-//     throw new moodle_exception('invalidcoursemodule');
-// }
-
-// if (!$course = $DB->get_record("course", array("id" => $cm->course))) {
-//     throw new moodle_exception('coursemisconf');
-// }
-
-// if (!$module = $DB->get_record('hippotrack', ['id' => $cm->instance])) {
-//     throw new moodle_exception('DataBase for hippotrack not found');
-// }
-
+$is_teacher = has_capability('mod/foetapp360:manage', $context);
+$is_student = has_capability('mod/foetapp360:attempt', $context);
 
 $PAGE->set_cm($cm);
 $PAGE->set_context($context);
-$PAGE->set_url('/mod/hippotrack/view.php', array('id' => $id));
+$PAGE->set_url('/mod/foetapp360/view.php', array('id' => $id));
+$PAGE->set_title(format_string($moduleinstance->name));
+$PAGE->set_heading(format_string($course->fullname));
+$PAGE->requires->css('/mod/foetapp360/styles.css');
 
-//Debut de l'affichage
 echo $OUTPUT->header();
+echo html_writer::tag('h2', format_string($moduleinstance->name), array('class' => 'foetapp360-title'));
+
+// 📌 Fonction pour vérifier si une page existe
+function page_exists($page)
+{
+    global $CFG;
+    return file_exists($CFG->dirroot . "/mod/foetapp360/$page");
+}
+
+// 📌 Interface enseignant
+if ($is_teacher) {
+    echo html_writer::start_div('foetapp360-teacher-options');
+
+    // 📊 Voir les statistiques
+    $stats_url = new moodle_url('/mod/foetapp360/stats.php', array('id' => $id));
+    if (page_exists('stats.php')) {
+        echo $OUTPUT->single_button($stats_url, '📊 Voir les statistiques', 'get');
+    } else {
+        echo html_writer::tag('button', '📊 Voir les statistiques (Bientôt dispo)', array('disabled' => 'disabled', 'class' => 'btn btn-secondary'));
+    }
+
+    // 📂 Gérer les ensembles
+    $manage_url = new moodle_url('/mod/foetapp360/manage_datasets.php', array('cmid' => $id));
+    if (page_exists('manage_datasets.php')) {
+        echo $OUTPUT->single_button($manage_url, '➕ Gérer les ensembles', 'get');
+    } else {
+        echo html_writer::tag('button', '➕ Gérer les ensembles (Bientôt dispo)', array('disabled' => 'disabled', 'class' => 'btn btn-secondary'));
+    }
+
+    echo html_writer::end_div();
+}
+
+// 📌 Interface étudiant
+if ($is_student) {
+    echo html_writer::start_div('foetapp360-student-options');
+
+    // 🔍 Vérification des essais
+    //$existing_attempts = $DB->count_records('foetapp360_session', array('userid' => $USER->id, 'instanceid' => $moduleinstance->id));
+    $history_url = new moodle_url('/mod/foetapp360/history.php', array('id' => $id));
+
+    /*
+    if (page_exists('history.php')) {
+        echo $OUTPUT->single_button($history_url, '📜 Voir les anciennes tentatives', 'get');
+    } else {
+        echo html_writer::tag('button', '📜 Voir les anciennes tentatives (Bientôt dispo)', array('disabled' => 'disabled', 'class' => 'btn btn-secondary'));
+    }*/
+
+    // 📊 Voir les statistiques
+    $stats_url = new moodle_url('/mod/foetapp360/mystats.php', array('id' => $id));
+    if (page_exists('stats.php')) {
+        echo $OUTPUT->single_button($stats_url, '📊 Voir mes statistiques', 'get');
+    } else {
+        echo html_writer::tag('button', '📊 Voir les statistiques (Bientôt dispo)', array('disabled' => 'disabled', 'class' => 'btn btn-secondary'));
+    }
 
 
-// Title Poll
-$divTitle = '<div id=divTitle>';
-$divTitle .= '<h2 id=namePoll>';
-$divTitle .= get_string('title', 'mod_nouveauplugin', $cm->name);
-$divTitle .= '</h2>';
-$divTitle .= '<div>';
+   // 🆕 Improved session handling
+    try {
+        $session_id = foetapp360_start_new_session($moduleinstance->id, $USER->id);
+        
+        $attempt_url = new moodle_url('/mod/foetapp360/attempt.php', [
+            'id' => $id,
+            'session_id' => $session_id
+        ]);
+        
+        if (page_exists('attempt.php')) {
+            echo $OUTPUT->single_button($attempt_url, '🚀 Lancer une session d\'exercice', 'get');
+        } else {
+            echo html_writer::tag('button', '🚀 Lancer une session (Bientôt dispo)', 
+                ['disabled' => 'disabled', 'class' => 'btn btn-secondary']);
+        }
+    } catch (dml_exception $e) {
+        debugging('Failed to create session: '.$e->getMessage(), DEBUG_DEVELOPER);
+        echo $OUTPUT->notification(get_string('sessionerror', 'foetapp360'));
+    }
 
-echo $divTitle;
-
+    echo html_writer::end_div();
+}
 
 
 echo $OUTPUT->footer();
