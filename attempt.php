@@ -144,8 +144,8 @@ if (empty($difficulty)) {
 }
 
 $possible_inputs = ($difficulty === 'easy') ?
-    ['nom', 'sigle', 'partogramme', 'schema_simplifie', 'vue_anterieure', 'vue_laterale'] :
-    ['nom', 'sigle', 'partogramme', 'schema_simplifie'];
+    ['name', 'sigle', 'partogramme', 'schema_simplifie', 'vue_anterieure', 'vue_laterale'] :
+    ['name', 'sigle', 'partogramme', 'schema_simplifie'];
 
 // GET toutes les vue antérieures
 $image_manager_anterieur = new image_manager('vue_anterieure');
