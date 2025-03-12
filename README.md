@@ -1,9 +1,5 @@
 # foetapp360 #
 
-TODO Describe the plugin shortly here.
-
-TODO Provide more detailed description here.
-
 ## Installing via uploaded ZIP file ##
 
 1. Log in to your Moodle site as an admin and go to _Site administration >
