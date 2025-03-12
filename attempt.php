@@ -32,7 +32,7 @@ $session_id = required_param('session_id', PARAM_INT);
 $difficulty = optional_param('difficulty', '', PARAM_ALPHA);
 $new_question = optional_param('new_question', 0, PARAM_INT);
 $submitted = optional_param('submitted', 0, PARAM_INT);
-$first_time = optional_param('first_time', 0, PARAM_INT);
+$diff_btn_clicked = optional_param('diff_btn_clicked', 0, PARAM_INT);
 $userid = $USER->id;
 $TOLERANCE = 5;
 
@@ -89,6 +89,8 @@ function update_session_values($session_id, $data)
     $DB->update_record('foetapp360_session', $session);
 }
 
+$session = $DB->get_record('foetapp360_session', array('id' => $session_id));
+
 echo $OUTPUT->header();
 
 // 📌 Étape 1 : Sélection de la difficulté
@@ -115,16 +117,30 @@ if (empty($difficulty)) {
 
     echo html_writer::tag('h3', "Choisissez votre niveau de difficulté");
 
-    $easy_url = new moodle_url('/mod/foetapp360/attempt.php', array('id' => $cmid, 'session_id' => $session_id, 'difficulty' => 'easy'));
-    $hard_url = new moodle_url('/mod/foetapp360/attempt.php', array('id' => $cmid, 'session_id' => $session_id, 'difficulty' => 'hard'));
+    $easy_url = new moodle_url('/mod/foetapp360/attempt.php', array('id' => $cmid, 'session_id' => $session_id, 'difficulty' => 'easy', 'diff_btn_clicked' => 1));
+    $hard_url = new moodle_url('/mod/foetapp360/attempt.php', array('id' => $cmid, 'session_id' => $session_id, 'difficulty' => 'hard', 'diff_btn_clicked' => 1));
 
+    /* -------------------------------------------------------------------------- */
+    /*             CHECK IF IT'S A NEW SESSION  AND UPDATE TIMESTART              */
+    /* -------------------------------------------------------------------------- */
+
+    
+    if ($session->timefinish == 0) {
+        update_session_values($session_id, ['timestart' => time()]);
+    } 
+    
     echo html_writer::start_div('difficulty-selection');
     echo $OUTPUT->single_button($easy_url, 'Facile', 'get');
     echo $OUTPUT->single_button($hard_url, 'Difficile', 'get');
     echo html_writer::end_div();
-
+    
     echo $OUTPUT->footer();
     exit;
+} else {
+    if ($diff_btn_clicked && $session->timefinish != 0) {
+        $homepage_url = new moodle_url('/mod/foetapp360/view.php', array('id' => $cmid));
+        redirect($homepage_url);
+    }
 }
 
 $possible_inputs = ($difficulty === 'easy') ?
@@ -364,7 +380,7 @@ if ($submitted) {
     $_SESSION['foetapp360_session_' . $session_id]['attempts'][] = $new_attempt;
 
     // Récupérer l'index de la dernière entrée ajoutée
-    $last_index = count($_SESSION['foetapp360_session_' . $session_id]['attempts']) - 1;
+    $dex = count($_SESSION['foetapp360_session_' . $session_id]['attempts']) - 1;
 
     // Compléter l'entrée avec les réponses de l'utilisateur
     foreach ($possible_inputs as $field) {
@@ -377,10 +393,10 @@ if ($submitted) {
             $student_answer = required_param($field, PARAM_RAW); // Récupère la réponse
         }
         // Ajouter la réponse de l'utilisateur au dernier enregistrement
-        $_SESSION['foetapp360_session_' . $session_id]['attempts'][$last_index][$field] = $student_answer;
+        $_SESSION['foetapp360_session_' . $session_id]['attempts'][$dex][$field] = $student_answer;
     }
-    $_SESSION['foetapp360_session_' . $session_id]['attempts'][$last_index]['given_input'] = $_POST['input'];
-    $_SESSION['foetapp360_session_' . $session_id]['attempts'][$last_index]['is_correct'] = (int) $is_correct;
+    $_SESSION['foetapp360_session_' . $session_id]['attempts'][$dex]['given_input'] = $_POST['input'];
+    $_SESSION['foetapp360_session_' . $session_id]['attempts'][$dex]['is_correct'] = (int) $is_correct;
 
     /* -------------------------------------------------------------------------- */
     /*                      Save the Attempt in the Database                      */
@@ -390,14 +406,14 @@ if ($submitted) {
     $attemptObj = new stdClass();
     $attemptObj->id_session    = $session_id;
     $attemptObj->id_dataset    = $dataset->id;        // from $random_dataset
-    $attemptObj->attempt_number= $last_index+1;       // from $attempt_number
-    $attemptObj->name          = $_SESSION['foetapp360_session_' . $session_id]['attempts'][$last_index]['name'];
-    $attemptObj->sigle         = $_SESSION['foetapp360_session_' . $session_id]['attempts'][$last_index]['sigle'];
-    $attemptObj->partogram   = $_SESSION['foetapp360_session_' . $session_id]['attempts'][$last_index]['partogramme'];
-    $attemptObj->schema_simplifie = $_SESSION['foetapp360_session_' . $session_id]['attempts'][$last_index]['schema_simplifie'];
-    $attemptObj->vue_anterieure= $_SESSION['foetapp360_session_' . $session_id]['attempts'][$last_index]['vue_anterieure'] ?? $STRING_FOR_HARD_DIFFICULTY; 
-    $attemptObj->vue_laterale  = $_SESSION['foetapp360_session_' . $session_id]['attempts'][$last_index]['vue_laterale'] ?? $STRING_FOR_HARD_DIFFICULTY;
-    $attemptObj->given_input   = $_SESSION['foetapp360_session_' . $session_id]['attempts'][$last_index]['given_input'];
+    $attemptObj->attempt_number= $dex+1;       // from $attempt_number
+    $attemptObj->name          = $_SESSION['foetapp360_session_' . $session_id]['attempts'][$dex]['name'];
+    $attemptObj->sigle         = $_SESSION['foetapp360_session_' . $session_id]['attempts'][$dex]['sigle'];
+    $attemptObj->partogram   = $_SESSION['foetapp360_session_' . $session_id]['attempts'][$dex]['partogramme'];
+    $attemptObj->schema_simplifie = $_SESSION['foetapp360_session_' . $session_id]['attempts'][$dex]['schema_simplifie'];
+    $attemptObj->vue_anterieure= $_SESSION['foetapp360_session_' . $session_id]['attempts'][$dex]['vue_anterieure'] ?? $STRING_FOR_HARD_DIFFICULTY; 
+    $attemptObj->vue_laterale  = $_SESSION['foetapp360_session_' . $session_id]['attempts'][$dex]['vue_laterale'] ?? $STRING_FOR_HARD_DIFFICULTY;
+    $attemptObj->given_input   = $_SESSION['foetapp360_session_' . $session_id]['attempts'][$dex]['given_input'];
     $attemptObj->is_correct    = (int)$is_correct;
     $DB->insert_record('foetapp360_attempt', $attemptObj);
 
