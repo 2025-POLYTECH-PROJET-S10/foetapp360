@@ -124,16 +124,16 @@ if (empty($difficulty)) {
     /*             CHECK IF IT'S A NEW SESSION  AND UPDATE TIMESTART              */
     /* -------------------------------------------------------------------------- */
 
-    
+
     if ($session->timefinish == 0) {
         update_session_values($session_id, ['timestart' => time()]);
-    } 
-    
+    }
+
     echo html_writer::start_div('difficulty-selection');
     echo $OUTPUT->single_button($easy_url, 'Facile', 'get');
     echo $OUTPUT->single_button($hard_url, 'Difficile', 'get');
     echo html_writer::end_div();
-    
+
     echo $OUTPUT->footer();
     exit;
 } else {
@@ -229,7 +229,7 @@ if ($submitted) {
             $student_inclinaison_raw = required_param("inclinaison_$field", PARAM_RAW);
             $student_inclinaison = get_correct_inclinaison($student_inclinaison_raw);
             $student_rotation = required_param("rotation_$field", PARAM_RAW);
-            if($student_rotation == 360){
+            if ($student_rotation == 360) {
                 $student_rotation = 0;
             }
 
@@ -260,15 +260,13 @@ if ($submitted) {
                 )
             );
             $feedback_data = 0;
-            if(!$feedback){
-                if($is_current_correct){
+            if (!$feedback) {
+                if ($is_current_correct) {
                     $feedback_data = $DB->get_record_sql("SELECT * FROM {foetapp360_feedback_data} WHERE id = :id", array('id' => 1));
-                }
-                else{
+                } else {
                     $feedback_data = $DB->get_record_sql("SELECT * FROM {foetapp360_feedback_data} WHERE id = :id", array('id' => 5));
                 }
-            }
-            else{
+            } else {
                 $feedback_data = $DB->get_record_sql("SELECT * FROM {foetapp360_feedback_data} WHERE id = :id", array('id' => $feedback->id_feedback));
             }
 
@@ -315,7 +313,7 @@ if ($submitted) {
                 }
                 $prefix = ($field === 'vue_anterieure') ? 'bb_vue_ante_bf_' : 'bb_vue_lat_bf_';
                 $image_path = $image_database_review[$field][$student_answer];
-    
+
                 // **🆕 Select Background Image Based on $field**
                 $background_image = ($field === 'vue_anterieure') ? 'bassin_anterieur.png' : 'bassin_laterale.png';
 
@@ -328,8 +326,7 @@ if ($submitted) {
                 echo '<img class="foetapp360_attempt_cycling-image_' . $field . '" src="' . $image_path . '">';
                 echo '</div>';
                 echo '</div>';
-            }
-            else{
+            } else {
                 if (format_answer_string($student_answer) != format_answer_string($correct_answer)) {
                     $is_current_correct = false;
                     $is_correct = false;
@@ -404,17 +401,17 @@ if ($submitted) {
 
     // "attemptObj" is the single question attempt data
     $attemptObj = new stdClass();
-    $attemptObj->id_session    = $session_id;
-    $attemptObj->id_dataset    = $dataset->id;        // from $random_dataset
-    $attemptObj->attempt_number= $dex+1;       // from $attempt_number
-    $attemptObj->name          = $_SESSION['foetapp360_session_' . $session_id]['attempts'][$dex]['name'];
-    $attemptObj->sigle         = $_SESSION['foetapp360_session_' . $session_id]['attempts'][$dex]['sigle'];
-    $attemptObj->partogram   = $_SESSION['foetapp360_session_' . $session_id]['attempts'][$dex]['partogramme'];
+    $attemptObj->id_session = $session_id;
+    $attemptObj->id_dataset = $dataset->id;        // from $random_dataset
+    $attemptObj->attempt_number = $dex + 1;       // from $attempt_number
+    $attemptObj->name = $_SESSION['foetapp360_session_' . $session_id]['attempts'][$dex]['name'];
+    $attemptObj->sigle = $_SESSION['foetapp360_session_' . $session_id]['attempts'][$dex]['sigle'];
+    $attemptObj->partogram = $_SESSION['foetapp360_session_' . $session_id]['attempts'][$dex]['partogramme'];
     $attemptObj->schema_simplifie = $_SESSION['foetapp360_session_' . $session_id]['attempts'][$dex]['schema_simplifie'];
-    $attemptObj->vue_anterieure= $_SESSION['foetapp360_session_' . $session_id]['attempts'][$dex]['vue_anterieure'] ?? $STRING_FOR_HARD_DIFFICULTY; 
-    $attemptObj->vue_laterale  = $_SESSION['foetapp360_session_' . $session_id]['attempts'][$dex]['vue_laterale'] ?? $STRING_FOR_HARD_DIFFICULTY;
-    $attemptObj->given_input   = $_SESSION['foetapp360_session_' . $session_id]['attempts'][$dex]['given_input'];
-    $attemptObj->is_correct    = (int)$is_correct;
+    $attemptObj->vue_anterieure = $_SESSION['foetapp360_session_' . $session_id]['attempts'][$dex]['vue_anterieure'] ?? $STRING_FOR_HARD_DIFFICULTY;
+    $attemptObj->vue_laterale = $_SESSION['foetapp360_session_' . $session_id]['attempts'][$dex]['vue_laterale'] ?? $STRING_FOR_HARD_DIFFICULTY;
+    $attemptObj->given_input = $_SESSION['foetapp360_session_' . $session_id]['attempts'][$dex]['given_input'];
+    $attemptObj->is_correct = (int) $is_correct;
     $DB->insert_record('foetapp360_attempt', $attemptObj);
 
     // Incrémente le nombre de question
@@ -425,35 +422,35 @@ if ($submitted) {
     } else {
         // Si la variable existe, on l'incrémente de 1
         $_SESSION['foetapp360_session_' . $session_id]['_questionsdone']++;
-    }    
+    }
 
     update_session_values($session_id, ['questionsdone' => $_SESSION['foetapp360_session_' . $session_id]['_questionsdone'] ?? 1, 'sumgrades' => $_SESSION['foetapp360_session_' . $session_id]['_sumgrades'], 'timefinish' => time(), 'difficulty' => $difficulty]);
-    
+
     // Sauvegarde la réponse actuelle
     $student_data = array_filter($_POST, function ($key) {
         return preg_match('/^(inclinaison|rotation)_(\d+)$/', $key);
     }, ARRAY_FILTER_USE_KEY);
-    
+
     // 📌 Boutons "Nouvelle Question" et "Terminer"
     $new_question_url = new moodle_url('/mod/foetapp360/attempt.php', array('id' => $cmid, 'session_id' => $session_id, 'difficulty' => $difficulty, 'new_question' => 1));
     $finish_url = new moodle_url('/mod/foetapp360/validate.php', array('id' => $cmid, 'session_id' => $session_id));
-    
+
     echo $OUTPUT->single_button($new_question_url, 'Nouvelle Question', 'get');
     echo $OUTPUT->single_button($finish_url, 'Terminer', 'get');
-    
+
     echo $OUTPUT->footer();
     exit;
 } else {
     $random_dataset = $DB->get_record_sql("SELECT * FROM {foetapp360_datasets} ORDER BY RAND() LIMIT 1"); // TODO A regarder pk random un peu bizarre
     $random_input = $possible_inputs[array_rand($possible_inputs)]; // get random input from dataset
-    
+
     // Enregistre la difficulté dans la session.
     if (!isset($_SESSION['foetapp360_session_' . $session_id]['_difficulty'])) {
         $_SESSION['foetapp360_session_' . $session_id]['_difficulty'] = $difficulty;
     }
-    
+
     echo html_writer::tag('h3', "Trouvez les bonnes correspondances pour :");
-    
+
     echo html_writer::start_tag('form', array('method' => 'post', 'action' => 'attempt.php', 'id' => 'attempt_form'));
     echo html_writer::empty_tag('input', array('type' => 'hidden', 'name' => 'id', 'value' => $cmid));
     echo html_writer::empty_tag('input', array('type' => 'hidden', 'name' => 'session_id', 'value' => $session_id));
@@ -461,7 +458,7 @@ if ($submitted) {
     echo html_writer::empty_tag('input', array('type' => 'hidden', 'name' => 'input', 'value' => $random_input));
     echo html_writer::empty_tag('input', array('type' => 'hidden', 'name' => 'dataset_id', 'value' => $random_dataset->id));
     echo html_writer::empty_tag('input', array('type' => 'hidden', 'name' => 'submitted', 'value' => '1'));
-    
+
     // List Selector
     echo '<div class="foetapp360-tabs">';
     echo '<ul class="foetapp360-tab-list">';
@@ -492,15 +489,15 @@ if ($submitted) {
             echo '<div class="rotation_foetapp360_container attempt_container" id="' . $field . '_container">';
             echo html_writer::tag('h4', $label);
             echo '<div class="foetapp360_container" data-schema-type="' . $field . '">';
-            
+
             if ($background_image !== 'null') {
                 echo '<img class="' . $background_image . '" src="' . new moodle_url('/mod/foetapp360/pix/' . $background_image . '.png') . '">';
             }
-            
+
             echo '<img class="' . $contour_class . '" src="' . new moodle_url('/mod/foetapp360/pix/' . $contour_class . '.png') . '">';
             echo '<img class="' . $interior_image . '" src="' . new moodle_url('/mod/foetapp360/pix/' . $interior_image . '.png') . '">';
             echo '</div>';  // Close .foetapp360_container
-            
+
             // Rotation & Inclination Sliders
             echo '<div class="foetapp360_sliders">';
             if (!$is_given_input) {
@@ -522,31 +519,31 @@ if ($submitted) {
                 echo '<input type="hidden" name="inclinaison_' . $field . '" value="' . ($random_dataset->inclinaison * 50) . '">';
             }
             echo '</div>';
-            
+
             echo '</div>';  // Close .rotation-foetapp360_container
         } elseif ($field === 'vue_anterieure' || $field === 'vue_laterale') {
-            $random_inclinaison_index = rand(0, count($image_database[$field])-1);
+            $random_inclinaison_index = rand(0, count($image_database[$field]) - 1);
             $inclinaison_keys = array_keys($image_database[$field]);
             $random_inclinaison = $inclinaison_keys[$random_inclinaison_index];
-            $random_index = rand(0, ((count($image_database[$field][$random_inclinaison])-1)));
-            
+            $random_index = rand(0, ((count($image_database[$field][$random_inclinaison]) - 1)));
+
             $prefix = ($field === 'vue_anterieure') ? 'bb_vue_ante_bf_' : 'bb_vue_lat_bf_';
             $image_path = ($is_given_input ? ($image_database[$field][$random_dataset->inclinaison][$random_dataset->$random_input]) : (array_values($image_database[$field][$random_inclinaison])[$random_index]));
-            
+
             // **🆕 Select Background Image Based on $field**
             $background_image = ($field === 'vue_anterieure') ? 'bassin_anterieur.png' : 'bassin_laterale.png';
-            
+
             echo '<div class="image_cycling_foetapp360_container attempt_container" data-schema-type="' . $field . '" data-prefix="' . $prefix . '" id="' . $field . '_container">';
             echo '<input type="hidden" class="foetapp360_field" data-values="' . $field . '">';
             echo html_writer::tag('h4', $label);
-            
+
             echo '<div class="foetapp360_container">';
             // 🆕 Dynamically set background image
             echo '<img class="foetapp360_background-image_' . $field . '" src="' . new moodle_url('/mod/foetapp360/pix/' . $background_image) . '">';
             echo '<img class="foetapp360_attempt_cycling-image_' . $field . '" src="' . $image_path . '">';
             echo '</div>';
-            
-            
+
+
             echo '<div class="foetapp360_container button-foetapp360_container">';
             if (!$is_given_input) {
                 echo '<button type="button" class="foetapp360_attempt_prev-btn">←</button>';
@@ -556,7 +553,7 @@ if ($submitted) {
             echo '<input type="hidden" class="foetapp360_attempt_selected_position" name="' . $field . '" value="' . $image_path . '">';
             echo '<input type="hidden" class="foetapp360_attempt_toggle_btn_value" name="' . $field . '_inclinaison" value="' . $random_inclinaison . '">';
             echo '</div>';
-            
+
             echo '</div>';
         } else {
             echo '<div class="attempt_container attempt_form_group" id="' . $field . '_container">';
