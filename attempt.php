@@ -222,9 +222,12 @@ if ($submitted) {
     echo '</div>';
 
     foreach ($possible_inputs as $field) {
+
         $is_current_correct = true;
         $label = ucfirst(str_replace('_', ' ', $field));
         if ($field === 'partogramme' || $field === 'schema_simplifie') {
+
+
             // 🔥 Correction spéciale pour partogramme et schéma simplifié (ils utilisent rotation + inclinaison)
             $student_inclinaison_raw = required_param("inclinaison_$field", PARAM_RAW);
             $student_inclinaison = get_correct_inclinaison($student_inclinaison_raw);
@@ -270,6 +273,7 @@ if ($submitted) {
                 $feedback_data = $DB->get_record_sql("SELECT * FROM {foetapp360_feedback_data} WHERE id = :id", array('id' => $feedback->id_feedback));
             }
 
+
             // Affichage
             $interior_image = ($field === 'partogramme') ? 'partogramme_interieur' : 'schema_simplifie_interieur';
             $background_image = ($field === 'partogramme') ? 'null' : 'bassin';
@@ -301,6 +305,8 @@ if ($submitted) {
 
             echo '</div>';  // Close .rotation-foetapp360_container
         } else {
+
+
             // 🔥 Cas normal (name, sigle, vue_anterieure, vue_laterale)
             $student_answer = required_param($field, PARAM_RAW);
             $correct_answer = $dataset->$field;
@@ -347,6 +353,18 @@ if ($submitted) {
         }
     }
     echo html_writer::tag('p', $is_correct ? 'Exercice Correct ✅' : 'Exercice Incorrect ❌');
+
+
+    echo '<div class="foetapp360-license-notice">
+    <img src="' . new moodle_url('/mod/foetapp360/pix/licence-cc-by-nc.png') . '" alt="CC BY-NC License">
+    <br>
+    FoetApp360\'s images © 2024 by Pierre-Yves Rabattu is licensed under CC BY-NC 4.0. 
+    To view a copy of this license, visit 
+    <a href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">here</a>.
+   </div>';
+
+    echo "123";
+
 
     // 📌 Enregistrer les réponses de l'étudiant dans la base de données
     // Vérifier si une tentative existe déjà, sinon l'initialiser
@@ -437,6 +455,7 @@ if ($submitted) {
 
     echo $OUTPUT->single_button($new_question_url, 'Nouvelle Question', 'get');
     echo $OUTPUT->single_button($finish_url, 'Terminer', 'get');
+
 
     echo $OUTPUT->footer();
     exit;
