@@ -363,7 +363,6 @@ if ($submitted) {
     <a href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">here</a>.
    </div>';
 
-    echo "123";
 
 
     // 📌 Enregistrer les réponses de l'étudiant dans la base de données
