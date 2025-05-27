@@ -103,5 +103,16 @@ if ($is_student) {
     echo html_writer::end_div();
 }
 
+// Lien vers la page des crédits
+if (has_capability('mod/foetapp360:manage', $context)) {
+    echo html_writer::div(
+        html_writer::link(
+            new moodle_url('/mod/foetapp360/credits.php', array('id' => $cm->id)),
+            'Voir les crédits du plugin',
+            array('class' => 'btn btn-link', 'style' => 'margin-top: 10px;')
+        ),
+        'credits-link'
+    );
+}
 
 echo $OUTPUT->footer();
