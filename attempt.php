@@ -465,7 +465,7 @@ if ($submitted) {
     echo $OUTPUT->footer();
     exit;
 } else {
-    $random_dataset = $DB->get_record_sql("SELECT * FROM {foetapp360_datasets} ORDER BY RAND() LIMIT 1"); // TODO A regarder pk random un peu bizarre
+    $random_dataset = $DB->get_record_sql("SELECT * FROM {foetapp360_datasets} ORDER BY RANDOM() LIMIT 1"); // TODO A regarder pk random un peu bizarre
     $random_input = $possible_inputs[array_rand($possible_inputs)]; // get random input from dataset
 
     // Enregistre la difficulté dans la session.
