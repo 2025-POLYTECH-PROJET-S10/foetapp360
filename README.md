@@ -38,3 +38,16 @@ PARTICULAR PURPOSE.  See the GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License along with
 this program.  If not, see <https://www.gnu.org/licenses/>.
+
+## Credits ##
+
+This application was developed as part of a collaborative project and is intended for national deployment.
+
+**Ideation**: Lionel Di Marco, Lucile Vadcard  
+**Development**: Brice Vittet, Ali Fawaz, Romain Hocquet, Alexandre Moua  
+**Graphics**: Pierre-Yves Rabattu
+
+For any questions, please contact:
+
+**Lionel Di Marco**  
+[UNESS profile] : ldimarco@chu-grenoble.fr
